@@ -1,0 +1,25 @@
+{
+    "family": "merit-award",
+    "executionRoleArn": "arn:aws:iam::274326796545:role/ecsInstanceRole",
+    "networkMode": "awsvpc",
+    "containerDefinitions": [
+        {
+            "name": "merit-award",
+            "image": "274326796545.dkr.ecr.us-east-1.amazonaws.com/meritaward:latest",
+            "portMappings": [
+                {
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp"
+                }
+            ],
+            "memory": 1024,
+            "essential": true
+        }
+    ],
+    "requiresCompatibilities": [
+        "EC2"
+    ],
+    "cpu": "512",
+    "memory": "1024"
+}
