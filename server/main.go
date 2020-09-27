@@ -48,13 +48,18 @@ func main() {
 	flag.Parse()
 	log.Println(*production)
 	connectDB(production)
+	setupServer().Run()
+}
 
+func setupServer() *gin.Engine {
 	r := gin.Default()
 	r.Use(static.Serve("/", static.LocalFile("./web", true)))
-	r.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"status": "running",
-		})
+	r.GET("/health", health)
+	return r
+}
+
+func health(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"status": "running",
 	})
-	r.Run()
 }
