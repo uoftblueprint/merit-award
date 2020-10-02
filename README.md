@@ -21,7 +21,7 @@
     CREATE USER username SUPERUSER WITH PASSWORD 'passwordstring';
     ```
 
-    ### Make sure your Postgres instance is running on the default port (5421)
+    ### Make sure your Postgres instance is running on the default port (5432)
 
 - Setting up the frontend
 
