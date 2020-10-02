@@ -18,7 +18,7 @@
     ### Create a Postgres user
 
     ```sql
-    CREATE USER username SUPERUSER WITH PASSWORD 'passwordstring';
+    CREATE USER meritawarduser SUPERUSER;
     ```
 
     ### Make sure your Postgres instance is running on the default port (5432)
