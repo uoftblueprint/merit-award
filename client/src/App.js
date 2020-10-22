@@ -1,46 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
+// import Login from './Login';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect,
+  useHistory,
+  useLocation
 } from "react-router-dom";
 import './App.css';
 
-import HealthComponent from './HealthComponent';
-
 function App() {
   return (
-    // <div className="App">
-    //   <header className="App-header">
-    //     <img src={logo} className="App-logo" alt="logo" />
-    //     <p>
-    //       Edit <code>src/App.js</code> and save to reload.
-    //     </p>
-    //     <a
-    //       className="App-link"
-    //       href="https://reactjs.org"
-    //       target="_blank"
-    //       rel="noopener noreferrer"
-    //     >
-    //       Learn React
-    //     </a>
-    //   </header>
-    //   <HealthComponent />
-    // </div>
     <Router>
     <div>
+    <AuthButton />
+
       <nav>
         <ul>
           <li>
             <Link to="/">Home</Link>
           </li>
           <li>
-            <Link to="/about">About</Link>
-          </li>
-          <li>
-            <Link to="/users">Users</Link>
+            <Link to="/dashboard">Dashboard</Link>
           </li>
         </ul>
       </nav>
@@ -48,12 +31,12 @@ function App() {
       {/* A <Switch> looks through its children <Route>s and
           renders the first one that matches the current URL. */}
       <Switch>
-        <Route path="/about">
-          <About />
+        <Route path="/login">
+          <Login />
         </Route>
-        <Route path="/users">
-          <Users />
-        </Route>
+        <PrivateRoute path="/dashboard">
+            <Dashboard />
+        </PrivateRoute>
         <Route path="/">
           <Home />
         </Route>
@@ -63,16 +46,84 @@ function App() {
   );
 }
 
+// A wrapper for <Route> that redirects to the login
+// screen if you're not yet authenticated.
+function PrivateRoute({ children, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        fakeAuth.isAuthenticated ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location }
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+
+const fakeAuth = {
+  isAuthenticated: false,
+  authenticate(cb) {
+    fakeAuth.isAuthenticated = true;
+    setTimeout(cb, 100); // fake async
+  },
+  signout(cb) {
+    fakeAuth.isAuthenticated = false;
+    setTimeout(cb, 100);
+  }
+};
+
+function AuthButton() {
+  let history = useHistory();
+
+  return fakeAuth.isAuthenticated ? (
+    <p>
+      Welcome!{" "}
+      <button
+        onClick={() => {
+          fakeAuth.signout(() => history.push("/"));
+        }}
+      >
+        Sign out
+      </button>
+    </p>
+  ) : (
+    <p>You are not logged in.</p>
+  );
+}
+
 function Home() {
   return <h2>Home</h2>;
 }
 
-function About() {
-  return <h2>About</h2>;
+function Dashboard() {
+  return <h3>Dashboard</h3>;
 }
 
-function Users() {
-  return <h2>Users</h2>;
+function Login() {
+  let history = useHistory();
+  let location = useLocation();
+
+  let { from } = location.state || { from: { pathname: "/" } };
+  let login = () => {
+    fakeAuth.authenticate(() => {
+      history.replace(from);
+    });
+  };
+
+  return (
+    <div>
+      <p>You must log in to view the page at {from.pathname}</p>
+      <button onClick={login}>Log in</button>
+    </div>
+  );
 }
 
 export default App;
