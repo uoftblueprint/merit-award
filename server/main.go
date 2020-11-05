@@ -11,14 +11,12 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	. "github.com/uoftblueprint/merit-award/server/api/controllers"
+	"github.com/uoftblueprint/merit-award/server/api/controllers"
 	"github.com/uoftblueprint/merit-award/server/api/middlewares"
 	"github.com/uoftblueprint/merit-award/server/api/models"
 )
 
-var DB *gorm.DB
-
-func connectDB(server Server, production *bool) {
+func connectDB(production *bool) *gorm.DB{
 	var dsn string
 
 	if *production == true {
@@ -36,50 +34,52 @@ func connectDB(server Server, production *bool) {
 		panic("failed to connect database")
 	}
 
+	db.Migrator().DropTable(&models.User{})
 	db.AutoMigrate(&models.User{})
-	server.DB = db
-}
 
-func main() {
-	server := Server{}
-	production := flag.Bool("production", false, "production")
-	flag.Parse()
-	log.Println(*production)
-	connectDB(server, production)
-
-	server.DB.Create(&models.User{
+	db.Create(&models.User{
 		Username: "Foo Bar",
 		Email:    "Foo@bar.com",
 		Password: "password",
 	})
 
-	server.DB.Create(&models.User{
+	db.Create(&models.User{
 		Username: "Rish God",
 		Email:    "rish@google.com",
 		Password: "password",
 	})
 
+	return db
+}
+
+func main() {
+	production := flag.Bool("production", false, "production")
+	flag.Parse()
+	log.Println(*production)
+	db := connectDB(production)
+	server := controllers.NewServer(db)
+
 	setupServer(server).Run()
 }
 
-func setupServer(server Server) *gin.Engine {
+func setupServer(server *controllers.Server) *gin.Engine {
 	r := gin.Default()
 	r.Use(static.Serve("/", static.LocalFile("./web", true)))
 	r.GET("/health", health)
-
 	// Login Route
 	r.POST("/login", server.Login)
 
 	//Users routes
 	r.POST("/users", server.CreateUser)
-	r.GET("/users", server.GetUser)
-	r.GET("/users/{id}", server.GetUser)
+	r.GET("/users", server.GetUsers)
+	r.GET("/users/:id", server.GetUser)
 
-	userIdRoutes := r.Group("/users/{id}")
+	userIdRoutes := r.Group("/users/:id")
 	userIdRoutes.Use(middlewares.Auth())
 	{
-		userIdRoutes.PUT("/users/{id}", server.UpdateUser)
-		userIdRoutes.DELETE("/users/{id}", server.DeleteUser)
+		userIdRoutes.GET("/", server.GetUser)
+		userIdRoutes.PUT("/", server.UpdateUser)
+		userIdRoutes.DELETE("/", server.DeleteUser)
 	}
 
 	return r
@@ -87,6 +87,7 @@ func setupServer(server Server) *gin.Engine {
 
 func health(c *gin.Context) {
 	c.JSON(200, gin.H{
-		"status": "running",
+		"status": "still running",
 	})
 }
+

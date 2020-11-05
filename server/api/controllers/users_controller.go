@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
 	"github.com/gin-gonic/gin"
 
 	"github.com/uoftblueprint/merit-award/server/api/auth"
@@ -53,7 +52,6 @@ func (server *Server) GetUsers(c *gin.Context) {
 	var w http.ResponseWriter = c.Writer
 
 	user := models.User{}
-
 	users, err := user.FindAllUsers(server.DB)
 	if err != nil {
 		utils.ERROR(w, http.StatusInternalServerError, err)
@@ -64,20 +62,21 @@ func (server *Server) GetUsers(c *gin.Context) {
 
 func (server *Server) GetUser(c *gin.Context) {
 	var w http.ResponseWriter = c.Writer
-	var r *http.Request = c.Request
 
-	vars := mux.Vars(r)
-	uid, err := strconv.ParseUint(vars["id"], 10, 32)
+	uid, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		utils.ERROR(w, http.StatusBadRequest, err)
 		return
 	}
+
 	user := models.User{}
 	userGotten, err := user.FindUserByID(server.DB, uint32(uid))
+
 	if err != nil {
 		utils.ERROR(w, http.StatusBadRequest, err)
 		return
 	}
+
 	utils.JSON(w, http.StatusOK, userGotten)
 }
 
@@ -85,8 +84,7 @@ func (server *Server) UpdateUser(c *gin.Context) {
 	var w http.ResponseWriter = c.Writer
 	var r *http.Request = c.Request
 
-	vars := mux.Vars(r)
-	uid, err := strconv.ParseUint(vars["id"], 10, 32)
+	uid, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		utils.ERROR(w, http.StatusBadRequest, err)
 		return
@@ -130,11 +128,9 @@ func (server *Server) DeleteUser(c *gin.Context) {
 	var w http.ResponseWriter = c.Writer
 	var r *http.Request = c.Request
 
-	vars := mux.Vars(r)
-
 	user := models.User{}
 
-	uid, err := strconv.ParseUint(vars["id"], 10, 32)
+	uid, err := strconv.ParseUint(c.Param("id"), 10, 32)
 	if err != nil {
 		utils.ERROR(w, http.StatusBadRequest, err)
 		return

@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"gorm.io/gorm"
 	"github.com/gin-gonic/gin"
 
 	"github.com/uoftblueprint/merit-award/server/api/auth"
@@ -13,10 +12,6 @@ import (
 	"github.com/uoftblueprint/merit-award/server/api/utils"
 	"golang.org/x/crypto/bcrypt"
 )
-
-type Server struct {
-	DB *gorm.DB
-}
 
 func (server *Server) Login(c *gin.Context) {
 	var w http.ResponseWriter = c.Writer
