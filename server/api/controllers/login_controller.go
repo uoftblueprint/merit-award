@@ -13,6 +13,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// Login will log in as a user based on the data given in the request body.
 func (server *Server) Login(c *gin.Context) {
 	var w http.ResponseWriter = c.Writer
 	var r *http.Request = c.Request
@@ -43,6 +44,8 @@ func (server *Server) Login(c *gin.Context) {
 	utils.JSON(w, http.StatusOK, token)
 }
 
+// SignIn signs in as a user based on the email and password passed in.
+// Creates a new JWT token and returns.
 func (server *Server) SignIn(email, password string) (string, error) {
 	var err error
 

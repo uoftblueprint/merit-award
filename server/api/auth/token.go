@@ -13,6 +13,7 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
+// CreateToken creates a new JWT
 func CreateToken(user_id uint32) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
@@ -22,6 +23,7 @@ func CreateToken(user_id uint32) (string, error) {
 	return token.SignedString([]byte(os.Getenv("API_SECRET")))
 }
 
+// TokenValid checks if the token in request body is a valid JWT
 func TokenValid(r *http.Request) error {
 	tokenString := ExtractToken(r)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -39,6 +41,7 @@ func TokenValid(r *http.Request) error {
 	return nil
 }
 
+// ExtractToken gets the token from the http request and returns it
 func ExtractToken(r *http.Request) string {
 	keys := r.URL.Query()
 	token := keys.Get("token")
@@ -52,6 +55,7 @@ func ExtractToken(r *http.Request) string {
 	return ""
 }
 
+// Gets the JWT ID from the http request body.
 func ExtractTokenID(r *http.Request) (uint32, error) {
 	tokenString := ExtractToken(r)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {

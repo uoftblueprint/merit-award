@@ -4,11 +4,11 @@ import (
 	"log"
 	"testing"
 
-	"gorm.io/driver/postgres" //postgres driver
 	"github.com/uoftblueprint/merit-award/server/api/models"
 	"gopkg.in/go-playground/assert.v1"
 )
 
+// TestFindAllUsers tests getting all users from database
 func TestFindAllUsers(t *testing.T) {
 	err := refreshUserTable()
 	if err != nil {
@@ -28,6 +28,7 @@ func TestFindAllUsers(t *testing.T) {
 	assert.Equal(t, len(*users), 2)
 }
 
+// TestSaveUser tests saving a single user in the database
 func TestSaveUser(t *testing.T) {
 	err := refreshUserTable()
 	if err != nil {
@@ -49,6 +50,7 @@ func TestSaveUser(t *testing.T) {
 	assert.Equal(t, newUser.Username, savedUser.Username)
 }
 
+// TestGetUserByID tests getting a single user from the database table by ID
 func TestGetUserByID(t *testing.T) {
 	err := refreshUserTable()
 	if err != nil {
@@ -69,6 +71,7 @@ func TestGetUserByID(t *testing.T) {
 	assert.Equal(t, foundUser.Username, user.Username)
 }
 
+// TestUpdateUser tests updating a single user's information.
 func TestUpdateUser(t *testing.T) {
 	err := refreshUserTable()
 	if err != nil {
@@ -96,6 +99,7 @@ func TestUpdateUser(t *testing.T) {
 	assert.Equal(t, updatedUser.Username, userUpdate.Username)
 }
 
+// TestDeleteUser tests deleting a user from the database.
 func TestDeleteUser(t *testing.T) {
 	err := refreshUserTable()
 	if err != nil {

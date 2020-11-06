@@ -7,6 +7,7 @@ import (
 	"github.com/uoftblueprint/merit-award/server/api/auth"
 )
 
+// Auth handles authentication given a JWT token in request
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		err := auth.TokenValid(c.Request)

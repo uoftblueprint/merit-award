@@ -5,71 +5,49 @@ import (
 	"log"
 	"os"
 	"testing"
+	
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 
-	"github.com/joho/godotenv"
 	"github.com/uoftblueprint/merit-award/server/api/controllers"
 	"github.com/uoftblueprint/merit-award/server/api/models"
-	"gorm.io/gorm"
 )
 
 var server = controllers.Server{}
 var userInstance = models.User{}
-var postInstance = models.Post{}
 
+// TestMain connects to the database and ensures there are no errors
 func TestMain(m *testing.M) {
-	var err error
-	err = godotenv.Load(os.ExpandEnv("../../.env"))
-	if err != nil {
-		log.Fatalf("Error getting env %v\n", err)
-	}
 	Database()
-
 	os.Exit(m.Run())
 }
 
+// Database connects to database and reports any errors
 func Database() {
-
 	var err error
+	dsn := "host=localhost port=5432 user=meritawarduser dbname=meritaward sslmode=disable password=password"
 
-	TestDbDriver := os.Getenv("TestDbDriver")
+	log.Println(dsn)
 
-	if TestDbDriver == "mysql" {
-		DBURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local", os.Getenv("TestDbUser"), os.Getenv("TestDbPassword"), os.Getenv("TestDbHost"), os.Getenv("TestDbPort"), os.Getenv("TestDbName"))
-		server.DB, err = gorm.Open(TestDbDriver, DBURL)
-		if err != nil {
-			fmt.Printf("Cannot connect to %s database\n", TestDbDriver)
-			log.Fatal("This is the error:", err)
-		} else {
-			fmt.Printf("We are connected to the %s database\n", TestDbDriver)
-		}
-	}
-	if TestDbDriver == "postgres" {
-		DBURL := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", os.Getenv("TestDbHost"), os.Getenv("TestDbPort"), os.Getenv("TestDbUser"), os.Getenv("TestDbName"), os.Getenv("TestDbPassword"))
-		server.DB, err = gorm.Open(TestDbDriver, DBURL)
-		if err != nil {
-			fmt.Printf("Cannot connect to %s database\n", TestDbDriver)
-			log.Fatal("This is the error:", err)
-		} else {
-			fmt.Printf("We are connected to the %s database\n", TestDbDriver)
-		}
+	server.DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	
+	if err != nil {
+		fmt.Printf("Cannot connect to database\n")
+		log.Fatal("This is the error:", err)
+	} else {
+		fmt.Printf("We are connected to the database\n")
 	}
 }
 
 func refreshUserTable() error {
-	err := server.DB.DropTableIfExists(&models.User{}).Error
-	if err != nil {
-		return err
-	}
-	err = server.DB.AutoMigrate(&models.User{}).Error
-	if err != nil {
-		return err
-	}
+	server.DB.Migrator().DropTable(&models.User{})
+	server.DB.AutoMigrate(&models.User{})
 	log.Printf("Successfully refreshed table")
 	return nil
 }
 
+// seedOneUser creates a single user in the database
 func seedOneUser() (models.User, error) {
-
 	err := refreshUserTable()
 	if err != nil {
 		log.Fatal(err)
@@ -88,8 +66,8 @@ func seedOneUser() (models.User, error) {
 	return user, nil
 }
 
+// seedUsers createss multiple users in the database
 func seedUsers() ([]models.User, error) {
-
 	var err error
 	if err != nil {
 		return nil, err

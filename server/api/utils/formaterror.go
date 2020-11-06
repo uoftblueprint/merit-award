@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// FormatError returns given error depending on string formatting.
 func FormatError(err string) error {
 	if strings.Contains(err, "username") {
 		return errors.New("Username Already Taken")

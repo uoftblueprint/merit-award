@@ -5,7 +5,11 @@ import (
 	"log"
 	"os"
 	"testing"
+	
+	"gorm.io/gorm"
+	"gorm.io/driver/postgres"
 
+	// "github.com/joho/godotenv"
 	"github.com/uoftblueprint/merit-award/server/api/controllers"
 	"github.com/uoftblueprint/merit-award/server/api/models"
 )
@@ -14,48 +18,37 @@ import (
 var server = controllers.Server{}
 var userInstance = models.User{}
 
+// TestMain connects to the database and ensures there are no errors
 func TestMain(m *testing.M) {
-	var err error
-	err = godotenv.Load(os.ExpandEnv("../.env"))
-	if err != nil {
-		log.Fatalf("Error getting env %v\n", err)
-	}
 	Database()
-
 	os.Exit(m.Run())
 }
 
+// Database connects to database and reports any errors
 func Database() {
-
 	var err error
+	dsn := "host=localhost port=5432 user=meritawarduser dbname=meritaward sslmode=disable password=password"
 
-	TestDbDriver := os.Getenv("TestDbDriver")
+	log.Println(dsn)
 
-	if TestDbDriver == "postgres" {
-		DBURL := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", os.Getenv("TestDbHost"), os.Getenv("TestDbPort"), os.Getenv("TestDbUser"), os.Getenv("TestDbName"), os.Getenv("TestDbPassword"))
-		server.DB, err = gorm.Open(TestDbDriver, DBURL)
-		if err != nil {
-			fmt.Printf("Cannot connect to %s database\n", TestDbDriver)
-			log.Fatal("This is the error:", err)
-		} else {
-			fmt.Printf("We are connected to the %s database\n", TestDbDriver)
-		}
+	server.DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	
+	if err != nil {
+		fmt.Printf("Cannot connect to database\n")
+		log.Fatal("This is the error:", err)
+	} else {
+		fmt.Printf("We are connected to the database\n")
 	}
 }
 
+// refreshUserTable drops and migrates the User table
 func refreshUserTable() error {
-	err := server.DB.DropTableIfExists(&models.User{}).Error
-	if err != nil {
-		return err
-	}
-	err = server.DB.AutoMigrate(&models.User{}).Error
-	if err != nil {
-		return err
-	}
-	log.Printf("Successfully refreshed table")
+	server.DB.Migrator().DropTable(&models.User{})
+	server.DB.AutoMigrate(&models.User{})
 	return nil
 }
 
+// seedOneUser creates a single user in the database
 func seedOneUser() (models.User, error) {
 	refreshUserTable()
 
@@ -72,6 +65,7 @@ func seedOneUser() (models.User, error) {
 	return user, nil
 }
 
+// seedUsers creates multiple users in the database
 func seedUsers() error {
 	users := []models.User{
 		models.User{
@@ -91,23 +85,6 @@ func seedUsers() error {
 		if err != nil {
 			return err
 		}
-	}
-	return nil
-}
-
-func seedOneUserAndOnePost() (error) {
-	err := refreshUserTable()
-	if err != nil {
-		return err
-	}
-	user := models.User{
-		Username: "Sam Phil",
-		Email:    "sam@gmail.com",
-		Password: "password",
-	}
-	err = server.DB.Model(&models.User{}).Create(&user).Error
-	if err != nil {
-		return err
 	}
 	return nil
 }

@@ -16,6 +16,7 @@ import (
 	"github.com/uoftblueprint/merit-award/server/api/models"
 )
 
+// connectDB connects to Postgres database
 func connectDB(production *bool) *gorm.DB{
 	var dsn string
 
@@ -38,7 +39,7 @@ func connectDB(production *bool) *gorm.DB{
 	db.AutoMigrate(&models.User{})
 
 	db.Create(&models.User{
-		Username: "Foo Bar",
+		Username: "Foo",
 		Email:    "Foo@bar.com",
 		Password: "password",
 	})
@@ -52,6 +53,7 @@ func connectDB(production *bool) *gorm.DB{
 	return db
 }
 
+// main runs our server
 func main() {
 	production := flag.Bool("production", false, "production")
 	flag.Parse()
@@ -62,6 +64,7 @@ func main() {
 	setupServer(server).Run()
 }
 
+// setupServer sets up appropriate routes
 func setupServer(server *controllers.Server) *gin.Engine {
 	r := gin.Default()
 	r.Use(static.Serve("/", static.LocalFile("./web", true)))
@@ -77,7 +80,6 @@ func setupServer(server *controllers.Server) *gin.Engine {
 	userIdRoutes := r.Group("/users/:id")
 	userIdRoutes.Use(middlewares.Auth())
 	{
-		userIdRoutes.GET("/", server.GetUser)
 		userIdRoutes.PUT("/", server.UpdateUser)
 		userIdRoutes.DELETE("/", server.DeleteUser)
 	}
@@ -85,6 +87,7 @@ func setupServer(server *controllers.Server) *gin.Engine {
 	return r
 }
 
+// health is an API endpoint used as a status check for server
 func health(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"status": "still running",
