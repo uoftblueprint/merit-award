@@ -15,7 +15,7 @@ import (
 	"github.com/uoftblueprint/merit-award/server/api/utils"
 )
 
-// CreateUser creates a new user based on the request body data
+// CreateUser creates a new user based on the request body data.
 func (server *Server) CreateUser(c *gin.Context) {
 	var w http.ResponseWriter = c.Writer
 	var r *http.Request = c.Request
@@ -36,12 +36,10 @@ func (server *Server) CreateUser(c *gin.Context) {
 		utils.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	userCreated, err := user.SaveUser(server.DB)
+	userCreated, err := user.CreateUser(server.DB)
 
 	if err != nil {
-
 		formattedError := utils.FormatError(err.Error())
-
 		utils.ERROR(w, http.StatusInternalServerError, formattedError)
 		return
 	}
@@ -49,7 +47,7 @@ func (server *Server) CreateUser(c *gin.Context) {
 	utils.JSON(w, http.StatusCreated, userCreated)
 }
 
-// GetUsers gets all the users in the database (maximum 100)
+// GetUsers gets all the users in the database (maximum 100).
 func (server *Server) GetUsers(c *gin.Context) {
 	var w http.ResponseWriter = c.Writer
 
@@ -62,7 +60,7 @@ func (server *Server) GetUsers(c *gin.Context) {
 	utils.JSON(w, http.StatusOK, users)
 }
 
-// GetUser gets an individual user by ID
+// GetUser gets an individual user by ID.
 func (server *Server) GetUser(c *gin.Context) {
 	var w http.ResponseWriter = c.Writer
 
@@ -83,7 +81,7 @@ func (server *Server) GetUser(c *gin.Context) {
 	utils.JSON(w, http.StatusOK, userGotten)
 }
 
-// UpdateUser updates an individual user by ID
+// UpdateUser updates an individual user by ID.
 func (server *Server) UpdateUser(c *gin.Context) {
 	var w http.ResponseWriter = c.Writer
 	var r *http.Request = c.Request
@@ -128,7 +126,7 @@ func (server *Server) UpdateUser(c *gin.Context) {
 	utils.JSON(w, http.StatusOK, updatedUser)
 }
 
-// DeleteUser deletes an individual user by ID
+// DeleteUser deletes an individual user by ID.
 func (server *Server) DeleteUser(c *gin.Context) {
 	var w http.ResponseWriter = c.Writer
 	var r *http.Request = c.Request

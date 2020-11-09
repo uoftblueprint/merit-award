@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-// JSON writes status code and data as JSON
+// JSON writes status code and data as JSON.
 func JSON(w http.ResponseWriter, statusCode int, data interface{}) {
 	w.WriteHeader(statusCode)
 	err := json.NewEncoder(w).Encode(data)
@@ -15,7 +15,7 @@ func JSON(w http.ResponseWriter, statusCode int, data interface{}) {
 	}
 }
 
-// ERROR writes an error in a JSON format
+// ERROR writes an error in a JSON format.
 func ERROR(w http.ResponseWriter, statusCode int, err error) {
 	if err != nil {
 		JSON(w, statusCode, struct {

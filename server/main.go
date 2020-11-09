@@ -38,16 +38,19 @@ func connectDB(production *bool) *gorm.DB{
 	db.Migrator().DropTable(&models.User{})
 	db.AutoMigrate(&models.User{})
 
+	fooPassword, err := models.HashPassword("foo")
+	rishPassword, err := models.HashPassword("rish")
+
 	db.Create(&models.User{
-		Username: "Foo",
-		Email:    "Foo@bar.com",
-		Password: "password",
+		Username: "foo",
+		Email:    "foo@bar.com",
+		Password: fooPassword,
 	})
 
 	db.Create(&models.User{
 		Username: "Rish God",
 		Email:    "rish@google.com",
-		Password: "password",
+		Password: rishPassword,
 	})
 
 	return db

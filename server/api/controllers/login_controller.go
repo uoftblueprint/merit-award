@@ -45,7 +45,7 @@ func (server *Server) Login(c *gin.Context) {
 }
 
 // SignIn signs in as a user based on the email and password passed in.
-// Creates a new JWT token and returns.
+// Returns created JWT
 func (server *Server) SignIn(email, password string) (string, error) {
 	var err error
 
@@ -55,7 +55,8 @@ func (server *Server) SignIn(email, password string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	err = models.VerifyPassword(user.Password, password)
+	
+	err = models.VerifyPassword(password, user.Password)
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
 		return "", err
 	}

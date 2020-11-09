@@ -16,13 +16,13 @@ import (
 var server = controllers.Server{}
 var userInstance = models.User{}
 
-// TestMain connects to the database and ensures there are no errors
+// TestMain connects to the database and ensures there are no errors.
 func TestMain(m *testing.M) {
 	Database()
 	os.Exit(m.Run())
 }
 
-// Database connects to database and reports any errors
+// Database connects to database and reports any errors.
 func Database() {
 	var err error
 	dsn := "host=localhost port=5432 user=meritawarduser dbname=meritaward sslmode=disable password=password"
@@ -46,7 +46,7 @@ func refreshUserTable() error {
 	return nil
 }
 
-// seedOneUser creates a single user in the database
+// seedOneUser creates a single user in the database.
 func seedOneUser() (models.User, error) {
 	err := refreshUserTable()
 	if err != nil {
@@ -66,7 +66,7 @@ func seedOneUser() (models.User, error) {
 	return user, nil
 }
 
-// seedUsers createss multiple users in the database
+// seedUsers createss multiple users in the database.
 func seedUsers() ([]models.User, error) {
 	var err error
 	if err != nil {

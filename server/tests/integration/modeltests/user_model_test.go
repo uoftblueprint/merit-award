@@ -28,8 +28,8 @@ func TestFindAllUsers(t *testing.T) {
 	assert.Equal(t, len(*users), 2)
 }
 
-// TestSaveUser tests saving a single user in the database
-func TestSaveUser(t *testing.T) {
+// TestCreateUser tests saving a single user in the database
+func TestCreateUser(t *testing.T) {
 	err := refreshUserTable()
 	if err != nil {
 		log.Fatal(err)
@@ -40,7 +40,7 @@ func TestSaveUser(t *testing.T) {
 		Username: "test",
 		Password: "password",
 	}
-	savedUser, err := newUser.SaveUser(server.DB)
+	savedUser, err := newUser.CreateUser(server.DB)
 	if err != nil {
 		t.Errorf("this is the error getting the users: %v\n", err)
 		return
@@ -117,9 +117,5 @@ func TestDeleteUser(t *testing.T) {
 		t.Errorf("this is the error updating the user: %v\n", err)
 		return
 	}
-	//one shows that the record has been deleted or:
-	// assert.Equal(t, int(isDeleted), 1)
-
-	//Can be done this way too
 	assert.Equal(t, isDeleted, int64(1))
 }

@@ -13,7 +13,7 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-// CreateToken creates a new JWT
+// CreateToken creates a new JWT.
 func CreateToken(user_id uint32) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
@@ -23,7 +23,7 @@ func CreateToken(user_id uint32) (string, error) {
 	return token.SignedString([]byte(os.Getenv("API_SECRET")))
 }
 
-// TokenValid checks if the token in request body is a valid JWT
+// TokenValid checks if the token in request body is a valid JWT.
 func TokenValid(r *http.Request) error {
 	tokenString := ExtractToken(r)
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -41,7 +41,7 @@ func TokenValid(r *http.Request) error {
 	return nil
 }
 
-// ExtractToken gets the token from the http request and returns it
+// ExtractToken gets the token from the http request and returns it.
 func ExtractToken(r *http.Request) string {
 	keys := r.URL.Query()
 	token := keys.Get("token")
@@ -78,7 +78,7 @@ func ExtractTokenID(r *http.Request) (uint32, error) {
 	return 0, nil
 }
 
-//Pretty display the claims licely in the terminal
+//Pretty display the claims licely in the terminal.
 func Pretty(data interface{}) {
 	b, err := json.MarshalIndent(data, "", " ")
 	if err != nil {

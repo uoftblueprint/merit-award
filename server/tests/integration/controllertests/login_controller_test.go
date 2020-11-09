@@ -9,7 +9,7 @@ import (
 	"gopkg.in/go-playground/assert.v1"
 )
 
-// TestSignIn tests the signing in of a user
+// TestSignIn tests the signing in of a user.
 func TestSignIn(t *testing.T) {
 	err := refreshUserTable()
 	if err != nil {

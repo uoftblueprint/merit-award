@@ -22,7 +22,7 @@ type User struct {
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
-// HashPassword returns the password after it has been hashed
+// HashPassword returns the password after it has been hashed.
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	return string(bytes), err
@@ -43,7 +43,7 @@ func (u *User) SaveHashedPassword() error {
 	return nil
 }
 
-// SetUpUser creates a temporary user with the following data
+// SetUpUser creates a temporary user with the following data.
 func (u *User) SetUpUser() {
 	u.ID = 0
 	u.Username = html.EscapeString(strings.TrimSpace(u.Username))
@@ -85,16 +85,20 @@ func (u *User) ValidateLogin() error {
 
 // ORM Methods
 
-// SaveUser saves the user in the database.
-func (u *User) SaveUser(db *gorm.DB) (*User, error) {
+// CreateUser creates the user in the database.
+func (u *User) CreateUser(db *gorm.DB) (*User, error) {
 	var err error
+	u.Password, err = HashPassword(u.Password)
+	if err != nil {
+		return &User{}, err
+	}
 	if err = db.Debug().Create(&u).Error; err != nil {
 		return &User{}, err
 	}
 	return u, nil
 }
 
-// FindAllUsers returns all of the users (maximum of 100)
+// FindAllUsers returns all of the users (maximum of 100).
 func (u *User) FindAllUsers(db *gorm.DB) (*[]User, error) {
 	var err error
 	var users []User
@@ -104,7 +108,7 @@ func (u *User) FindAllUsers(db *gorm.DB) (*[]User, error) {
 	return &users, err
 }
 
-// FindUserById returns a single user based on ID
+// FindUserByID returns a single user based on ID.
 func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
 	var err error
 	if err = db.Debug().Model(User{}).Where("id = ?", uid).Take(&u).Error; err != nil {
@@ -113,7 +117,7 @@ func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
 	return u, err
 }
 
-// FindUserByUsername finds a user based on username
+// FindUserByUsername finds a user based on username.
 func (u *User) FindUserByUsername(db *gorm.DB, username string) (*User, error) {
 	var err error
 	if err = db.Debug().Model(User{}).Where("username = ?", username).Take(&u).Error; err != nil {
@@ -122,7 +126,7 @@ func (u *User) FindUserByUsername(db *gorm.DB, username string) (*User, error) {
 	return u, err
 }
 
-// UpdateUser updates user in the database with new parameters
+// UpdateUser updates user in the database with new parameters.
 func (u *User) UpdateUser(db *gorm.DB, uid uint32) (*User, error) {
 	// To hash the password
 	err := u.SaveHashedPassword()
@@ -148,7 +152,7 @@ func (u *User) UpdateUser(db *gorm.DB, uid uint32) (*User, error) {
 	return u, nil
 }
 
-// DeleteUser deletes a user in the database based on ID
+// DeleteUser deletes a user in the database based on ID.
 func (u *User) DeleteUser(db *gorm.DB, uid uint32) (int64, error) {
 	db = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&User{}).Delete(&User{})
 

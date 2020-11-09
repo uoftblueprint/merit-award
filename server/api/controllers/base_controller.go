@@ -10,7 +10,7 @@ type Server struct {
 	DB *gorm.DB
 }
 
-// NewServer returns a server struct
+// NewServer returns a server struct.
 func NewServer(db *gorm.DB) *Server {
 	return &Server{
 		DB: db,
