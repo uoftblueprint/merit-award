@@ -88,21 +88,25 @@ func (u *User) ValidateLogin() error {
 // CreateUser creates the user in the database.
 func (u *User) CreateUser(db *gorm.DB) (*User, error) {
 	var err error
-	u.Password, err = HashPassword(u.Password)
+	err = u.SaveHashedPassword()
 	if err != nil {
-		return &User{}, err
+		log.Fatal(err)
 	}
 	if err = db.Debug().Create(&u).Error; err != nil {
 		return &User{}, err
 	}
-	return u, nil
+	var user User
+	if err = db.Model(&User{}).Select("ID", "Username", "Email", "CreatedAt", "UpdatedAt").Where("id = ?", u.ID).Find(&user).Error; err != nil {
+		return &User{}, err
+	}
+	return &user, nil
 }
 
 // FindAllUsers returns all of the users (maximum of 100).
 func (u *User) FindAllUsers(db *gorm.DB) (*[]User, error) {
 	var err error
 	var users []User
-	if err = db.Model(&User{}).Limit(100).Find(&users).Error; err != nil {
+	if err = db.Model(&User{}).Select("ID", "Username", "Email", "CreatedAt", "UpdatedAt").Limit(100).Find(&users).Error; err != nil {
 		return &[]User{}, err
 	}
 	return &users, err
@@ -111,7 +115,7 @@ func (u *User) FindAllUsers(db *gorm.DB) (*[]User, error) {
 // FindUserByID returns a single user based on ID.
 func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
 	var err error
-	if err = db.Debug().Model(User{}).Where("id = ?", uid).Take(&u).Error; err != nil {
+	if err = db.Debug().Model(User{}).Select("ID", "Username", "Email", "CreatedAt", "UpdatedAt").Where("id = ?", uid).Take(&u).Error; err != nil {
 		return &User{}, err
 	}
 	return u, err
@@ -120,7 +124,7 @@ func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
 // FindUserByUsername finds a user based on username.
 func (u *User) FindUserByUsername(db *gorm.DB, username string) (*User, error) {
 	var err error
-	if err = db.Debug().Model(User{}).Where("username = ?", username).Take(&u).Error; err != nil {
+	if err = db.Debug().Model(User{}).Select("ID", "Username", "Email", "CreatedAt", "UpdatedAt").Where("username = ?", username).Take(&u).Error; err != nil {
 		return &User{}, err
 	}
 	return u, err
@@ -144,18 +148,19 @@ func (u *User) UpdateUser(db *gorm.DB, uid uint32) (*User, error) {
 	if db.Error != nil {
 		return &User{}, db.Error
 	}
+	
+	var user User
 	// This is the display the updated user
-	err = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&u).Error
+	err = db.Debug().Model(&User{}).Select("ID", "Username", "Email", "CreatedAt", "UpdatedAt").Where("id = ?", uid).Find(&user).Error
 	if err != nil {
 		return &User{}, err
 	}
-	return u, nil
+	return &user, nil
 }
 
 // DeleteUser deletes a user in the database based on ID.
 func (u *User) DeleteUser(db *gorm.DB, uid uint32) (int64, error) {
 	db = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&User{}).Delete(&User{})
-
 	if db.Error != nil {
 		return 0, db.Error
 	}
