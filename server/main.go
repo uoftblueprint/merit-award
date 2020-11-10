@@ -77,14 +77,19 @@ func setupServer(server *controllers.Server) *gin.Engine {
 
 	//Users routes
 	r.POST("/users", server.CreateUser)
-	r.GET("/users", server.GetUsers)
 	r.GET("/users/:id", server.GetUser)
 
-	userIdRoutes := r.Group("/users/:id")
-	userIdRoutes.Use(middlewares.Auth())
+	authorized := r.Group("/")
+	authorized.Use(middlewares.Auth())
 	{
-		userIdRoutes.PUT("/", server.UpdateUser)
-		userIdRoutes.DELETE("/", server.DeleteUser)
+		authorized.GET("/users", server.GetUsers)
+	}
+
+	userIDRoutes := r.Group("/users/:id")
+	userIDRoutes.Use(middlewares.Auth())
+	{
+		userIDRoutes.PUT("/", server.UpdateUser)
+		userIDRoutes.DELETE("/", server.DeleteUser)
 	}
 
 	return r
