@@ -17,7 +17,7 @@ import (
 )
 
 // connectDB connects to Postgres database
-func connectDB(production *bool) *gorm.DB{
+func connectDB(production *bool) *gorm.DB {
 	var dsn string
 
 	if *production == true {
@@ -38,6 +38,9 @@ func connectDB(production *bool) *gorm.DB{
 	db.Migrator().DropTable(&models.User{})
 	db.AutoMigrate(&models.User{})
 
+	db.Migrator().DropTable(&models.Question{})
+	db.AutoMigrate(&models.Question{})
+
 	fooPassword, err := models.HashPassword("foo")
 	rishPassword, err := models.HashPassword("rish")
 
@@ -51,6 +54,21 @@ func connectDB(production *bool) *gorm.DB{
 		Username: "Rish God",
 		Email:    "rish@google.com",
 		Password: rishPassword,
+	})
+
+	db.Create(&models.Question{
+		PageNumber:   1,
+		QuestionType: "Multiple Choice",
+		Text:         "This is the first question",
+		Hint:         "Hint",
+		Options:      "Yes, No",
+	})
+	db.Create(&models.Question{
+		PageNumber:   2,
+		QuestionType: "Free Response",
+		Text:         "Please give answer",
+		Hint:         "Hint number two",
+		Options:      "",
 	})
 
 	return db
@@ -92,6 +110,11 @@ func setupServer(server *controllers.Server) *gin.Engine {
 		userIDRoutes.DELETE("/", server.DeleteUser)
 	}
 
+	//Questions route
+	r.GET("/updateQuestions", server.UpdateQuestions)
+	r.GET("/getQuestions", server.GetQuestions)
+	r.GET("/getQuestions/:page", server.GetQuestionPage)
+
 	return r
 }
 
@@ -101,4 +124,3 @@ func health(c *gin.Context) {
 		"status": "still running",
 	})
 }
-

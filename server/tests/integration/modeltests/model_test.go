@@ -5,18 +5,18 @@ import (
 	"log"
 	"os"
 	"testing"
-	
-	"gorm.io/gorm"
+
 	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 
 	// "github.com/joho/godotenv"
 	"github.com/uoftblueprint/merit-award/server/api/controllers"
 	"github.com/uoftblueprint/merit-award/server/api/models"
 )
 
-
 var server = controllers.Server{}
 var userInstance = models.User{}
+var questionInstance = models.Question{}
 
 // TestMain connects to the database and ensures there are no errors.
 func TestMain(m *testing.M) {
@@ -32,7 +32,7 @@ func Database() {
 	log.Println(dsn)
 
 	server.DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	
+
 	if err != nil {
 		fmt.Printf("Cannot connect to database\n")
 		log.Fatal("This is the error:", err)
@@ -45,6 +45,13 @@ func Database() {
 func refreshUserTable() error {
 	server.DB.Migrator().DropTable(&models.User{})
 	server.DB.AutoMigrate(&models.User{})
+	return nil
+}
+
+// refreshQuestionTable drops and migrates the Question table.
+func refreshQuestionTable() error {
+	server.DB.Migrator().DropTable(&models.Question{})
+	server.DB.AutoMigrate(&models.Question{})
 	return nil
 }
 
@@ -87,4 +94,21 @@ func seedUsers() error {
 		}
 	}
 	return nil
+}
+
+//seedOneQuestion creates a single question
+func seedOneQuestion() (models.Question, error) {
+	refreshQuestionTable()
+	question := models.Question{
+		PageNumber:   2,
+		QuestionType: "Free Response",
+		Text:         "Please give answer",
+		Hint:         "Hint number two",
+		Options:      "",
+	}
+	err := server.DB.Model(&models.Question{}).Create(&question).Error
+	if err != nil {
+		log.Fatalf("cannot seed questions table: %v", err)
+	}
+	return question, err
 }
