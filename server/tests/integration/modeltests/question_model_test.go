@@ -45,11 +45,11 @@ func TestCreateQuestions(t *testing.T) {
 		t.Errorf("this is the error getting the users: %v\n", err)
 		return
 	}
-	assert.Equal(t, savedQuestion.PageNumber, savedQuestion.PageNumber)
-	assert.Equal(t, savedQuestion.QuestionType, savedQuestion.QuestionType)
-	assert.Equal(t, savedQuestion.Text, savedQuestion.Text)
-	assert.Equal(t, savedQuestion.Hint, savedQuestion.Hint)
-	assert.Equal(t, savedQuestion.Options, savedQuestion.Options)
+	assert.Equal(t, savedQuestion.PageNumber, newQuestion.PageNumber)
+	assert.Equal(t, savedQuestion.QuestionType, newQuestion.QuestionType)
+	assert.Equal(t, savedQuestion.Text, newQuestion.Text)
+	assert.Equal(t, savedQuestion.Hint, newQuestion.Hint)
+	assert.Equal(t, savedQuestion.Options, newQuestion.Options)
 }
 
 // TestGetQuestionByPage tests getting a question from the database table by its page number
@@ -69,11 +69,11 @@ func TestGetQuestionByPage(t *testing.T) {
 		t.Errorf("this is the error getting one user: %v\n", err)
 		return
 	}
-	assert.Equal(t, foundQuestion.PageNumber, foundQuestion.PageNumber)
-	assert.Equal(t, foundQuestion.QuestionType, foundQuestion.QuestionType)
-	assert.Equal(t, foundQuestion.Text, foundQuestion.Text)
-	assert.Equal(t, foundQuestion.Hint, foundQuestion.Hint)
-	assert.Equal(t, foundQuestion.Options, foundQuestion.Options)
+	assert.Equal(t, foundQuestion.PageNumber, question.PageNumber)
+	assert.Equal(t, foundQuestion.QuestionType, question.QuestionType)
+	assert.Equal(t, foundQuestion.Text, question.Text)
+	assert.Equal(t, foundQuestion.Hint, question.Hint)
+	assert.Equal(t, foundQuestion.Options, question.Options)
 }
 
 // TestDeleteQuestions tests deleting all questions from the database.
