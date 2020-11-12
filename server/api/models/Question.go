@@ -20,7 +20,7 @@ func CreateQuestion(db *gorm.DB, q Question) (*Question, error) {
 	if err = db.Create(&q).Error; err != nil {
 		return &Question{}, err
 	}
-	return &Question{}, err
+	return &q, err
 }
 
 // GetAllQuestions returns all questions in the database
