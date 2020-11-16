@@ -5,6 +5,8 @@ import {
   Route,
   Link,
 } from "react-router-dom";
+import Login from "./components/login/Login"
+import Signup from "./components/login/Signup"
 import './App.css';
 
 function App() {
@@ -23,6 +25,9 @@ function App() {
         </Route>
         <Route path="/users">
           <Users />
+        </Route>
+        <Route path="/signup">
+          <Signup />
         </Route>
         <Route path="/">
           <Login />
@@ -45,24 +50,24 @@ function Users() {
   return <h2>User Dashboard</h2>;
 }
 
-function Login() {
-  return (
-    <div>
-        <h1>Login</h1>
-        <form>
-            <div>
-                <p>Username:</p>
-                <input type="text" name="username" />
-            </div>
-            <div>
-                <p>Password:</p>
-                <input type="password" name="password" />
-            </div>
-            <Link to="/users"><button>User</button></Link>
-            <Link to="/recommenders"><button>Recommender</button></Link>
-            <Link to="/reviewers"><button>Reviewer</button></Link>
-        </form>
-    </div>
-  );
-}
+// function Login() {
+//   return (
+//     <div>
+//         <h1>Login</h1>
+//         <form>
+//             <div>
+//                 <p>Username:</p>
+//                 <input type="text" name="username" />
+//             </div>
+//             <div>
+//                 <p>Password:</p>
+//                 <input type="password" name="password" />
+//             </div>
+//             <Link to="/users"><button>User</button></Link>
+//             <Link to="/recommenders"><button>Recommender</button></Link>
+//             <Link to="/reviewers"><button>Reviewer</button></Link>
+//         </form>
+//     </div>
+//   );
+// }
 export default App;
