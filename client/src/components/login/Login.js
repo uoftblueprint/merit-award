@@ -16,7 +16,6 @@ function Login() {
     event.preventDefault();
     const login = "http://localhost:8080/login";
     fetch(login, {
-      mode: 'no-cors',
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -26,13 +25,42 @@ function Login() {
         email: email,
         password: password,
       })
-    }).then((response) => response.json())
-      .then((data) => console.log('data :>> ', data));
+    }).then((response) => {
+      let token;
+      let res = response.json();
+      res.then((result) => {
+        if (typeof result == "string") {
+          // this is the jwt
+          token = result;
+        } else {
+          if (result["error"]) {
+            console.log(result["error"]);
+            return;
+          }
+        }
+      })
+    });
+  }
+
+  function getUsers() {
+    const login = "http://localhost:8080/users";
+    fetch(login, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    }).then((response) => {
+      console.log('response :>> ', response);
+    });
   }
 
   return (
     <div className="login">
       <h1> MERIT AWARD </h1>
+      <Button onClick={() => getUsers()}>
+        GET USERS
+      </Button>
       <Form onSubmit={handleSubmit}>
         <Form.Group size="lg" controlId="email">
           <Form.Label>Email</Form.Label>

@@ -22,7 +22,6 @@ function Signup() {
     event.preventDefault();
     const signup = "http://localhost:8080/users"
     fetch(signup, {
-      mode: 'no-cors',
       method: 'POST',
       headers: {
         'Accept': 'application/json',

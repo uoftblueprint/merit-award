@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 
@@ -88,6 +89,7 @@ func main() {
 // setupServer sets up appropriate routes
 func setupServer(server *controllers.Server) *gin.Engine {
 	r := gin.Default()
+	r.Use(cors.Default())
 	r.Use(static.Serve("/", static.LocalFile("./web", true)))
 	r.GET("/health", health)
 	// Login Route
