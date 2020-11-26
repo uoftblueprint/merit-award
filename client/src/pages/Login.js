@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { Link } from "react-router-dom";
-import "../../styles/login.css";
+import { Link, useHistory } from "react-router-dom";
+import "../styles/login.css";
 import { useCookies } from 'react-cookie';
+import { useDispatch } from 'react-redux';
 
-import utils from '../../utils';
+import utils from '../utils';
 
 function Login() {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [cookies, setCookie, removeCookie] = useCookies(['auth_token']);
@@ -23,7 +26,7 @@ function Login() {
     // don't bother with login if we already have a valid token
     if (cookies.auth_token) {
       console.log("Logging In")
-      // set loggedIn: true with redux
+      dispatch({ type: 'logIn' });
       return true;
     }
 
@@ -35,12 +38,15 @@ function Login() {
     utils.post('/login', params)
       .then((response) => response.json())
       .then(result => {
-        if (typeof result == "string" && result != "undefined") {
+        if (typeof result == "string" && result !== "undefined") {
           // this is the jwt
           let token = result;
 
           setCookie('auth_token', token, { path: '/' });
-          // set App state to logged in, handle with Redux
+          dispatch({ type: 'logIn' });
+          console.log("logging in")
+
+          history.push("/loggedin");
         }
       }).catch(err => {
         console.log(err);
@@ -48,7 +54,7 @@ function Login() {
   }
 
   function getUsers() {
-    removeCookie('auth_token')
+    removeCookie('auth_token', {path: "/"})
     utils.get('/users').then((response) => {
       console.log('response :>> ', response);
     });

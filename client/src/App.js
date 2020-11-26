@@ -2,33 +2,63 @@ import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link,
+  Route
 } from "react-router-dom";
-import Login from "./components/login/Login"
-import Signup from "./components/login/Signup"
+import Login from "./pages/Login";
+import LoggedIn from "./pages/LoggedIn";
+import Signup from "./pages/Signup";
 import './App.css';
-import utils from './utils';
+import { useCookies } from 'react-cookie';
+import { useSelector, useDispatch } from 'react-redux';
 
 function App() {
-
-  function authenticate() {
-    const params = { token: utils.token() };
-
-    utils.post('/validateToken', params).then(({status, data}) => {
-      if (!status) {
-        console.log("Not a Valid Token");
-        this.logout()
-      }
-    }).catch(console.log("oops"));
-  }
+  const loggedIn = useSelector(state => state.userStatus);
+  const dispatch = useDispatch();
+  const [cookies, removeCookie] = useCookies(['auth_token']);
 
   useEffect(() => {
-    // authenticate()
+    authenticate()
   });
+
+  function authenticate() {
+    if (cookies.auth_token) {
+      dispatch({ type: 'logIn' }); // sets global user state to logged in with Redux
+      // redirect to loggedIn page
+    }
+
+    // FINISH IMPLEMENTING THIS
+    // try {
+    //   const { exp } = decode(refreshToken);
+    //
+    //   if (Date.now() >= exp * 1000) {
+    //     logout();
+    //   } else {
+    //     // authenticate with JWT refresh token after expiry
+    //     const params = { token: cookies.auth_token };
+    //
+    //     utils.post('/validateToken', params).then(({status, data}) => {
+    //         if (!status) {
+    //         console.log("Not a Valid Token");
+    //         logout();
+    //       } else {
+    //         history.push("/loggedIn");
+    //       }
+    //     });
+    //
+    //   }
+    // } catch (err) {
+    //   logout();
+    // };
+  }
+
+  function logout() {
+    removeCookie('auth_token');
+    dispatch({ type: 'logOut' }); // sets global user state to logged out with Redux
+  }
 
   return (
     <Router>
+
     <div>
       {/* A <Switch> looks through its children <Route>s and
           renders the first one that matches the current URL. */}
@@ -44,6 +74,9 @@ function App() {
         </Route>
         <Route path="/signup">
           <Signup />
+        </Route>
+        <Route path="/loggedin">
+          <LoggedIn />
         </Route>
         <Route path="/">
           <Login />

@@ -3,16 +3,17 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
-import "../../styles/login.css";
-import { useCookies, Cookies } from 'react-cookie';
+import "../styles/login.css";
+import { useCookies } from 'react-cookie';
 
-import utils from '../../utils';
+import utils from '../utils';
 
 function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [validate, setValidate] = useState("");
+  const [signupState, setSignUpState] = useState(false);
   const [cookies, setCookie] = useCookies(['auth_token']);
 
   function validateForm() {
@@ -40,7 +41,7 @@ function Signup() {
           let token = response.token;
 
           setCookie('auth_token', token, { path: '/' });
-          // set App state to logged in, handle with Redux
+          setSignUpState(true);
         }
       }).catch(err => {
         console.log(err);
@@ -90,6 +91,7 @@ function Signup() {
         </Button>
       </Form>
       <Link to="/">Login</Link>
+      <p>{signupState ? "Successfully signed up" : ""}</p>
       <p>Current cookies: {cookies.auth_token}</p>
     </div>
   );
