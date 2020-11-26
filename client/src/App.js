@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -8,10 +8,26 @@ import {
 import Login from "./components/login/Login"
 import Signup from "./components/login/Signup"
 import './App.css';
+import utils from './utils';
 
 function App() {
-  return (
 
+  function authenticate() {
+    const params = { token: utils.token() };
+
+    utils.post('/validateToken', params).then(({status, data}) => {
+      if (!status) {
+        console.log("Not a Valid Token");
+        this.logout()
+      }
+    }).catch(console.log("oops"));
+  }
+
+  useEffect(() => {
+    // authenticate()
+  });
+
+  return (
     <Router>
     <div>
       {/* A <Switch> looks through its children <Route>s and
@@ -50,24 +66,4 @@ function Users() {
   return <h2>User Dashboard</h2>;
 }
 
-// function Login() {
-//   return (
-//     <div>
-//         <h1>Login</h1>
-//         <form>
-//             <div>
-//                 <p>Username:</p>
-//                 <input type="text" name="username" />
-//             </div>
-//             <div>
-//                 <p>Password:</p>
-//                 <input type="password" name="password" />
-//             </div>
-//             <Link to="/users"><button>User</button></Link>
-//             <Link to="/recommenders"><button>Recommender</button></Link>
-//             <Link to="/reviewers"><button>Reviewer</button></Link>
-//         </form>
-//     </div>
-//   );
-// }
 export default App;

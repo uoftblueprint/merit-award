@@ -2,13 +2,18 @@ import React, { useState } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { Link } from "react-router-dom";
 import "../../styles/login.css";
+import { useCookies, Cookies } from 'react-cookie';
+
+import utils from '../../utils';
 
 function Signup() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [validate, setValidate] = useState("");
+  const [cookies, setCookie] = useCookies(['auth_token']);
 
   function validateForm() {
     return email.length > 0 && password.length > 0 && username.length > 0 && validatePassword();
@@ -20,19 +25,26 @@ function Signup() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    const signup = "http://localhost:8080/users"
-    fetch(signup, {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: username,
-        email: email,
-        password: password,
-      })
-    })
+
+    let params = {
+      username: username,
+      email: email,
+      password: password
+    }
+
+    utils.post('/users', params)
+      .then((response) => {
+        if (response.token) {
+          console.log(response)
+          // this is the jwt
+          let token = response.token;
+
+          setCookie('auth_token', token, { path: '/' });
+          // set App state to logged in, handle with Redux
+        }
+      }).catch(err => {
+        console.log(err);
+      });
   }
 
   return (
@@ -77,6 +89,8 @@ function Signup() {
           Sign Up
         </Button>
       </Form>
+      <Link to="/">Login</Link>
+      <p>Current cookies: {cookies.auth_token}</p>
     </div>
   );
 }
