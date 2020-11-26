@@ -17,7 +17,7 @@ function App() {
   const [cookies, removeCookie] = useCookies(['auth_token']);
 
   useEffect(() => {
-    authenticate()
+    authenticate();
   });
 
   function authenticate() {
@@ -76,7 +76,7 @@ function App() {
           <Signup />
         </Route>
         <Route path="/loggedin">
-          <LoggedIn />
+          <LoggedIn  logout={logout} cookies={cookies.auth_token}/>
         </Route>
         <Route path="/">
           <Login />
