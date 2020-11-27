@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -58,17 +59,24 @@ func connectDB(production *bool) *gorm.DB {
 
 	db.Create(&models.Question{
 		PageNumber:   1,
-		QuestionType: "Multiple Choice",
-		Text:         "This is the first question",
-		Hint:         "Hint",
-		Options:      "Yes, No",
+		QuestionType: "Input Text",
+		Text:         "What is your full name?",
+		Hint:         "extra hint 1",
+		Options:      "",
 	})
 	db.Create(&models.Question{
 		PageNumber:   2,
-		QuestionType: "Free Response",
-		Text:         "Please give answer",
-		Hint:         "Hint number two",
-		Options:      "",
+		QuestionType: "Single Select",
+		Text:         "How is merit award?",
+		Hint:         "",
+		Options:      "great,very great,super great",
+	})
+	db.Create(&models.Question{
+		PageNumber:   2,
+		QuestionType: "Checkbox",
+		Text:         "How cool is Rish? Select all that apply.",
+		Hint:         "",
+		Options:      "cool,very cool,super cool",
 	})
 
 	return db
@@ -88,6 +96,7 @@ func main() {
 // setupServer sets up appropriate routes
 func setupServer(server *controllers.Server) *gin.Engine {
 	r := gin.Default()
+	r.Use(cors.Default())
 	r.Use(static.Serve("/", static.LocalFile("./web", true)))
 	r.GET("/health", health)
 	// Login Route
