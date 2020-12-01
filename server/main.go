@@ -78,7 +78,20 @@ func connectDB(production *bool) *gorm.DB {
 		Hint:         "",
 		Options:      "cool,very cool,super cool",
 	})
-
+	db.Create(&models.Question{
+		PageNumber:   1,
+		QuestionType: "Email",
+		Text:         "What is your email?",
+		Hint:         "example@gmail.com",
+		Options:      "",
+	})
+	db.Create(&models.Question{
+		PageNumber:   1,
+		QuestionType: "Phone Number",
+		Text:         "What is your phone number?",
+		Hint:         "416-123-4567",
+		Options:      "",
+	})
 	return db
 }
 

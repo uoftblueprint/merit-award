@@ -64,6 +64,20 @@ function Form() {
             </div>
           );
           break;
+        case "Email":
+          list.push(
+            <div key={index}>
+              <Email label={value.text} hint={value.hint} register={register} />
+            </div>
+          );
+          break;
+        case "Phone Number":
+          list.push(
+            <div key={index}>
+              <PhoneNumber label={value.text} hint={value.hint} register={register} />
+            </div>
+          );
+          break;
       }
     }
     setFormElements(list)
@@ -130,6 +144,32 @@ function SingleSelect(props) {
         <label htmlFor={props.label}>{props.label}</label>
       </div>
       {select_options}
+    </div>
+  )
+}
+
+function Email(props) {
+  return (
+    <div>
+      <div>
+        <label>{props.label}</label>
+      </div>
+      <div>
+        <input type="text" name={props.label} placeholder={props.hint} ref={props.register({required: true, pattern: /^\S+@\S+$/i})} />
+      </div>
+    </div>
+  )
+}
+
+function PhoneNumber(props) {
+  return (
+    <div>
+      <div>
+        <label>{props.label}</label>
+      </div>
+      <div>
+        <input type="tel" name={props.label} placeholder={props.hint} ref={props.register({required: true, minLength: 6, maxLength: 12})} />
+      </div>
     </div>
   )
 }
