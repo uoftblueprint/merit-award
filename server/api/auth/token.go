@@ -13,14 +13,32 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
-// CreateToken creates a new JWT.
-func CreateToken(user_id uint32) (string, error) {
+// CreateTokenPair creates a new JWT and Refresh token
+func CreateTokenPair(userID uint32) (string, string, error) {
+	var err error
+	var jwtToken string
+	// Create JWT
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["user_id"] = user_id
-	claims["exp"] = time.Now().Add(time.Hour * 1).Unix() //Token expires after 1 hour
+	claims["user_id"] = userID
+	claims["exp"] = time.Now().Add(time.Minute * 10).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString([]byte(os.Getenv("API_SECRET")))
+	jwtToken, err = token.SignedString([]byte(os.Getenv("API_SECRET")))
+  if err != nil {
+     return "", "", err
+  }
+
+	var refreshToken string
+	// Create refresh token
+	rtClaims := jwt.MapClaims{}
+  rtClaims["user_id"] = userID
+  rtClaims["exp"] = time.Now().Add(time.Hour * 24 * 7).Unix()
+	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)
+	refreshToken, err = rt.SignedString([]byte(os.Getenv("API_SECRET")))
+  if err != nil {
+     return "", "", err
+  }
+  return jwtToken, refreshToken, nil
 }
 
 // TokenValid checks if the token in request body is a valid JWT.
@@ -44,7 +62,21 @@ func TokenValid(r *http.Request) error {
 // ExtractToken gets the token from the http request and returns it.
 func ExtractToken(r *http.Request) string {
 	keys := r.URL.Query()
-	token := keys.Get("token")
+	token := keys.Get("jwtToken")
+	if token != "" {
+		return token
+	}
+	bearerToken := r.Header.Get("Authorization")
+	if len(strings.Split(bearerToken, " ")) == 2 {
+		return strings.Split(bearerToken, " ")[1]
+	}
+	return ""
+}
+
+// ExtractRefreshToken gets the token from the http request and returns it.
+func ExtractRefreshToken(r *http.Request) string {
+	keys := r.URL.Query()
+	token := keys.Get("refreshToken")
 	if token != "" {
 		return token
 	}

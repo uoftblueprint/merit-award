@@ -98,6 +98,7 @@ func setupServer(server *controllers.Server) *gin.Engine {
 	//Users routes
 	r.POST("/users", server.CreateUser)
 	r.GET("/users/:id", server.GetUser)
+	r.POST("/refresh", server.Refresh)
 
 	authorized := r.Group("/")
 	authorized.Use(middlewares.Auth())
