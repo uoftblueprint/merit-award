@@ -45,9 +45,7 @@ const post = (url, params = undefined) => {
   };
 
   if (token()){
-    options.headers = {
-      "Authorization": `Token ${token()}`
-    };
+    options.body.token = token();
   }
 
   return fetch(url, options);
@@ -59,24 +57,19 @@ const refresh = (url) => {
     url = `${config.BACKEND_HOST}${url}`;
   }
 
+  let refresh_token = refreshToken()
+
   let options = {
     method: 'POST',
     headers: {
       "Accept": "application/json",
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Authorization",
-      "Access-Control-Allow-Origin": "*"
+      "Content-Type": "application/json"
     },
-    body: "",
+    body: JSON.stringify({
+      "refreshToken": refresh_token
+    }),
     mode: "cors"
   };
-
-  if (refreshToken()){
-    options.headers = {
-      "Authorization": `RefreshToken ${refreshToken()}`
-    };
-  }
 
   return fetch(url, options);
 }

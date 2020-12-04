@@ -40,9 +40,7 @@ function App() {
     utils.refresh('/refresh')
       .then((response) => response.json())
       .then(result => {
-        console.log("refresh result", result)
         if (typeof result !== "undefined") {
-          // this is the jwt
           let token = result.jwtToken;
           let refresh = result.refreshToken;
 
