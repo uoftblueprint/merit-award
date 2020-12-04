@@ -8,51 +8,57 @@ import Login from "./pages/Login";
 import LoggedIn from "./pages/LoggedIn";
 import Signup from "./pages/Signup";
 import './App.css';
+import utils from './utils';
+import jwt_decode from "jwt-decode";
 import { useCookies } from 'react-cookie';
 import { useSelector, useDispatch } from 'react-redux';
 
 function App() {
   const loggedIn = useSelector(state => state.userStatus);
   const dispatch = useDispatch();
-  const [cookies, removeCookie] = useCookies(['auth_token']);
+  const [cookies, setCookie, removeCookie] = useCookies(['auth_token']);
 
   useEffect(() => {
     authenticate();
   });
 
   function authenticate() {
-    if (cookies.auth_token) {
-      dispatch({ type: 'logIn' }); // sets global user state to logged in with Redux
-      // redirect to loggedIn page
-    }
+    if (cookies.auth_token && cookies.auth_token !== undefined) {
+      let decoded = jwt_decode(cookies.auth_token);
 
-    // FINISH IMPLEMENTING THIS
-    // try {
-    //   const { exp } = decode(refreshToken);
-    //
-    //   if (Date.now() >= exp * 1000) {
-    //     logout();
-    //   } else {
-    //     // authenticate with JWT refresh token after expiry
-    //     const params = { token: cookies.auth_token };
-    //
-    //     utils.post('/validateToken', params).then(({status, data}) => {
-    //         if (!status) {
-    //         console.log("Not a Valid Token");
-    //         logout();
-    //       } else {
-    //         history.push("/loggedIn");
-    //       }
-    //     });
-    //
-    //   }
-    // } catch (err) {
-    //   logout();
-    // };
+      if (Date.now() >= decoded.exp * 1000) {
+        refresh(); // get refresh token if current time is greater than JWT expiry time
+      } else {
+        dispatch({ type: 'LOGIN' }); // sets global user state to logged in with Redux
+      }
+    } else {
+      logout();
+    }
+  }
+
+  function refresh() {
+    utils.refresh('/refresh')
+      .then((response) => response.json())
+      .then(result => {
+        console.log("refresh result", result)
+        if (typeof result !== "undefined") {
+          // this is the jwt
+          let token = result.jwtToken;
+          let refresh = result.refreshToken;
+
+          setCookie('auth_token', token, { path: '/' });
+          setCookie('refresh_token', refresh, { path: '/' });
+          dispatch({ type: 'LOGIN' });
+          console.log("logging in");
+        }
+      }).catch(err => {
+        console.log(err);
+      });
   }
 
   function logout() {
     removeCookie('auth_token');
+    removeCookie('refresh_token');
     dispatch({ type: 'logOut' }); // sets global user state to logged out with Redux
   }
 
@@ -60,28 +66,32 @@ function App() {
     <Router>
 
     <div>
-      {/* A <Switch> looks through its children <Route>s and
-          renders the first one that matches the current URL. */}
-      <Switch>
-        <Route path="/reviewers">
-          <Reviewers />
-        </Route>
-        <Route path="/recommenders">
-          <Recommenders />
-        </Route>
-        <Route path="/users">
-          <Users />
-        </Route>
-        <Route path="/signup">
-          <Signup />
-        </Route>
-        <Route path="/loggedin">
-          <LoggedIn  logout={logout} cookies={cookies.auth_token}/>
-        </Route>
-        <Route path="/">
-          <Login />
-        </Route>
-      </Switch>
+      {/* Only make internal pages available if global state is Logged In -> true */}
+        {loggedIn ?
+          <Switch>
+            <Route path="/reviewers">
+              <Reviewers />
+            </Route>
+            <Route path="/recommenders">
+              <Recommenders />
+            </Route>
+            <Route path="/users">
+              <Users />
+            </Route>
+            <Route path="/">
+              <LoggedIn  logout={logout} cookies={cookies.auth_token}/>
+            </Route>
+          </Switch>
+          :
+          <Switch>
+            <Route path="/signup">
+              <Signup />
+            </Route>
+            <Route path="/">
+              <Login />
+            </Route>
+          </Switch>
+        }
     </div>
   </Router>
   );

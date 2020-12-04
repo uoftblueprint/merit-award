@@ -1,11 +1,11 @@
 export const logIn = (user) => {
-    return {
-        type: 'LOGIN'
-    }
+  return {
+    type: 'LOGIN'
+  }
 }
 
 export const logOut = (user) => {
-    return {
-        type: 'LOGOUT'
-    }
+  return {
+    type: 'LOGOUT'
+  }
 }

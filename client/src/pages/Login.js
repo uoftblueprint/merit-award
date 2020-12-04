@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
@@ -25,8 +25,7 @@ function Login() {
 
     // don't bother with login if we already have a valid token
     if (cookies.auth_token) {
-      console.log("Logging In")
-      dispatch({ type: 'logIn' });
+      dispatch({ type: 'LOGIN' });
       return true;
     }
 
@@ -38,15 +37,16 @@ function Login() {
     utils.post('/login', params)
       .then((response) => response.json())
       .then(result => {
-        if (typeof result == "string" && result !== "undefined") {
+        if (result.error) {
+          console.log(result.error)
+        } else if (typeof result !== "undefined") {
           // this is the jwt
-          let token = result;
+          let token = result.jwtToken;
+          let refresh = result.refreshToken;
 
           setCookie('auth_token', token, { path: '/' });
-          dispatch({ type: 'logIn' });
-          console.log("logging in")
-
-          history.push("/loggedin");
+          setCookie('refresh_token', refresh, { path: '/' });
+          dispatch({ type: 'LOGIN' });
         }
       }).catch(err => {
         console.log(err);
@@ -55,6 +55,7 @@ function Login() {
 
   function getUsers() {
     removeCookie('auth_token', {path: "/"})
+    removeCookie('refresh_token', {path: "/"})
     utils.get('/users').then((response) => {
       console.log('response :>> ', response);
     });

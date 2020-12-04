@@ -36,7 +36,6 @@ function Signup() {
     utils.post('/users', params)
       .then((response) => {
         if (response.token) {
-          console.log(response)
           // this is the jwt
           let token = response.token;
 
