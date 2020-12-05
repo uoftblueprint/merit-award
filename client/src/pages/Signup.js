@@ -35,9 +35,9 @@ function Signup() {
 
     utils.post('/users', params)
       .then((response) => {
-        if (response.token) {
+        if (response.jwtToken) {
           // this is the jwt
-          let token = response.token;
+          let token = response.jwtToken;
 
           setCookie('auth_token', token, { path: '/' });
           setSignUpState(true);
