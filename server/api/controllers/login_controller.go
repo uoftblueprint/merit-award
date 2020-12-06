@@ -26,8 +26,6 @@ func (server *Server) Login(c *gin.Context) {
 		utils.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	fmt.Print("hereererereeee")
-	fmt.Println("Body: ", string(body), err)
 		
 	type PostBody struct {
 		Method  string `json:"method"`
@@ -44,10 +42,8 @@ func (server *Server) Login(c *gin.Context) {
 		utils.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-	fmt.Printf("%v", pb)
 
 	user := models.User{}
-	
 	err = json.Unmarshal([]byte(pb.Data), &user)
 	if err != nil {
 		utils.ERROR(w, http.StatusUnprocessableEntity, err)
