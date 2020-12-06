@@ -8,13 +8,15 @@ const token = () => cookies.get('auth_token');
 const refreshToken = () => cookies.get('refresh_token');
 
 // Function that will be called to refresh authorization
-const refreshAuthLogic = failedRequest => axios.post(`${config.BACKEND_HOST}/refresh`).then(tokenRefreshResponse => {
-  let token = tokenRefreshResponse.data.jwtToken;
-  let refresh = tokenRefreshResponse.data.refreshToken;
-
-  failedRequest.response.config.headers['Authorization'] = 'Bearer ' + tokenRefreshResponse.data.token;
-  return { jwtToken: token, refreshToken: refresh };
-});
+const refreshAuthLogic = failedRequest => {
+  axios.post(`${config.BACKEND_HOST}/refresh`).then(tokenRefreshResponse => {
+    let token = tokenRefreshResponse.data.jwtToken;
+    let refresh = tokenRefreshResponse.data.refreshToken;
+  
+    failedRequest.response.config.headers['Authorization'] = 'Bearer ' + tokenRefreshResponse.data.token;
+    return { jwtToken: token, refreshToken: refresh };
+  });
+}
 
 // Instantiate the interceptor (you can chain it as it returns the axios instance)
 createAuthRefreshInterceptor(axios, refreshAuthLogic);

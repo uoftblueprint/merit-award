@@ -16,6 +16,16 @@ import (
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
+type PostBody struct {
+	Method  string `json:"method"`
+	Headers struct {
+		Accept      string `json:"Accept"`
+		ContentType string `json:"Content-Type"`
+	} `json:"headers"`
+	Data string `json:"data"`
+	Mode string `json:"mode"`
+}
+
 // Login will log in as a user based on the data given in the request body.
 // Required fields: email, password
 func (server *Server) Login(c *gin.Context) {
@@ -27,15 +37,6 @@ func (server *Server) Login(c *gin.Context) {
 		return
 	}
 		
-	type PostBody struct {
-		Method  string `json:"method"`
-		Headers struct {
-			Accept      string `json:"Accept"`
-			ContentType string `json:"Content-Type"`
-		} `json:"headers"`
-		Data string `json:"data"`
-		Mode string `json:"mode"`
-	}
 	var pb PostBody;
 	err = json.Unmarshal(body, &pb)
 	if err != nil {
@@ -97,14 +98,22 @@ func (server *Server) Refresh(c *gin.Context) {
 	if err != nil {
 		utils.ERROR(w, http.StatusUnprocessableEntity, err)
 	}
+	
+	var pb PostBody;
+	err = json.Unmarshal(body, &pb)
+	if err != nil {
+		utils.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
 
 	// Struct type to hold POST body info
 	type tokenReqBody struct {
 		RefreshToken string `json:"refreshToken"`
 		ID uint32 `json:"id"`
 	}
+	
 	tokenReq := tokenReqBody{}
-	err = json.Unmarshal(body, &tokenReq)
+	err = json.Unmarshal([]byte(pb.Data), &tokenReq)
 
 	// Validate refresh token
 	token, err := jwt.Parse(tokenReq.RefreshToken, func(token *jwt.Token) (interface{}, error) {

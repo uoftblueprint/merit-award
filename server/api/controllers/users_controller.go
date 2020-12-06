@@ -24,8 +24,15 @@ func (server *Server) CreateUser(c *gin.Context) {
 	if err != nil {
 		utils.ERROR(w, http.StatusUnprocessableEntity, err)
 	}
+	var pb PostBody;
+	err = json.Unmarshal(body, &pb)
+	if err != nil {
+		utils.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
 	user := models.User{}
-	err = json.Unmarshal(body, &user)
+	err = json.Unmarshal([]byte(pb.Data), &user)
 	if err != nil {
 		utils.ERROR(w, http.StatusUnprocessableEntity, err)
 		return

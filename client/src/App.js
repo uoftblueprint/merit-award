@@ -38,16 +38,15 @@ function App() {
 
   function refresh() {
     utils.refresh('/refresh')
-      .then((response) => response.json())
-      .then(result => {
-        if (typeof result !== "undefined") {
+      .then(response => {
+        if (typeof response !== "undefined") {
+          let result = response.data;
           let token = result.jwtToken;
           let refresh = result.refreshToken;
 
           setCookie('auth_token', token, { path: '/' });
           setCookie('refresh_token', refresh, { path: '/' });
           dispatch({ type: 'LOGIN' });
-          console.log("logging in");
         }
       }).catch(err => {
         console.log(err);
@@ -77,7 +76,7 @@ function App() {
               <Users />
             </Route>
             <Route path="/">
-              <LoggedIn  logout={logout} cookies={cookies.auth_token}/>
+              <LoggedIn refresh={refresh} logout={logout} cookies={cookies.auth_token}/>
             </Route>
           </Switch>
           :
