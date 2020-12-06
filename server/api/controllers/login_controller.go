@@ -26,9 +26,29 @@ func (server *Server) Login(c *gin.Context) {
 		utils.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
+	fmt.Print("hereererereeee")
+	fmt.Println("Body: ", string(body), err)
+		
+	type PostBody struct {
+		Method  string `json:"method"`
+		Headers struct {
+			Accept      string `json:"Accept"`
+			ContentType string `json:"Content-Type"`
+		} `json:"headers"`
+		Data string `json:"data"`
+		Mode string `json:"mode"`
+	}
+	var pb PostBody;
+	err = json.Unmarshal(body, &pb)
+	if err != nil {
+		utils.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	fmt.Printf("%v", pb)
+
 	user := models.User{}
 	
-	err = json.Unmarshal(body, &user)
+	err = json.Unmarshal([]byte(pb.Data), &user)
 	if err != nil {
 		utils.ERROR(w, http.StatusUnprocessableEntity, err)
 		return

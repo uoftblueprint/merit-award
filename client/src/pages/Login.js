@@ -35,7 +35,7 @@ function Login() {
     }
 
     utils.post('/login', params)
-      .then((response) => response.json())
+      .then((response) => response.data)
       .then(result => {
         if (result.error) {
           console.log(result.error)
