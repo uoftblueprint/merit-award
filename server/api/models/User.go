@@ -8,16 +8,16 @@ import (
 	"time"
 
 	"github.com/badoux/checkmail"
-	"gorm.io/gorm"
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 )
 
 // User is a user model in the database
 type User struct {
-	ID uint32 `gorm:"primary_key;auto_increment" json:"id"`
-	Username string `gorm:"size:100;not null;unique" json:"username"`
-	Email string `gorm:"size:254;not null;unique" json:"email"`
-	Password string `gorm:"size:100;not null" json:"password"`
+	ID        uint32    `gorm:"primary_key;auto_increment" json:"id"`
+	Username  string    `gorm:"size:100;not null;" json:"username"`
+	Email     string    `gorm:"size:254;not null;unique" json:"email"`
+	Password  string    `gorm:"size:100;not null" json:"password"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
@@ -28,7 +28,7 @@ func HashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-// VerifyPassword returns true if password and hash are equivalent when hashed. False otherwise. 
+// VerifyPassword returns true if password and hash are equivalent when hashed. False otherwise.
 func VerifyPassword(password, hash string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 }
@@ -139,16 +139,16 @@ func (u *User) UpdateUser(db *gorm.DB, uid uint32) (*User, error) {
 	}
 	db = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&User{}).UpdateColumns(
 		map[string]interface{}{
-			"password":  u.Password,
-			"username":  u.Username,
-			"email":     u.Email,
+			"password":   u.Password,
+			"username":   u.Username,
+			"email":      u.Email,
 			"updated_at": time.Now(),
 		},
 	)
 	if db.Error != nil {
 		return &User{}, db.Error
 	}
-	
+
 	var user User
 	// This is the display the updated user
 	err = db.Debug().Model(&User{}).Select("ID", "Username", "Email", "CreatedAt", "UpdatedAt").Where("id = ?", uid).Find(&user).Error

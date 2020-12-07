@@ -1,10 +1,11 @@
 package controllers
 
 import (
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/uoftblueprint/merit-award/server/api/importer"
 	"github.com/uoftblueprint/merit-award/server/api/models"
-	"strconv"
 )
 
 // UpdateQuestions queries Airtable and adds all of the entries into the database

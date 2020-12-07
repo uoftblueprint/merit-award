@@ -2,10 +2,11 @@ package importer
 
 import (
 	"errors"
-	"github.com/fabioberger/airtable-go"
-	"github.com/uoftblueprint/merit-award/server/api/models"
 	"os"
 	"strconv"
+
+	"github.com/fabioberger/airtable-go"
+	"github.com/uoftblueprint/merit-award/server/api/models"
 )
 
 //the json from Airtable is converted to type Task
