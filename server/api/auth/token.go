@@ -24,21 +24,21 @@ func CreateTokenPair(userID uint32) (string, string, error) {
 	claims["exp"] = time.Now().Add(time.Minute * 10).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	jwtToken, err = token.SignedString([]byte(os.Getenv("API_SECRET")))
-  if err != nil {
-     return "", "", err
-  }
+	if err != nil {
+		return "", "", err
+	}
 
 	var refreshToken string
 	// Create refresh token
 	rtClaims := jwt.MapClaims{}
-  rtClaims["user_id"] = userID
-  rtClaims["exp"] = time.Now().Add(time.Hour * 24 * 7).Unix()
+	rtClaims["user_id"] = userID
+	rtClaims["exp"] = time.Now().Add(time.Hour * 24 * 7).Unix()
 	rt := jwt.NewWithClaims(jwt.SigningMethodHS256, rtClaims)
 	refreshToken, err = rt.SignedString([]byte(os.Getenv("API_SECRET")))
-  if err != nil {
-     return "", "", err
-  }
-  return jwtToken, refreshToken, nil
+	if err != nil {
+		return "", "", err
+	}
+	return jwtToken, refreshToken, nil
 }
 
 // TokenValid checks if the token in request body is a valid JWT.

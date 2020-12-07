@@ -26,22 +26,14 @@ const get = (url, params = undefined) => {
     url = `${config.BACKEND_HOST}${url}`;
   }
 
-  let options = {
-    method: 'get',
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json"
-    },
-    json: true
-  };
-
+  let headers = {}
   if (token()){
-    options.headers = {
+    headers = {
       "Authorization": `Token ${token()}`
     };
   }
 
-  return axios.get(url, options);
+  return axios.get(url, {}, headers);
 }
 
 const post = (url, params = undefined) => {
@@ -50,21 +42,13 @@ const post = (url, params = undefined) => {
     url = `${config.BACKEND_HOST}${url}`;
   }
 
-  let options = {
-    method: 'post',
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json"
-    },
-    data: JSON.stringify(params),
-    mode: "cors"
-  };
+  let body = JSON.stringify(params)
 
   if (token()){
-    options.data.token = token();
+    body.token = token();
   }
 
-  return axios.post(url, options);
+  return axios.post(url, body);
 }
 
 const refresh = (url) => {
@@ -75,19 +59,7 @@ const refresh = (url) => {
 
   let refresh_token = refreshToken()
 
-  let options = {
-    method: 'post',
-    headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json"
-    },
-    data: JSON.stringify({
-      "refreshToken": refresh_token
-    }),
-    mode: "cors"
-  };
-
-  return axios.post(url, options);
+  return axios.post(url, {"refreshToken": refresh_token});
 }
 
 export default {

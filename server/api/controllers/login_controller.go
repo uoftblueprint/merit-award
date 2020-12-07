@@ -2,29 +2,19 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 
+	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/uoftblueprint/merit-award/server/api/auth"
 	"github.com/uoftblueprint/merit-award/server/api/models"
 	"github.com/uoftblueprint/merit-award/server/api/utils"
 	"golang.org/x/crypto/bcrypt"
-	jwt "github.com/dgrijalva/jwt-go"
 )
-
-type PostBody struct {
-	Method  string `json:"method"`
-	Headers struct {
-		Accept      string `json:"Accept"`
-		ContentType string `json:"Content-Type"`
-	} `json:"headers"`
-	Data string `json:"data"`
-	Mode string `json:"mode"`
-}
 
 // Login will log in as a user based on the data given in the request body.
 // Required fields: email, password
@@ -36,16 +26,9 @@ func (server *Server) Login(c *gin.Context) {
 		utils.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
 	}
-		
-	var pb PostBody;
-	err = json.Unmarshal(body, &pb)
-	if err != nil {
-		utils.ERROR(w, http.StatusUnprocessableEntity, err)
-		return
-	}
 
 	user := models.User{}
-	err = json.Unmarshal([]byte(pb.Data), &user)
+	err = json.Unmarshal(body, &user)
 	if err != nil {
 		utils.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
@@ -64,7 +47,7 @@ func (server *Server) Login(c *gin.Context) {
 		return
 	}
 	tokens := map[string]string{
-		"jwtToken": jwt,
+		"jwtToken":     jwt,
 		"refreshToken": refreshToken,
 	}
 	utils.JSON(w, http.StatusOK, tokens)
@@ -81,7 +64,7 @@ func (server *Server) SignIn(email, password string) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	
+
 	err = models.VerifyPassword(password, user.Password)
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
 		return "", "", err
@@ -94,26 +77,20 @@ func (server *Server) SignIn(email, password string) (string, string, error) {
 func (server *Server) Refresh(c *gin.Context) {
 	var w http.ResponseWriter = c.Writer
 	var r *http.Request = c.Request
+
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		utils.ERROR(w, http.StatusUnprocessableEntity, err)
-	}
-	
-	var pb PostBody;
-	err = json.Unmarshal(body, &pb)
-	if err != nil {
-		utils.ERROR(w, http.StatusForbidden, err)
-		return
 	}
 
 	// Struct type to hold POST body info
 	type tokenReqBody struct {
 		RefreshToken string `json:"refreshToken"`
-		ID uint32 `json:"id"`
+		ID           uint32 `json:"id"`
 	}
-	
+
 	tokenReq := tokenReqBody{}
-	err = json.Unmarshal([]byte(pb.Data), &tokenReq)
+	err = json.Unmarshal(body, &tokenReq)
 
 	// Validate refresh token
 	token, err := jwt.Parse(tokenReq.RefreshToken, func(token *jwt.Token) (interface{}, error) {
@@ -122,7 +99,7 @@ func (server *Server) Refresh(c *gin.Context) {
 		}
 		return []byte(os.Getenv("API_SECRET")), nil
 	})
-	
+
 	// Return new refresh token if valid
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		if userID, ok := claims["user_id"].(float64); ok {
@@ -131,12 +108,12 @@ func (server *Server) Refresh(c *gin.Context) {
 				return
 			}
 			newTokenPair := map[string]string{
-				"jwtToken": jwtToken,
+				"jwtToken":     jwtToken,
 				"refreshToken": refreshToken,
 			}
 			utils.JSON(w, http.StatusOK, newTokenPair)
 		} else {
-			fmt.Printf("Invalid User ID type, should be float64: %v\n", claims["user_id"]);
+			fmt.Printf("Invalid User ID type, should be float64: %v\n", claims["user_id"])
 		}
 	}
 }
