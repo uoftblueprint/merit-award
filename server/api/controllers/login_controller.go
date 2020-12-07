@@ -102,7 +102,7 @@ func (server *Server) Refresh(c *gin.Context) {
 	var pb PostBody;
 	err = json.Unmarshal(body, &pb)
 	if err != nil {
-		utils.ERROR(w, http.StatusUnprocessableEntity, err)
+		utils.ERROR(w, http.StatusForbidden, err)
 		return
 	}
 
