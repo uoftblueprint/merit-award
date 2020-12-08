@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import "../styles/login.css";
 import { useCookies } from 'react-cookie';
+import {useHistory } from 'react-router-dom';
 
 import utils from '../utils';
 
@@ -15,6 +16,7 @@ function Signup() {
   const [validate, setValidate] = useState("");
   const [signupState, setSignUpState] = useState(false);
   const [cookies, setCookie] = useCookies(['auth_token']);
+  const history = useHistory();
 
   function validateForm() {
     return email.length > 0 && password.length > 0 && username.length > 0 && validatePassword();
@@ -33,15 +35,11 @@ function Signup() {
       password: password
     }
 
-    utils.post('/users', params)
+    utils.post("/users", params)
       .then((response) => {
-        if (response.jwtToken) {
-          // this is the jwt
-          let token = response.jwtToken;
-
-          setCookie('auth_token', token, { path: '/' });
-          setSignUpState(true);
-        }
+        setSignUpState(true);
+        alert("Sign up successful!");
+        history.push("/");
       }).catch(err => {
         console.log(err);
       });
