@@ -18,9 +18,25 @@ type User struct {
 	Username string `gorm:"size:100;not null;unique" json:"username"`
 	Email string `gorm:"size:254;not null;unique" json:"email"`
 	Password string `gorm:"size:100;not null" json:"password"`
+	UserTypes []UserType `gorm:"foreignkey:ID"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
+
+/*
+ ******** Backend tasks ********
+ * User Type model
+ * Create user with the user type they are assigned (sign up link)
+ * Add user type
+ * Get user type based on id
+ * Login??? -> probably handle user types in frontend, just return id and they can figure out what user types there are
+ * Generating sign up link?
+ ******** Frontend tasks ******
+ * Webpage to invite other people (generate signup link)
+ * Add user type to signup
+ * Login screen to choose user type (if multiple)
+ * Different pages for each user type (later)
+*/
 
 // HashPassword returns the password after it has been hashed.
 func HashPassword(password string) (string, error) {

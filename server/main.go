@@ -97,6 +97,9 @@ func setupServer(server *controllers.Server) *gin.Engine {
 	r.POST("/users", server.CreateUser)
 	r.GET("/users/:id", server.GetUser)
 
+	// User type routes
+	r.POST("/types/users/:id", server.CreateUserType)
+
 	authorized := r.Group("/")
 	authorized.Use(middlewares.Auth())
 	{
@@ -109,6 +112,12 @@ func setupServer(server *controllers.Server) *gin.Engine {
 		userIDRoutes.PUT("/", server.UpdateUser)
 		userIDRoutes.DELETE("/", server.DeleteUser)
 	}
+
+	// userTypeRoutes := r.Group("/users/:id/userTypes")
+	// userTypeRoutes.Use(middlewares.Auth())
+	// {
+	// 	userIDRoutes.POST("/", server.CreateUserType)
+	// }
 
 	//Questions route
 	r.GET("/updateQuestions", server.UpdateQuestions)
