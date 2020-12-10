@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 import "../styles/login.css";
-import Button from "react-bootstrap/esm/Button";
+import Button from "react-bootstrap/Button";
 
 function Login(props) {
   return (

@@ -44,7 +44,7 @@ func TestSignIn(t *testing.T) {
 
 	for _, v := range samples {
 
-		token, err := server.SignIn(v.email, v.password)
+		jwt, refreshToken, err := server.SignIn(v.email, v.password)
 		if err != nil {
 			assert.Equal(t, err, errors.New(v.errorMessage))
 		} else {
