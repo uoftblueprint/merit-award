@@ -13,7 +13,6 @@ import (
 )
 
 // User is a user model in the database
-// Type should be one of the following 
 type User struct {
 	ID uint32 `gorm:"primary_key;auto_increment" json:"id"`
 	Username string `gorm:"size:100;not null;unique" json:"username"`
@@ -22,22 +21,6 @@ type User struct {
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
-
-/*
- ******** Backend tasks ********
- * User Type model
- * Create user with the user type they are assigned (sign up link)
- * Add user type
- * Get user type based on id
- * Login??? -> probably handle user types in frontend, just return id and they can figure out what user types there are
- * Generating sign up link?
-
- ******** Frontend tasks ******
- * Webpage to invite other people (generate signup link)
- * Add user type to signup
- * Login screen to choose user type (if multiple)
- * Different pages for each user type (later)
-*/
 
 // HashPassword returns the password after it has been hashed.
 func HashPassword(password string) (string, error) {
@@ -168,7 +151,7 @@ func (u *User) UpdateUser(db *gorm.DB, uid uint32) (*User, error) {
 	
 	var user User
 	// This is the display the updated user
-	err = db.Debug().Model(&User{}).Select("ID", "Username", "Email", "Type", "CreatedAt", "UpdatedAt").Where("id = ?", uid).Find(&user).Error
+	err = db.Debug().Model(&User{}).Select("ID", "Username", "Email", "CreatedAt", "UpdatedAt").Where("id = ?", uid).Find(&user).Error
 	if err != nil {
 		return &User{}, err
 	}
@@ -182,30 +165,4 @@ func (u *User) DeleteUser(db *gorm.DB, uid uint32) (int64, error) {
 		return 0, db.Error
 	}
 	return db.RowsAffected, nil
-}
-
-// UpdateUserType updates user type in the database with new type
-// Valid user types: student, recommender, counselor, reviewer, admin
-func (u *User) UpdateUserType(db *gorm.DB, uid uint32) (*User, error) {
-	// To hash the password
-	err := u.SaveHashedPassword()
-	if err != nil {
-		log.Fatal(err)
-	}
-	db = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&User{}).UpdateColumns(
-		map[string]interface{}{
-			"type":      u.Type,
-		},
-	)
-	if db.Error != nil {
-		return &User{}, db.Error
-	}
-	
-	var user User
-	// This is the display the updated user
-	err = db.Debug().Model(&User{}).Select("Type").Where("id = ?", uid).Find(&user).Error
-	if err != nil {
-		return &User{}, err
-	}
-	return &user, nil
 }
