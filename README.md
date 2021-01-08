@@ -66,6 +66,10 @@
     ### Run the Go server
 
     ```bash
+    air # recommended to enable hot reload
+    ```
+    OR
+    ```bash
     go run main.go --production=false
     ```
 
