@@ -6,10 +6,10 @@ function Form() {
   const [questions, setQuestions] = useState([]);
   const [formElements, setFormElements] = useState([]);
 
-  const { register, handleSubmit, } = useForm();
+  const { register, handleSubmit, watch, errors} = useForm();
 
   useEffect(() => {
-    console.log("inside useEffect")
+    console.log("inside useEffect");
 
     async function fetchData() {
       // Get the data from the backend
@@ -38,50 +38,52 @@ function Form() {
   }, []);
 
   useEffect(() => {
-    const list = [...formElements]
+    console.log('errors :>> ', errors);
+    const list = []
     for (const [index, value] of questions.entries()) {
       console.log("line 40")
       console.log(value.question_type)
+      const label = value.text;
       switch (value.question_type) {
         case "Input Text":
           list.push(
             <div key={index}>
-              <InputText label={value.text} hint={value.hint} register={register} />
+              <InputText label={value.text} hint={value.hint} register={register} error={errors[label]}/>
             </div>
           );
           break;
         case "Checkbox":
           list.push(
             <div key={index}>
-              <Checkbox label={value.text} options={value.options} register={register} />
+              <Checkbox label={value.text} options={value.options} register={register} error={errors[label]}/>
             </div>
           );
           break;
         case "Single Select":
           list.push(
             <div key={index}>
-              <SingleSelect label={value.text} options={value.options} register={register} />
+              <SingleSelect label={value.text} options={value.options} register={register} error={errors[label]}/>
             </div>
           );
           break;
         case "Email":
           list.push(
             <div key={index}>
-              <Email label={value.text} hint={value.hint} register={register} />
+              <Email label={value.text} hint={value.hint} register={register} error={errors[label]}/>
             </div>
           );
           break;
         case "Phone Number":
           list.push(
             <div key={index}>
-              <PhoneNumber label={value.text} hint={value.hint} register={register} />
+              <PhoneNumber label={value.text} hint={value.hint} register={register} error={errors[label]}/>
             </div>
           );
           break;
       }
     }
     setFormElements(list)
-  }, [questions])
+  }, [questions, errors])
 
   return (
     <form onSubmit={handleSubmit(d => console.log(d))}>
@@ -100,6 +102,7 @@ function InputText(props) {
       <div>
         <input type="text" name={props.label} placeholder={props.hint} ref={props.register} />
       </div>
+      {props.error && <div>This field is required.</div>}
     </div>
   )
 }
@@ -156,6 +159,7 @@ function Email(props) {
       </div>
       <div>
         <input type="text" name={props.label} placeholder={props.hint} ref={props.register({required: true, pattern: /^\S+@\S+$/i})} />
+        {props.error && <div>Enter a valid email address.</div>}
       </div>
     </div>
   )
@@ -168,7 +172,8 @@ function PhoneNumber(props) {
         <label>{props.label}</label>
       </div>
       <div>
-        <input type="tel" name={props.label} placeholder={props.hint} ref={props.register({required: true, minLength: 6, maxLength: 12})} />
+        <input type="tel" name={props.label} placeholder={props.hint} ref={props.register({required: true, pattern: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/})} />
+        {props.error && <div>Enter a valid phone number.</div>}
       </div>
     </div>
   )
