@@ -8,6 +8,7 @@ require (
 	github.com/creack/pty v1.1.11 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/fabioberger/airtable-go v3.1.0+incompatible
+	github.com/gin-contrib/cors v1.3.1 // indirect
 	github.com/fatih/color v1.10.0 // indirect
 	github.com/gin-gonic/contrib v0.0.0-20200913005814-1c32036e7ea4
 	github.com/gin-gonic/gin v1.6.3
