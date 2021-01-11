@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import MeritUser
 
-# Register your models here.
+@admin.register(MeritUser)
+class MeritUserAdmin(admin.ModelAdmin):
+    pass
