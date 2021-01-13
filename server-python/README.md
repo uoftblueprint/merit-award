@@ -1,11 +1,11 @@
 ## Setup Instructions
 1. `cd server-python` and run `python -m venv env` to build your virtual environment.
-2. `env/Scripts/activate` (If on Windows, use `source env/Scripts/activate` to run the virtual environment)
-3. Run `pip install` to install all the dependencies in requirements.txt.
+2. `env/Scripts/activate` (If on Windows, use `source env/Scripts/activate` to run the virtual environment. If this doesn't work, use the path `source env/bin/activate`)
+3. Run `pip install -r requirements.txt` to install all the dependencies in requirements.txt.
 4. We are using Postgres for our DB rather than the default SQLite. To set up the database do the following:
   - `psql -U postgres`
-  - `DROP DATABASE MERITAWARDB;`, if a previous database exists.
-  - `CREATE DATABASE MERITAWARDDB;`
+  - `DROP DATABASE MERITAWARD;`, if a previous database exists.
+  - `CREATE DATABASE MERITAWARD;`
   - `CREATE USER meritawarduser SUPERUSER WITH PASSWORD password;`
 5. `python manage.py migrate` to run the migrations for the project.
 6. `python manage.py runserver` to start the server. Navigate to http://localhost:8000/ to see the server running!
