@@ -4,3 +4,5 @@ pytz==2020.5
 sqlparse==0.4.1
 psycopg2==2.8.6
 django-extensions==3.1.0
+djangorestframework==3.12.2
+coverage==5.3.1
