@@ -6,3 +6,5 @@ psycopg2==2.8.6
 django-extensions==3.1.0
 djangorestframework==3.12.2
 coverage==5.3.1
+djangorestframework-simplejwt==4.6.0
+setuptools==51.1.2

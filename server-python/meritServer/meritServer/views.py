@@ -28,4 +28,3 @@ def get_token_pair(user):
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
-    

@@ -21,7 +21,7 @@ from . import views
 urlpatterns = [
     path('', views.main),
     path('admin/', admin.site.urls),
-    path('login/', views.login),
+    path('api/login/', views.login),
     path('api/users/', include('users.urls')),
     path('api/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 ]
