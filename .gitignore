@@ -1,7 +1,8 @@
 client/node_modules/
-server-python/env/
-server-python/meritServer/frontend/node_modules/
-server-python/.idea/
+backend/node_modules/
+old/server-python/env/
+old/server-python/meritServer/frontend/node_modules/
+old/server-python/.idea/
 
 # Django #
 *.log
