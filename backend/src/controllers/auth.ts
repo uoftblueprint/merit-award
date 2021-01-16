@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 
 import UserModel from "../../src/models/User";
 import { User } from "../types";
+import { JWT_SECRET } from '../constants';
 
 const reqLogin = async (err: Error, user: User, req: Request, res: Response, next: NextFunction) => {
   try {
@@ -18,9 +19,9 @@ const reqLogin = async (err: Error, user: User, req: Request, res: Response, nex
       if (error) return next(error);
 
       const body = { _id: user._id, email: user.email };
-      const token = jwt.sign({ user: body }, "TOP_SECRET");
+      const token = jwt.sign({ user: body }, JWT_SECRET);
 
-      return res.json({ token });
+      return res.json({ access: token });
     });
   } catch (error) {
     return next(error);

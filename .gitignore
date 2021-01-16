@@ -4,6 +4,8 @@ old/server-python/env/
 old/server-python/meritServer/frontend/node_modules/
 old/server-python/.idea/
 
+backend/.env
+
 # Django #
 *.log
 *.pot
@@ -30,6 +32,8 @@ media
 # Python # 
 *.py[cod] 
 *$py.class 
+
+*.DS_Store
 
 
 # Distribution / packaging 

@@ -7,6 +7,7 @@ const JWTstrategy = passportJwt.Strategy;
 const ExtractJWT = passportJwt.ExtractJwt;
 
 import UserModel from '../models/User';
+import { JWT_SECRET } from '../constants';
 
 passport.use(
     'signup',
@@ -61,7 +62,7 @@ passport.use(
 passport.use(
   new JWTstrategy(
     {
-      secretOrKey: "TOP_SECRET",
+      secretOrKey: JWT_SECRET,
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     },
     async (token: any, done: any) => {
