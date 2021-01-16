@@ -1,36 +1,74 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Link,
-} from 'react-router-dom';
+  Route
+} from "react-router-dom";
+import Login from "./pages/Login";
+import LoggedIn from "./pages/LoggedIn";
+import Signup from "./pages/Signup";
 import './App.css';
-import Form from './components/questions/forms'
+import Cookies from 'js-cookie'
+import { useSelector, useDispatch } from 'react-redux';
+
+import Form from './components/questions/forms';
 
 function App() {
-  return (
+  const loggedIn = useSelector(state => state.userStatus);
+  const [access, setAccess] = useState(undefined);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    authenticate();
+  });
 
+  const authenticate = () => {
+    let access = Cookies.get('access');
+    if (access && access !== undefined) {
+
+      setAccess(access);
+      dispatch({ type: 'LOGIN' });
+    } else {
+      logout();
+    }
+  }
+
+  function logout() {
+    Cookies.remove('access');
+    dispatch({ type: 'logOut' }); // sets global user state to logged out with Redux
+  }
+
+  return (
     <Router>
-      <div>
-        {/* A <Switch> looks through its children <Route>s and
-          renders the first one that matches the current URL. */}
-        <Switch>
-          <Route path="/reviewers">
-            <Reviewers />
-          </Route>
-          <Route path="/recommenders">
-            <Recommenders />
-          </Route>
-          <Route path="/users">
-            <Users />
-          </Route>
-          <Route path="/">
-            <Login />
-          </Route>
-        </Switch>
-      </div>
-    </Router>
+
+    <div>
+      {/* Only make internal pages available if global state is Logged In -> true */}
+        {loggedIn ?
+          <Switch>
+            <Route path="/reviewers">
+              <Reviewers />
+            </Route>
+            <Route path="/recommenders">
+              <Recommenders />
+            </Route>
+            <Route path="/users">
+              <Users />
+            </Route>
+            <Route path="/">
+              <LoggedIn logout={logout} cookies={access}/>
+            </Route>
+          </Switch>
+          :
+          <Switch>
+            <Route path="/signup">
+              <Signup />
+            </Route>
+            <Route path="/">
+              <Login />
+            </Route>
+          </Switch>
+        }
+    </div>
+  </Router>
   );
 }
 
@@ -51,24 +89,4 @@ function Users() {
     </div>);
 }
 
-function Login() {
-  return (
-    <div>
-      <h1>Login</h1>
-      <form>
-        <div>
-          <p>Username:</p>
-          <input type="text" name="username" />
-        </div>
-        <div>
-          <p>Password:</p>
-          <input type="password" name="password" />
-        </div>
-        <Link to="/users"><button>User</button></Link>
-        <Link to="/recommenders"><button>Recommender</button></Link>
-        <Link to="/reviewers"><button>Reviewer</button></Link>
-      </form>
-    </div>
-  );
-}
 export default App;

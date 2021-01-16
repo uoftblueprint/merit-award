@@ -7,7 +7,7 @@
 
 [https://github.com/uoftblueprint/merit-award](https://github.com/uoftblueprint/merit-award)
 
-- Setting up the DB
+<!-- - Setting up the DB
 
     ### Create a new Postgres database
 
@@ -21,7 +21,7 @@
     CREATE USER meritawarduser SUPERUSER;
     ```
 
-    ### Make sure your Postgres instance is running on the default port (5432)
+    ### Make sure your Postgres instance is running on the default port (5432) -->
 
 - Setting up the frontend
 
@@ -30,52 +30,48 @@
     ### Install node modules
 
     ```bash
-    npm i or yarn add
+    npm i
     ```
 
     ### Run frontend tests
 
     ```bash
-    npm test or yarn test
+    npm test
     ```
 
     ### Run frontend server for development
 
     ```bash
-    npm start or yarn start
+    npm start
     ```
 
     ### Build the frontend (not necessary)
 
     ```bash
-    npm build or yarn build
+    npm build
     ```
 
     The frontend server will run on port 3000
 
 - Setting up the backend
 
-    Switch into the `server` directory
+    Switch into the `backend` directory
 
-    ### Run tests
-
-    ```bash
-    go test ./...
-    ```
-
-    ### Run the Go server
+    ### Install node modules
 
     ```bash
-    air # recommended to enable hot reload
+    npm i
     ```
-    OR
+
+    ### Run node server (hot reload)
+
     ```bash
-    go run main.go --production=false
+    npm start
     ```
 
-    The server will run on port 8080
+    The server will run on port 8000
 
-- Replicating the production environment
+<!-- - Replicating the production environment
 
     Start the Docker app
 
@@ -91,4 +87,4 @@
     docker run -p 8080:8080 -d merit-award
     ```
 
-    Your entire app should be accessible on port 8080
+    Your entire app should be accessible on port 8080 -->
