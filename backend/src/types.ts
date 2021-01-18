@@ -3,31 +3,27 @@ import { Document, Schema } from "mongoose";
 export interface User extends Document {
     email: string;
     password: string;
-    student: Schema.Types.ObjectId;
-    recommender: Schema.Types.ObjectId;
-    reviewer: Schema.Types.ObjectId;
-    counselor: Schema.Types.ObjectId;
-    admin: Schema.Types.ObjectId;
 }
 
+// TODO: do we need these interfaces?
 // user types
-export interface Student extends Document {
-    user: Schema.Types.ObjectId;
-    // other data for Student dashboard goes here
-}
+// export interface StudentModel extends Document {
+//     user: Schema.Types.ObjectId;
+//     // other data for Student dashboard goes here
+// }
 
-export interface Recommender extends Document {
-    user: Schema.Types.ObjectId;
-}
+// export interface RecommenderModel extends Document {
+//     user: Schema.Types.ObjectId;
+// }
 
-export interface Reviewer extends Document {
-    user: Schema.Types.ObjectId;
-}
+// export interface ReviewerModel extends Document {
+//     user: Schema.Types.ObjectId;
+// }
 
-export interface Counselor extends Document {
-    user: Schema.Types.ObjectId;
-}
+// export interface CounselorModel extends Document {
+//     user: Schema.Types.ObjectId;
+// }
 
-export interface Admin extends Document {
-    user: Schema.Types.ObjectId;
-}
+// export interface AdminModel extends Document {
+//     user: Schema.Types.ObjectId;
+// }
