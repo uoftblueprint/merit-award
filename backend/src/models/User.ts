@@ -1,6 +1,6 @@
 import mongoose, { Document, Model } from "mongoose";
 import bcrypt from "bcrypt";
-import { User, StudentModel, ReviewerModel, RecommenderModel, AdminModel, CounselorModel } from "../types";
+import { User } from "../types";
 
 const Schema = mongoose.Schema;
 const options = { discriminatorKey: 'userType' };
@@ -63,12 +63,5 @@ UserSchema.methods.isValidPassword = async function (
 
   return compare;
 };
-
-// TODO: should we inherit interfaces defined in types.ts?
-export const Student = mongoose.model("student", StudentSchema);
-export const Recommender = mongoose.model("recommender", RecommenderSchema);
-export const Reviewer = mongoose.model("reviewer", ReviewerSchema);
-export const Admin = mongoose.model("admin", AdminSchema);
-export const Counselor = mongoose.model("counselor", CounselorSchema);
 
 export default User;
