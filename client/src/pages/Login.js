@@ -23,7 +23,7 @@ function Login() {
         dispatch({ type: 'LOGIN' });
     } catch (err) {
         console.log(err);
-    } 
+    }
   }
 
   return (
