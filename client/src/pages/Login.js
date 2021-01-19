@@ -28,7 +28,7 @@ function Login() {
 
   return (
     <div className="login">
-      <h1> MERIT AWARD </h1>
+      <h1 className="bg-gray-500 text-orange"> MERIT AWARD </h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group size="lg" controlId="email">
           <Form.Label>Email</Form.Label>
