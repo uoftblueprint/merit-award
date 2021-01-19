@@ -7,7 +7,7 @@ import {
 import Login from "./pages/Login";
 import LoggedIn from "./pages/LoggedIn";
 import Signup from "./pages/Signup";
-import './App.css';
+import './styles/App.css';
 import Cookies from 'js-cookie'
 import { useSelector, useDispatch } from 'react-redux';
 
