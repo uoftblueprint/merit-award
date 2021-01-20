@@ -15,6 +15,7 @@ import Cookies from 'js-cookie'
 import { useSelector, useDispatch } from 'react-redux';
 
 import Form from './components/questions/forms';
+import Home from './pages/Home';
 
 function App() {
   const loggedIn = useSelector(state => state.userStatus);
@@ -56,8 +57,15 @@ function App() {
           </Switch>
           :
           <Switch>
-            <Route path="/signup" component={Signup}/>
-            <Route path="/" component={Login}/>
+            <Route path="/signup">
+              <Signup />
+            </Route>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
           </Switch>
         }
     </div>

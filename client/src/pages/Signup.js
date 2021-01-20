@@ -69,7 +69,7 @@ function Signup() {
           Sign Up
         </Button>
       </Form>
-      <Link to="/">Login</Link>
+      <Link to="/login">Login</Link>
       <p>{signupState ? "Successfully signed up" : ""}</p>
     </div>
   );
