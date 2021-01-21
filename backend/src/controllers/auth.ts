@@ -9,7 +9,7 @@ import { JWT_SECRET } from '../constants';
 const reqLogin = async (err: Error, user: User, req: Request, res: Response, next: NextFunction) => {
   try {
     if (err || !user) {
-      console.log(err);
+      console.log("errrrrororrr", err);
       const error = new Error("An error occurred.");
 
       return next(error);
@@ -29,11 +29,12 @@ const reqLogin = async (err: Error, user: User, req: Request, res: Response, nex
 }
 
 export const signUp = async (req: Request, res: Response, next: NextFunction) => {
-  const doesUserExit = await UserModel.exists({ email: req.body.email });
-  if (doesUserExit) {
+  const doesUserExist = await UserModel.exists({ email: req.body.email });
+  if (doesUserExist) {
     res.status(400);
     return res.json({ error: "User exists" });
   }
+
   passport.authenticate("signup", async (err: Error, user: User, _: NextFunction) => {
     return reqLogin(err, user, req, res, next);
   })(req, res, next);

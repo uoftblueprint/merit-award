@@ -8,6 +8,7 @@ const ExtractJWT = passportJwt.ExtractJwt;
 
 import UserModel from '../models/User';
 import { JWT_SECRET } from '../constants';
+import Student from '../models/UserType';
 
 passport.use(
     'signup',
@@ -18,9 +19,9 @@ passport.use(
       },
       async (email: string, password: string, done: any) => {
         try {
-          console.log("hello");
           const user = await UserModel.create({ email, password });
-          console.log(user);
+          const student = await Student.create({ user: user._id });
+          user.student = student._id;
           return done(null, user);
         } catch (error) {
           done(error);

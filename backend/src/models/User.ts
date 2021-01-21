@@ -18,6 +18,10 @@ const UserSchema = new Schema<User, UserModel>({
     type: String,
     required: true,
   },
+  student: {
+    type: Schema.Types.ObjectId,
+    ref: "Student",
+  }
 });
 
 UserSchema.pre("save", async function (this: User, next: any) {
