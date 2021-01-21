@@ -7,6 +7,7 @@ import {
 import Login from "./pages/Login";
 import LoggedIn from "./pages/LoggedIn";
 import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
 import './styles/App.css';
 import Cookies from 'js-cookie'
 import { useSelector, useDispatch } from 'react-redux';
@@ -61,6 +62,9 @@ function App() {
           <Switch>
             <Route path="/signup">
               <Signup />
+            </Route>
+            <Route path="/dashboard">
+              <Dashboard />
             </Route>
             <Route path="/">
               <Login />
