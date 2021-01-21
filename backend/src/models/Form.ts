@@ -19,7 +19,7 @@ const SectionSchema = new Schema({
 
 const FormSchema = new Schema({
     name: String,
-    questions: [SectionSchema]
+    sections: [SectionSchema]
 });
 
 export const FormModel = mongoose.model('Form', FormSchema);

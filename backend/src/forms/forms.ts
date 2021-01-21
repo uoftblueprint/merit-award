@@ -22,6 +22,6 @@ export const questions = async (req: Request, res: Response) => {
 };
 
 export const createPage = async(req: Request, res: Response) => {
-  await FormModel.create({name: "test", questions: [{name: "test", repeatable: 0, label: "test", questions:[{text: "test", type:"test", charCount: 0}]}]})
+  await FormModel.create({name: "test", sections: [{name: "test", repeatable: 0, label: "test", questions:[{text: "test", type:"test", charCount: 0}]}]})
   return res.json({hello: "hello"})
 }
