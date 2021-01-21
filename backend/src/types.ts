@@ -5,9 +5,9 @@ export interface User extends Document {
     password: string;
 }
 
-export interface Form extends Document { 
+export interface Form { 
     name: string;
-    questions: Record<number, Array<Section>>;
+    pages: Record<string, Array<Section>>;
 }
 
 export interface Section {

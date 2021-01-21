@@ -17,9 +17,13 @@ const SectionSchema = new Schema({
     questions: [QuestionSchema]
 });
 
+
 const FormSchema = new Schema({
     name: String,
-    sections: [SectionSchema]
+    pages: {
+        type: Map,
+        of: [SectionSchema]
+    }
 });
 
 export const FormModel = mongoose.model('Form', FormSchema);
