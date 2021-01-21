@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import Navbar from "../components/Navbar";
 
 function Dashboard() {
   return (
     <div className="dashboard flex justify-center items-center h-screen">
-      <Navbar/>
       <div className="status w-4/5">
         <div className="flex">
           <span className="flex-grow"/>
