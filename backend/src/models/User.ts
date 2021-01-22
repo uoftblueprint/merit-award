@@ -1,4 +1,4 @@
-import mongoose, { Document, Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import bcrypt from "bcrypt";
 import { User } from "../types";
 
@@ -21,7 +21,23 @@ const UserSchema = new Schema<User, UserModel>({
   student: {
     type: Schema.Types.ObjectId,
     ref: "Student",
-  }
+  },
+  counselor: {
+    type: Schema.Types.ObjectId,
+    ref: "Counselor",
+  },
+  reviewer: {
+    type: Schema.Types.ObjectId,
+    ref: "Reviewer",
+  },
+  recommender: {
+    type: Schema.Types.ObjectId,
+    ref: "Recommender",
+  },
+  admin: {
+    type: Schema.Types.ObjectId,
+    ref: "Admin",
+  },
 });
 
 UserSchema.pre("save", async function (this: User, next: any) {

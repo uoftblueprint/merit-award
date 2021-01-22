@@ -11,23 +11,24 @@ export interface User extends Document {
 }
 
 // user types
-export interface Student extends Document {
+export interface StudentInterface extends Document {
     user: Schema.Types.ObjectId;
-    // other data for Student dashboard goes here
+    counselorReferralUrl: String;
 }
 
-export interface Recommender extends Document {
-    user: Schema.Types.ObjectId;
-}
-
-export interface Reviewer extends Document {
+export interface RecommenderInterface extends Document {
     user: Schema.Types.ObjectId;
 }
 
-export interface Counselor extends Document {
+export interface ReviewerInterface extends Document {
     user: Schema.Types.ObjectId;
 }
 
-export interface Admin extends Document {
+export interface CounselorInterface extends Document {
+    user: Schema.Types.ObjectId;
+    students: Array<Schema.Types.ObjectId>;
+}
+
+export interface AdminInterface extends Document {
     user: Schema.Types.ObjectId;
 }

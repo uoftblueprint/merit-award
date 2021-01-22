@@ -3,13 +3,13 @@ import passport from "passport";
 import jwt from "jsonwebtoken";
 
 import UserModel from "../../src/models/User";
+import { Counselor } from '../models/UserType';
 import { User } from "../types";
 import { JWT_SECRET } from '../constants';
 
 const reqLogin = async (err: Error, user: User, req: Request, res: Response, next: NextFunction) => {
   try {
     if (err || !user) {
-      console.log("errrrrororrr", err);
       const error = new Error("An error occurred.");
 
       return next(error);
@@ -47,3 +47,14 @@ export const logIn = async (req: Request, res: Response, next: NextFunction) => 
   })(req, res, next);
 };
 
+export const signUpCounselor = async (req: Request, res: Response, next: NextFunction) => {
+  const doesUserExist = await UserModel.exists({ email: req.body.email });
+  if (doesUserExist) {
+    res.status(400);
+    return res.json({ error: "User exists" });
+  }
+
+  passport.authenticate("signupCounselor", async (err: Error, user: User, _: NextFunction) => {
+    return reqLogin(err, user, req, res, next);
+  })(req, res, next);
+};
