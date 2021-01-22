@@ -13,7 +13,7 @@ export interface User extends Document {
 // user types
 export interface StudentInterface extends Document {
     user: Schema.Types.ObjectId;
-    counselorReferralUrl: String;
+    counselorReferral: String;
 }
 
 export interface RecommenderInterface extends Document {

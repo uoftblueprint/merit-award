@@ -1,8 +1,10 @@
 import passport from 'passport';
 import passportLocal from 'passport-local';
 import passportJwt from 'passport-jwt';
+import passportCustom from 'passport-custom';
 
 const localStrategy = passportLocal.Strategy;
+const CustomStrategy = passportCustom.Strategy;
 const JWTstrategy = passportJwt.Strategy;
 const ExtractJWT = passportJwt.ExtractJwt;
 
@@ -32,26 +34,50 @@ passport.use(
     )
 );
 
-passport.use(
-    'signupCounselor',
-    new localStrategy(
-      {
-        usernameField: 'email',
-        passwordField: 'password',
-      },
-      async (email: string, password: string, done: any) => {
-        try {
-          const user = await UserModel.create({ email, password });
-          const counselor = await Counselor.create({ user: user._id });
-          user.counselor = counselor._id;
-          await user.save();
+// passport.use(
+//     'signupCounselor',
+//     new customStrategy(
+//       {
+//         usernameField: 'email',
+//         passwordField: 'password',
+//         urlField: 'url',
+//       },
+//       async (email: string, password: string, url: string, done: any) => {
+//         try {
+//           const user = await UserModel.create({ email, password });
+//           const counselor = await Counselor.create({ user: user._id });
+//           user.counselor = counselor._id;
+//           await user.save();
 
-          return done(null, user);
-        } catch (error) {
-          done(error);
+//           return done(null, user);
+//         } catch (error) {
+//           done(error);
+//         }
+//       }
+//     )
+// );
+
+passport.use(
+  'signupCounselor',
+  new CustomStrategy(
+    async (req, done) => {
+      try {
+        const student = await Student.findOne({ counselorReferral: req.body.url })
+        if (!student) {
+          done(Error('Invalid Referral Url :('));
         }
+        const user = await UserModel.create({ email: req.body.email, password: req.body.password });
+        const counselor = await Counselor.create({ user: user._id });
+        user.counselor = counselor._id;
+        counselor.students = [student._id];
+        await counselor.save();
+        await user.save();
+        return done(null, user);
+      } catch (error) {
+        done(error);
       }
-    )
+    }
+  )
 );
 
 passport.use(
