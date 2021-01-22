@@ -6,19 +6,20 @@ export interface User extends Document {
 }
 
 export interface Form { 
-    name: string;
-    pages: Record<string, Array<Section>>;
+    name: string,
+    pages: Record<string, Array<Section>>,
 }
 
 export interface Section {
-    name: string;
-    repeatable: number;
-    label: string;
+    name: string,
+    repeatable: number,
+    label: string,
     questions: Array <Question>
 }
 
 export interface Question {
-    text: string;
-    type: string;
-    charCount: number;
+    text: string,
+    type: string,
+    charCount: number,
+    options: string[]
 }

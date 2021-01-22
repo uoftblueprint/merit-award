@@ -1,47 +1,60 @@
 import airtable = require('airtable')
-import { Request, Response } from 'express'
-import { FormModel } from '../models/Form'
 import { Question, Form, Section } from "../types"
 
-
+//This is the id of our airtable base
 const base = airtable.base('appt2jmmk7EWPzIkp');
 
+//These are the names of the tabs in our Airtable
 const questionTable = base("StudentApplication")
 const descriptorsTable = base("StudentDescriptors")
 
+//airtableQuestion is the interface for the data when it first comes from
+//Airtable
 interface airtableQuestion {
   pageNumber: string,
   sectionName: string,
   text: string,
   type: string,
-  charCount: number
+  charCount: number,
+  options: string[]
 }
 
+//airtableDescriptor is the form that the initial Airtable data is put in
 interface airtableDescriptor {
   name: string,
   repeatable: number,
   label: string
 }
 
-
+//getAirtableQuestions queries Airtable and returns a list of 
+//Questions
 const getAirtableQuestions = async() => {
   const questions = await questionTable.select({view:'Grid view'}).all();
   return questions.map(
     function(r) {
       let c = r._rawJson
       c = c["fields"]
+      let options = []
+      try {
+        options = c["Options"].split(", ");
+      }
+      catch (e) {
+        /* if options are empty, we pass empty array */
+      }
       const a : airtableQuestion = {
         pageNumber: c["PageNumber"],
         sectionName: c["Section Name"],
         text: c["Text"],
         type: c["Type"],
-        charCount: c["CharCount"]
+        charCount: c["CharCount"],
+        options: options
       }
       return a;
     }
   )
 }
 
+//getDescriptors queries the Airtable for info on each section
 const getDescriptors = async() => {
   const descriptors = await descriptorsTable.select({view: 'Grid view'}).all();
   return descriptors.map(
@@ -58,6 +71,8 @@ const getDescriptors = async() => {
   )
 }
 
+//createSection merges info on a section from a question and a list of
+//descriptors into one Section
 function createSection(q: airtableQuestion, d: airtableDescriptor[]) {
   const sec : Section = {
     name: q.sectionName,
@@ -76,18 +91,21 @@ function createSection(q: airtableQuestion, d: airtableDescriptor[]) {
   return sec
 }
 
+
+//createQuestion takes the airtable row and turns it into a Question
 function createQuestion(q: airtableQuestion) {
   return {
     text: q.text,
     type: q.type,
-    charCount: q.charCount
+    charCount: q.charCount,
+    options: q.options
   }
 }
 
-export const updateQuestions = async (req: Request, res: Response) => {
-  if (await FormModel.exists({name: "Student"})) {
-    await FormModel.deleteOne({name:"Student"});
-  }
+
+//updateQuestions uses the Airtable questions + descriptors and
+//combines them into Form data type for mongodb
+export const updateQuestions = async () => {
   const questions = await getAirtableQuestions();
   const descriptors = await getDescriptors();
   const form: Form = {name:"Student", pages:{}}
@@ -120,11 +138,5 @@ export const updateQuestions = async (req: Request, res: Response) => {
     }
   }
   form.pages[lastPage].push(currSection)
-  await FormModel.create(form)
-  return res.json(form)
+  return form
 };
-
-
-export const getQuestions = async(req: Request, res: Response) => {
-  return res.json(await FormModel.find({name:"Student"}));
-}

@@ -1,11 +1,14 @@
 import { Router } from "express";
 
-import {getQuestions, updateQuestions} from "../forms/forms"
+import {getQuestions, updateRoute, getPage} from "../controllers/form"
 
 const router = Router();
 
-router.get("/questions", getQuestions);
+//Routes related to querying MongoDB
+router.get("/questions", getQuestions)
+router.get("/questions/:page", getPage);
 
-router.get("/updateQuestions", updateQuestions)
+//Routes for querying Airtable
+router.get("/updateQuestions", updateRoute)
 
 export default router;

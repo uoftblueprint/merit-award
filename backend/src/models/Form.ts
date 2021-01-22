@@ -1,13 +1,12 @@
 import mongoose from "mongoose";
-// import { Form } from "../types";
 
 const { Schema } = mongoose;
-
 
 const QuestionSchema = new Schema({
     text: String,
     type: String,
-    charCount: Number
+    charCount: Number,
+    options: [String]
 })
 
 const SectionSchema = new Schema({
