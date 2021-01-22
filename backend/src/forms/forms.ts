@@ -9,96 +9,114 @@ const base = airtable.base('appt2jmmk7EWPzIkp');
 const questionTable = base("StudentApplication")
 const descriptorsTable = base("StudentDescriptors")
 
-const getQuestions = async() => {
-  let questions = await questionTable.select({view:'Grid view'}).all();
-  questions = questions.map(
+interface airtableQuestion {
+  pageNumber: string,
+  sectionName: string,
+  text: string,
+  type: string,
+  charCount: number
+}
+
+interface airtableDescriptor {
+  name: string,
+  repeatable: number,
+  label: string
+}
+
+
+const getAirtableQuestions = async() => {
+  const questions = await questionTable.select({view:'Grid view'}).all();
+  return questions.map(
     function(r) {
-      return r._rawJson;
+      let c = r._rawJson
+      c = c["fields"]
+      const a : airtableQuestion = {
+        pageNumber: c["PageNumber"],
+        sectionName: c["Section Name"],
+        text: c["Text"],
+        type: c["Type"],
+        charCount: c["CharCount"]
+      }
+      return a;
     }
   )
-  return questions;
 }
 
 const getDescriptors = async() => {
-  let descriptors =  await descriptorsTable.select({view: 'Grid view'}).all();
-  descriptors = descriptors.map(
+  const descriptors = await descriptorsTable.select({view: 'Grid view'}).all();
+  return descriptors.map(
     function(r) {
-      return r._rawJson;
+      let c = r._rawJson
+      c = c["fields"]
+      const a : airtableDescriptor = {
+        name: c["Name"],
+        repeatable: c["Repeatable"],
+        label: c["Label"]
+      }
+      return a;
     }
   )
-  return descriptors;
 }
 
-// function createSection(q: object, d: object) {
-//   for (const entries in d) {
-//     const curr = d[entries]
-//     if (curr["Name"] == q["Section Name"]){
-//       const sec : Section = {
-//         name: q["Section Name"],
-//         repeatable: curr["Repeatable"],
-//         label: curr["Label"],
-//         questions: []
-//       }
-//       return sec
-//     }
-//   }
-//   const sec : Section = {
-//     name: q["Section Name"],
-//     repeatable: 0,
-//     label: "none",
-//     questions: []
-//   }
-//   return sec
-// }
+function createSection(q: airtableQuestion, d: airtableDescriptor[]) {
+  const sec : Section = {
+    name: q.sectionName,
+    repeatable: 0,
+    label: "none",
+    questions: []
+  }
+  for (const entries in d) {
+    const curr = d[entries]
+    if (curr.name == q.sectionName){
+      sec.repeatable = curr.repeatable
+      sec.label = curr.label
+      return sec
+    }
+  }
+  return sec
+}
 
-export const processQuestions = async (req: Request, res: Response) => {
-  const questions = await getQuestions();
+function createQuestion(q: airtableQuestion) {
+  return {
+    text: q.text,
+    type: q.type,
+    charCount: q.charCount
+  }
+}
+
+export const updateQuestions = async (req: Request, res: Response) => {
+  if (await FormModel.exists({name: "Student"})) {
+    await FormModel.deleteOne({name:"Student"});
+  }
+  const questions = await getAirtableQuestions();
   const descriptors = await getDescriptors();
   const form: Form = {name:"Student", pages:{}}
   let lastPage = "";
   let lastSection = "";
   let currSection: Section = {name:"empty", label: "", questions:[], repeatable:0};
   for (const entries in questions) {
-    const current = questions[entries]["fields"]
-    if (current["PageNumber"] == lastPage) {
-      if (current["Section Name"] == lastSection) {
-        const q: Question = {text: current["Text"], type: current["Type"], charCount: current["CharCount"]}
+    const current = questions[entries]
+    if (current.pageNumber == lastPage) {
+      if (current.sectionName == lastSection) {
+        const q: Question = createQuestion(current)
         currSection.questions.push(q)       
       }
       else {
-        lastSection = current["Section Name"]
+        lastSection = current.sectionName
         form.pages[lastPage].push(currSection)
-        currSection = {
-          name: current["Section Name"],
-          label: "none",
-          repeatable: 0,
-          questions: []
-        }
-        currSection.questions.push({
-          text: current["Text"],
-          type: current["Type"],
-          charCount: current["CharCount"]
-        })
+        currSection = createSection(current, descriptors)
+        currSection.questions.push(createQuestion(current))
       }
     }
     else {
-      if (current["PageNumber"] != "1") {
+      if (current.pageNumber != "1") {
         form.pages[lastPage].push(currSection)
       }
-      lastPage = current["PageNumber"]
-      lastSection = current["Section Name"]
+      lastPage = current.pageNumber
+      lastSection = current.sectionName
       form.pages[lastPage] = []
-      currSection = {
-        name: current["Section Name"],
-        repeatable: 0,
-        label: "none",
-        questions: []
-      }
-      currSection.questions.push({
-        text: current["Text"],
-        type: current["Type"],
-        charCount: current["CharCount"]
-      })
+      currSection = createSection(current, descriptors)
+      currSection.questions.push(createQuestion(current))
     }
   }
   form.pages[lastPage].push(currSection)
@@ -106,7 +124,7 @@ export const processQuestions = async (req: Request, res: Response) => {
   return res.json(form)
 };
 
-export const createPage = async(req: Request, res: Response) => {
-  await FormModel.create({name: "test", pages: {"1": {name: "test", repeatable: 0, label: "test", questions:[{text: "test", type:"test", charCount: 0}]}}})
-  return res.json({hello: "hello"})
+
+export const getQuestions = async(req: Request, res: Response) => {
+  return res.json(await FormModel.find({name:"Student"}));
 }

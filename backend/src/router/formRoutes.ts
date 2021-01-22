@@ -1,11 +1,11 @@
 import { Router } from "express";
 
-import {processQuestions, createPage} from "../forms/forms"
+import {getQuestions, updateQuestions} from "../forms/forms"
 
 const router = Router();
 
-router.get("/questions", processQuestions);
+router.get("/questions", getQuestions);
 
-router.get("/testCreate", createPage)
+router.get("/updateQuestions", updateQuestions)
 
 export default router;
