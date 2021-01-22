@@ -27,33 +27,45 @@ function Login() {
   }
 
   return (
-    <div className="login">
-      <h1 className="bg-gray-500 text-orange"> MERIT AWARD </h1>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group size="lg" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            autoFocus
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group size="lg" controlId="password">
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Form.Group>
-        <Button block size="lg" type="submit" disabled={!validateForm()}>
-          Login
-        </Button>
-      </Form>
-      <Link to="/signup">Signup</Link>
+    <div className="h-screen bg-blue-50 flex items-center justify-center">
+      <div class="max-w-md flex flex-col p-4 sm:w-1/2 lg:w-1/3 border-2 rounded border-black">
+
+        <div class="flex-1">
+          <h2 class="text-gray-900 text-2xl font-bold leading-snug">
+            Merit Award Bursary Program Application
+          </h2>
+        </div>
+     
+        <Form onSubmit={handleSubmit}>
+          <Form.Group size="lg" controlId="email">
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              autoFocus
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group size="lg" controlId="password">
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Form.Group>
+          <div class="flex-1">
+            <Link to="/">Forgot Password?</Link>
+          </div>
+          <Button block size="lg" type="submit" disabled={!validateForm()}>
+            Sign In
+          </Button>
+        </Form>
+
+      </div>
     </div>
   );
 }
 
 export default Login;
+
