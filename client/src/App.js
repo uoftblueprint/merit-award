@@ -4,9 +4,12 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import LoggedIn from "./pages/LoggedIn";
 import Signup from "./pages/Signup";
+import Dashboard from "./pages/Dashboard";
+import Application from "./pages/Application";
 import './styles/App.css';
 import Cookies from 'js-cookie'
 import { useSelector, useDispatch } from 'react-redux';
@@ -42,33 +45,39 @@ function App() {
 
     <div>
       {/* Only make internal pages available if global state is Logged In -> true */}
-        {loggedIn ?
+        {!loggedIn ?
           <Switch>
-            <Route path="/reviewers">
-              <Reviewers />
-            </Route>
-            <Route path="/recommenders">
-              <Recommenders />
-            </Route>
-            <Route path="/users">
-              <Users />
-            </Route>
-            <Route path="/">
-              <LoggedIn logout={logout} cookies={access}/>
-            </Route>
+            <Route path="/reviewers" component={WithNav}/>
+            <Route path="/recommenders" component={WithNav}/>
+            <Route path="/users" component={WithNav}/>
+            <Route path="/dashboard" component={WithNav}/>
+            <Route path="/application" component={WithNav}/>
+            <Route path="/" render={() => <WithNav logout={logout} cookies={access}/>}/>
           </Switch>
           :
           <Switch>
-            <Route path="/signup">
-              <Signup />
-            </Route>
-            <Route path="/">
-              <Login />
-            </Route>
+            <Route path="/signup" component={Signup}/>
+            <Route path="/" component={Login}/>
           </Switch>
         }
     </div>
   </Router>
+  );
+}
+
+function WithNav(props) {
+  return (
+    <div>
+      <Navbar/>
+      <Switch>
+        <Route path="/reviewers" component={Reviewers}/>
+        <Route path="/recommenders" component={Recommenders}/>
+        <Route path="/users" component={Users}/>
+        <Route path="/dashboard" component={Dashboard}/>
+        <Route path="/application" component={Application}/>
+        <Route path="/" render={() => <LoggedIn logout={props.logout} cookies={props.access}/>}/>
+      </Switch>
+    </div>
   );
 }
 
