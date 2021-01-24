@@ -48,10 +48,10 @@ export const logIn = async (req: Request, res: Response, next: NextFunction) => 
 };
 
 export const signUpCounselor = async (req: Request, res: Response, next: NextFunction) => {
-  const doesUserExist = await UserModel.exists({ email: req.body.email });
-  if (doesUserExist) {
+  const user = await UserModel.exists({ email: req.body.email });
+  if (user.counselor) {
     res.status(400);
-    return res.json({ error: "User exists" });
+    return res.json({ error: "User is already a counselor" });
   }
 
   passport.authenticate("signupCounselor", async (err: Error, user: User, _: NextFunction) => {

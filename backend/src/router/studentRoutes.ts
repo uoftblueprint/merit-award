@@ -9,7 +9,7 @@ router.put(
   '/referral/counselor',
   async (req: Request, res: Response, _: NextFunction) => {
     const user = req.user as User;
-    if (!user.student) {
+    if (!user.student || !user.admin) {
       return;
     }
     const url = crypto.randomBytes(50).toString('hex');
