@@ -10,7 +10,7 @@ const ExtractJWT = passportJwt.ExtractJwt;
 
 import UserModel from '../models/User';
 import { JWT_SECRET } from '../constants';
-import { Student, Counselor } from '../models/UserType';
+import { Student, Counselor, Reviewer, Admin } from '../models/UserType';
 import User from '../models/User';
 
 passport.use(
@@ -34,29 +34,6 @@ passport.use(
     )
 );
 
-// passport.use(
-//     'signupCounselor',
-//     new customStrategy(
-//       {
-//         usernameField: 'email',
-//         passwordField: 'password',
-//         urlField: 'url',
-//       },
-//       async (email: string, password: string, url: string, done: any) => {
-//         try {
-//           const user = await UserModel.create({ email, password });
-//           const counselor = await Counselor.create({ user: user._id });
-//           user.counselor = counselor._id;
-//           await user.save();
-
-//           return done(null, user);
-//         } catch (error) {
-//           done(error);
-//         }
-//       }
-//     )
-// );
-
 passport.use(
   'signupCounselor',
   new CustomStrategy(
@@ -64,13 +41,59 @@ passport.use(
       try {
         const student = await Student.findOne({ counselorReferral: req.body.url })
         if (!student) {
-          done(Error('Invalid Referral Url :('));
+          return done(Error('Invalid Referral Url :('));
         }
         const user = await UserModel.create({ email: req.body.email, password: req.body.password });
         const counselor = await Counselor.create({ user: user._id });
         user.counselor = counselor._id;
         counselor.students = [student._id];
         await counselor.save();
+        await user.save();
+        return done(null, user);
+      } catch (error) {
+        done(error);
+      }
+    }
+  )
+);
+
+passport.use(
+  'signupReviewer',
+  new CustomStrategy(
+    async (req, done) => {
+      try {
+        const student = await Student.findOne({ reviewerReferral: req.body.url })
+        console.log('student :>> ', student);
+        if (!student) {
+          return done(Error('Invalid Referral Url :('));
+        }
+        const user = await UserModel.create({ email: req.body.email, password: req.body.password });
+        const reviewer = await Reviewer.create({ user: user._id });
+        user.reviewer = reviewer._id;
+        reviewer.students = [student._id];
+        await reviewer.save();
+        await user.save();
+        return done(null, user);
+      } catch (error) {
+        console.log('error :>> ', error);
+        done(error);
+      }
+    }
+  )
+);
+
+passport.use(
+  'signupAdmin',
+  new localStrategy(
+    {
+      usernameField: 'email',
+      passwordField: 'password'
+    },
+    async (email: string, password: string, done: any) => {
+      try {
+        const user = await UserModel.create({ email, password });
+        const admin = await Admin.create({ user: user._id });
+        user.admin = admin._id;
         await user.save();
         return done(null, user);
       } catch (error) {

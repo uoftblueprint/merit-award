@@ -48,13 +48,37 @@ export const logIn = async (req: Request, res: Response, next: NextFunction) => 
 };
 
 export const signUpCounselor = async (req: Request, res: Response, next: NextFunction) => {
-  const user = await UserModel.exists({ email: req.body.email });
-  if (user.counselor) {
+  const user = await UserModel.findOne({ email: req.body.email });
+  if (user && user.counselor) {
     res.status(400);
     return res.json({ error: "User is already a counselor" });
   }
 
   passport.authenticate("signupCounselor", async (err: Error, user: User, _: NextFunction) => {
+    return reqLogin(err, user, req, res, next);
+  })(req, res, next);
+};
+
+export const signUpReviewer = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserModel.findOne({ email: req.body.email });
+  if (user && user.reviewer) {
+    res.status(400);
+    return res.json({ error: "User is already a reviewer" });
+  }
+
+  passport.authenticate("signupReviewer", async (err: Error, user: User, _: NextFunction) => {
+    return reqLogin(err, user, req, res, next);
+  })(req, res, next);
+};
+
+export const signUpAdmin = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserModel.exists({ email: req.body.email });
+  if (user) {
+    res.status(400);
+    return res.json({ error: "User already exists." });
+  }
+
+  passport.authenticate("signupAdmin", async (err: Error, user: User, _: NextFunction) => {
     return reqLogin(err, user, req, res, next);
   })(req, res, next);
 };
