@@ -3,6 +3,8 @@ import { Document, Schema } from "mongoose";
 export interface User extends Document {
     email: string;
     password: string;
+    resetPasswordToken: string,
+    resetPasswordExpires: number,
     student: Schema.Types.ObjectId;
     reviewer: Schema.Types.ObjectId;
     counselor: Schema.Types.ObjectId;

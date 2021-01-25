@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { signUp, logIn, signUpCounselor, signUpReviewer, signUpAdmin } from "../controllers/auth";
+import { signUp, logIn, signUpCounselor, signUpReviewer, signUpAdmin, recoverPassword, redirectReset } from "../controllers/auth";
 
 
 
@@ -14,4 +14,6 @@ router.post("/signup/counselor", signUpCounselor);
 router.post("/signup/reviewer", signUpReviewer);
 router.post("/signup/admin", signUpAdmin);
 
+router.post("recover", recoverPassword);
+router.post("reset", redirectReset);
 export default router;

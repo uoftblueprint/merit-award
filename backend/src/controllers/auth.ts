@@ -98,3 +98,36 @@ export const signUpAdmin = async (req: Request, res: Response, next: NextFunctio
     return reqLogin(err, user, req, res, next);
   })(req, res, next);
 };
+
+export const recoverPassword = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserModel.findOne({email: req.body.email});
+  if (!user){
+    return res.status(404).json({ error: "User not found."})
+  }
+  
+  try {
+    user.generatePasswordReset();
+    user.save()
+  
+    // TODO: send email instead of returning link
+    const link = "http://" + req.headers.host + "/api/auth/reset/" + user.resetPasswordToken;
+    return res.json({link: link});
+  }
+  catch(err) {
+    return next(err);
+  }
+};
+
+export const redirectReset = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserModel.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}});
+  if (!user){
+    return res.status(401).json({errror: "Password reset token is invalid or has expired."})
+  }
+  
+  try {
+    res.render('reset', {user})
+  }
+  catch(err) {
+    return next(err);
+  }
+};

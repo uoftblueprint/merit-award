@@ -1,5 +1,6 @@
 import mongoose, { Model } from "mongoose";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
 import { User } from "../types";
 
 const Schema = mongoose.Schema;
@@ -17,6 +18,14 @@ const UserSchema = new Schema<User, UserModel>({
   password: {
     type: String,
     required: true,
+  },
+  resetPasswordToken: {
+    type: String,
+    required: false
+  },
+  resetPasswordExpires: {
+    type: Date,
+    required: false
   },
   student: {
     type: Schema.Types.ObjectId,
@@ -50,6 +59,11 @@ UserSchema.methods.isValidPassword = async function (
   const compare = await bcrypt.compare(password, this.password);
 
   return compare;
+};
+
+UserSchema.methods.generatePasswordReset = function() {
+  this.resetPasswordToken = crypto.randomBytes(20).toString('hex');
+  this.resetPasswordExpires = Date.now() + 3600000; //expires in an hour
 };
 
 const User = mongoose.model<User, UserModel>("user", UserSchema);
