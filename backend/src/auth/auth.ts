@@ -36,17 +36,18 @@ passport.use(
 
 passport.use(
   'signupCounselor',
-  new CustomStrategy(
-    async (req, done) => {
+  new localStrategy(
+    {
+      usernameField: 'email',
+      passwordField: 'password',
+      passReqToCallback : true
+    },
+    async (req, email: string, password: string, done: any) => {
       try {
-        const student = await Student.findOne({ counselorReferral: req.body.url })
-        if (!student) {
-          return done(Error('Invalid Referral Url :('));
-        }
-        const user = await UserModel.create({ email: req.body.email, password: req.body.password });
+        const user = await UserModel.create({ email, password });
         const counselor = await Counselor.create({ user: user._id });
         user.counselor = counselor._id;
-        counselor.students = [student._id];
+        counselor.students = [req.body._student._id];
         await counselor.save();
         await user.save();
         return done(null, user);
@@ -59,23 +60,22 @@ passport.use(
 
 passport.use(
   'signupReviewer',
-  new CustomStrategy(
-    async (req, done) => {
+  new localStrategy(
+    {
+      usernameField: 'email',
+      passwordField: 'password',
+      passReqToCallback : true
+    },
+    async (req, email: string, password: string, done: any) => {
       try {
-        const student = await Student.findOne({ reviewerReferral: req.body.url })
-        console.log('student :>> ', student);
-        if (!student) {
-          return done(Error('Invalid Referral Url :('));
-        }
-        const user = await UserModel.create({ email: req.body.email, password: req.body.password });
+        const user = await UserModel.create({ email, password });
         const reviewer = await Reviewer.create({ user: user._id });
         user.reviewer = reviewer._id;
-        reviewer.students = [student._id];
+        reviewer.students = [req.body._student._id];
         await reviewer.save();
         await user.save();
         return done(null, user);
       } catch (error) {
-        console.log('error :>> ', error);
         done(error);
       }
     }

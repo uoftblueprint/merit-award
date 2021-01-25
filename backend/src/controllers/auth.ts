@@ -3,7 +3,7 @@ import passport from "passport";
 import jwt from "jsonwebtoken";
 
 import UserModel from "../../src/models/User";
-import { Counselor } from '../models/UserType';
+import { Student, Counselor } from '../models/UserType';
 import { User } from "../types";
 import { JWT_SECRET } from '../constants';
 
@@ -54,6 +54,14 @@ export const signUpCounselor = async (req: Request, res: Response, next: NextFun
     return res.json({ error: "User is already a counselor" });
   }
 
+  const student = await Student.findOne({ counselorReferral: req.body.url })
+  if (!student) {
+    res.status(400);
+    return res.json({ error: "Invalid Referral Url :(" });
+  }
+
+  req.body._student = student;
+
   passport.authenticate("signupCounselor", async (err: Error, user: User, _: NextFunction) => {
     return reqLogin(err, user, req, res, next);
   })(req, res, next);
@@ -65,6 +73,14 @@ export const signUpReviewer = async (req: Request, res: Response, next: NextFunc
     res.status(400);
     return res.json({ error: "User is already a reviewer" });
   }
+
+  const student = await Student.findOne({ reviewerReferral: req.body.url })
+  if (!student) {
+    res.status(400);
+    return res.json({ error: "Invalid Referral Url :(" });
+  }
+
+  req.body._student = student;
 
   passport.authenticate("signupReviewer", async (err: Error, user: User, _: NextFunction) => {
     return reqLogin(err, user, req, res, next);
