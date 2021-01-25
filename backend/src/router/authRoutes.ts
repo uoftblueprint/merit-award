@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { signUp, logIn, signUpCounselor, signUpReviewer, signUpAdmin } from "../controllers/auth";
 
 
+
 const router = Router();
 
 router.post("/signup", signUp);

@@ -12,7 +12,7 @@ export interface User extends Document {
 // user types
 export interface StudentInterface extends Document {
     user: Schema.Types.ObjectId;
-    counselorReferral: String;
+    counselorReferral: string;
 }
 
 export interface ReviewerInterface extends Document {
@@ -27,4 +27,23 @@ export interface CounselorInterface extends Document {
 
 export interface AdminInterface extends Document {
     user: Schema.Types.ObjectId;
+}
+
+export interface Form { 
+    name: string,
+    pages: Record<string, Array<Section>>,
+}
+
+export interface Section {
+    name: string,
+    repeatable: number,
+    label: string,
+    questions: Array <Question>
+}
+
+export interface Question {
+    text: string,
+    type: string,
+    charCount: number,
+    options: string[]
 }
