@@ -57,7 +57,7 @@ function Login() {
           <div class="flex-1">
             <Link to="/">Forgot Password?</Link>
           </div>
-          <Button block size="lg" type="submit" disabled={!validateForm()}>
+          <Button block size="lg" class="bg-blue-700" type="submit" disabled={!validateForm()}>
             Sign In
           </Button>
         </Form>

@@ -13,18 +13,20 @@ function Home() {
           <div class="mt-24 mb-6">
             <a
               href="/login"
-              class="w-1/3 m-0 m-auto my-6 px-3 py-3 text-white font-semibold bg-blue-700 rounded-md shadow-sm"
             >
-              Login
+              <h5 class="w-1/3 m-0 m-auto my-6 px-3 py-3 text-white font-semibold bg-blue-700 rounded-md shadow-sm">
+                Login
+              </h5>
             </a>
           </div>
 
           <div class="my-6">
             <a
               href="/signup"
-              class="w-1/3 m-0 m-auto my-3 mt-6 px-3 py-3 text-white font-semibold bg-blue-700 rounded-md shadow-sm"
             >
-              Sign Up
+              <h5 class="w-1/3 m-0 m-auto my-6 px-3 py-3 text-white font-semibold bg-blue-700 rounded-md shadow-sm">
+                Sign Up
+              </h5>
             </a>
           </div>
         </div>

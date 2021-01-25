@@ -96,7 +96,7 @@ function Signup() {
               onChange={(e) => setValidate(e.target.value)}
             />
           </Form.Group>
-          <Button block size="lg" type="submit" disabled={!validateForm()}>
+          <Button block size="lg" class="bg-blue-700" type="submit" disabled={!validateForm()}>
             Sign Up
           </Button>
         </Form>
