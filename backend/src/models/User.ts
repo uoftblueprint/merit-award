@@ -1,4 +1,4 @@
-import mongoose, { Document, Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import bcrypt from "bcrypt";
 import { User } from "../types";
 
@@ -17,6 +17,22 @@ const UserSchema = new Schema<User, UserModel>({
   password: {
     type: String,
     required: true,
+  },
+  student: {
+    type: Schema.Types.ObjectId,
+    ref: "Student",
+  },
+  counselor: {
+    type: Schema.Types.ObjectId,
+    ref: "Counselor",
+  },
+  reviewer: {
+    type: Schema.Types.ObjectId,
+    ref: "Reviewer",
+  },
+  admin: {
+    type: Schema.Types.ObjectId,
+    ref: "Admin",
   },
 });
 

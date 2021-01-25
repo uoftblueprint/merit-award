@@ -3,7 +3,7 @@ import { FormModel } from '../models/Form'
 import { updateQuestions } from '../forms/forms'
 
 //This is the route used when updating the MongoDB with the airtable
-export const updateRoute = async(req: Request, res: Response) => {
+export const updateRoute = async(_: Request, res: Response) => {
     const form = await updateQuestions()
     if (await FormModel.exists({name: "Student"})) {
         await FormModel.deleteOne({name:"Student"});
@@ -13,7 +13,7 @@ export const updateRoute = async(req: Request, res: Response) => {
 }
 
 //getQuestions queries the MongoDB and returns the ENTIRE form
-export const getQuestions = async(req: Request, res: Response) => {
+export const getQuestions = async(_: Request, res: Response) => {
     return res.json(await FormModel.findOne({name:"Student"}));
 }
 
