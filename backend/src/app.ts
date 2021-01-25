@@ -4,6 +4,7 @@ import passport from 'passport';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
 
@@ -36,6 +37,9 @@ app.use(function(err: any, req: any, res: any, next: any) {
   res.status(err.status || 500);
   res.json({ error: err });
 });
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
 app.listen(8000, () => {
   console.log('Server started.')

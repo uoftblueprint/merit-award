@@ -15,5 +15,5 @@ router.post("/signup/reviewer", signUpReviewer);
 router.post("/signup/admin", signUpAdmin);
 
 router.post("recover", recoverPassword);
-router.post("reset", redirectReset);
+router.get("reset", redirectReset);
 export default router;
