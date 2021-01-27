@@ -56,8 +56,10 @@ UserSchema.methods.isValidPassword = async function (
   this: User,
   password: string
 ) {
-  const compare = await bcrypt.compare(password, this.password);
-
+  console.log('this.password :>> ', this.password);
+  console.log('password :>> ', password);
+  const compare = await bcrypt.compare(this.password, password);
+  console.log('compare :>> ', compare);
   return compare;
 };
 

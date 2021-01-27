@@ -10,20 +10,23 @@ import { JWT_SECRET } from '../constants';
 const reqLogin = async (err: Error, user: User, req: Request, res: Response, next: NextFunction) => {
   try {
     if (err || !user) {
+      console.log("line 13");
+      console.log('user :>> ', user);
       const error = new Error("An error occurred.");
-
+      console.log('error :>> ', error);
       return next(error);
     }
 
     req.login(user, { session: false }, async (error: Error) => {
       if (error) return next(error);
-
+      console.log('user :>> ', user);
       const body = { _id: user._id, email: user.email };
       const token = jwt.sign({ user: body }, JWT_SECRET);
 
       return res.json({ access: token });
     });
   } catch (error) {
+    console.log('error :>> ', error);
     return next(error);
   }
 }
