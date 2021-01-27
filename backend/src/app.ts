@@ -25,6 +25,7 @@ const app = express();
 app.use(cors());
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/api/user', routes);
 app.use('/api/forms', formRoutes)
 
@@ -38,6 +39,7 @@ app.use(function(err: any, req: any, res: any, next: any) {
   res.json({ error: err });
 });
 
+// Setup view engine.
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 

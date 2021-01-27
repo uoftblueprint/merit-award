@@ -1,6 +1,6 @@
 import { Router } from 'express';
-
-import { signUp, logIn, signUpCounselor, signUpReviewer, signUpAdmin, recoverPassword, redirectReset } from "../controllers/auth";
+import { check } from 'express-validator';
+import { signUp, logIn, signUpCounselor, signUpReviewer, signUpAdmin, recoverPassword, redirectReset, resetPassword } from "../controllers/auth";
 
 
 
@@ -14,6 +14,9 @@ router.post("/signup/counselor", signUpCounselor);
 router.post("/signup/reviewer", signUpReviewer);
 router.post("/signup/admin", signUpAdmin);
 
-router.post("recover", recoverPassword);
-router.get("reset", redirectReset);
+router.post("/recover", recoverPassword);
+router.get("/reset/:token", redirectReset);
+router.post("/reset/:token", [
+    check('confirmPassword', 'Passwords do not match').custom((value, { req }) => (value === req.body.password)),
+], resetPassword);
 export default router;

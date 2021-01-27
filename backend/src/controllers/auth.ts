@@ -110,7 +110,7 @@ export const recoverPassword = async (req: Request, res: Response, next: NextFun
     user.save()
   
     // TODO: send email instead of returning link
-    const link = "http://" + req.headers.host + "/api/auth/reset/" + user.resetPasswordToken;
+    const link = "http://" + req.headers.host + "/api/user/reset/" + user.resetPasswordToken;
     return res.json({link: link});
   }
   catch(err) {
@@ -126,6 +126,25 @@ export const redirectReset = async (req: Request, res: Response, next: NextFunct
   
   try {
     res.render('reset', {user})
+  }
+  catch(err) {
+    return next(err);
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserModel.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}});
+  if (!user){
+    return res.status(401).json({errror: "Password reset token is invalid or has expired."})
+  }
+  
+  try {
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+    // TODO: send email that password has been updated
+    res.status(200).json({message: 'Your password has been updated.'})
   }
   catch(err) {
     return next(err);
