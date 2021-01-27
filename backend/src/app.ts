@@ -25,7 +25,7 @@ const app = express();
 app.use(cors());
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }));    // need this for pug form
 app.use('/api/user', routes);
 app.use('/api/forms', formRoutes)
 
