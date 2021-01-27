@@ -45,7 +45,7 @@ function App() {
 
     <div>
       {/* Only make internal pages available if global state is Logged In -> true */}
-        {!loggedIn ?
+        {loggedIn ?
           <Switch>
             <Route path="/reviewers" component={WithNav}/>
             <Route path="/recommenders" component={WithNav}/>

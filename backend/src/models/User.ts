@@ -46,10 +46,12 @@ const UserSchema = new Schema<User, UserModel>({
 });
 
 UserSchema.pre("save", async function (this: User, next: any) {
-  const hash = await bcrypt.hash(this.password, 10);
+  if (this.isNew) {
+    const hash = await bcrypt.hash(this.password, 10);
 
-  this.password = hash;
-  next();
+    this.password = hash;
+    next();
+  }
 });
 
 UserSchema.methods.isValidPassword = async function (
