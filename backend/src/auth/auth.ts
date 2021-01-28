@@ -111,12 +111,8 @@ passport.use(
         passwordField: 'password'
       },
       async (email: string, password: string, done: any) => {
-        console.log('email :>> ', email);
-        console.log('password :>> ', password);
         try {
           const user = await UserModel.findOne({ email: email });
-          console.log("118");
-          console.log('user :>> ', user);
           if (!user) {
             return done(null, false, { message: 'User not found' });
           }
@@ -124,13 +120,11 @@ passport.use(
           const validate = await user.isValidPassword(password);
   
           if (!validate) {
-            console.log('validate :>> ', validate);
             return done(null, false, { message: 'Wrong Password' });
           }
   
           return done(null, user, { message: 'Logged in Successfully' });
         } catch (error) {
-          console.log('error :>> ', error);
           return done(error);
         }
       }

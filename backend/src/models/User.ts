@@ -47,7 +47,6 @@ const UserSchema = new Schema<User, UserModel>({
 
 UserSchema.pre("save", async function (this: User, next: any) {
   if (this.isNew) {
-    console.log('this.isNew :>> ', this.isNew);
     const hash = await bcrypt.hash(this.password, 10);
 
     this.password = hash;
@@ -59,10 +58,7 @@ UserSchema.methods.isValidPassword = async function (
   this: User,
   password: string
 ) {
-  console.log('this.password :>> ', this.password);
-  console.log('password :>> ', password);
-  const compare = await bcrypt.compare(this.password, password);
-  console.log('compare :>> ', compare);
+  const compare = await bcrypt.compare(password, this.password);
   return compare;
 };
 
