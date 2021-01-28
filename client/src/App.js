@@ -76,7 +76,7 @@ function WithNav(props) {
         <Route path="/dashboard" component={Dashboard}/>
         <Route path="/application" component={Student}/>
         <Route path="/references" component={References}/>
-        <Route path="/" render={() => <Dashboard logout={props.logout} cookies={props.access}/>}/>
+        <Route path="/" render={() => <LoggedIn logout={props.logout} cookies={props.access}/>}/>
       </Switch>
     </div>
   );
