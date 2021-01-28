@@ -49,9 +49,9 @@ export const logIn = async (req: Request, res: Response, next: NextFunction) => 
 
 export const signUpCounselor = async (req: Request, res: Response, next: NextFunction) => {
   const user = await UserModel.findOne({ email: req.body.email });
-  if (user && user.counselor) {
+  if (user) {
     res.status(400);
-    return res.json({ error: "User is already a counselor" });
+    return res.json({ error: "User already exists." });
   }
 
   const student = await Student.findOne({ counselorReferral: req.body.url })
@@ -69,9 +69,9 @@ export const signUpCounselor = async (req: Request, res: Response, next: NextFun
 
 export const signUpReviewer = async (req: Request, res: Response, next: NextFunction) => {
   const user = await UserModel.findOne({ email: req.body.email });
-  if (user && user.reviewer) {
+  if (user) {
     res.status(400);
-    return res.json({ error: "User is already a reviewer" });
+    return res.json({ error: "User already exists." });
   }
 
   const student = await Student.findOne({ reviewerReferral: req.body.url })
@@ -89,9 +89,9 @@ export const signUpReviewer = async (req: Request, res: Response, next: NextFunc
 
 export const signUpRecommender = async (req: Request, res: Response, next: NextFunction) => {
   const user = await UserModel.findOne({ email: req.body.email });
-  if (user && user.recommender) {
+  if (user) {
     res.status(400);
-    return res.json({ error: "User is already a recommender" });
+    return res.json({ error: "User already exists." });
   }
 
   const student = await Student.findOne({ recommenderReferral: req.body.url })
