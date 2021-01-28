@@ -1,5 +1,4 @@
 import client from './axios';
-
 export const getQuestions = async (page) => {
     try {
         const questions = await client.get('/api/forms/questions/'+page);
