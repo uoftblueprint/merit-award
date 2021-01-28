@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import Form from "react-bootstrap/Form";
-import { Link } from "react-router-dom";
-
-import Applicant from "./application/Applicant";
-import Involvement from "./application/Involvement";
-import Education from "./application/Education";
-import Mentorship from "./application/Mentorship";
-import { getQuestions } from "../api/application";
+import FormBody from "./application/FormBody";
 
 function Application() {
   const [stage, setStage] = useState(1);
@@ -21,20 +14,7 @@ function Application() {
     }
   }
 
-  function StageSwitch(props) {
-    switch(props.stage) {
-      case 1:
-        return <Applicant/>
-      case 2:
-        return <Involvement/>
-      case 3:
-        return <Education/>
-      case 4:
-        return <Mentorship/>
-    }
-  }
-
-  let stages = [
+  const stages = [
     {
       index: 1,
       name: "Applicant Info"
@@ -53,6 +33,27 @@ function Application() {
     }
   ]
 
+  function getStage() {
+    return stages.map(stage => 
+      <div key={stage.index} className="cursor-pointer hover:text-blue-500" onClick={() => {setStage(stage.index)}}>
+        <span className="border border-blue-900 rounded-full py-0.5 px-1.5 mr-2">{stage.index}</span>
+        {stage.name}
+      </div>
+    )
+  }
+
+  function nextPage() {
+    if (stage < stages.length) {
+      setStage(stage + 1);
+    }
+  }
+
+  function previousPage() {
+    if (stage > 1) {
+      setStage(stage - 1);
+    }
+  }
+
   return (
     <div className="application flex flex-column m-20">
       <div className="mt-20 bg-ma rounded-full p-2">
@@ -69,18 +70,9 @@ function Application() {
         </p>
       </div>
       <div className="p-2 flex border border-blue-200 space-x-10 rounded-full">
-        {
-          stages.map(stage =>
-            <div className="cursor-pointer hover:text-blue-500" onClick={() => setStage(stage.index)}>
-              <span className="border border-blue-900 rounded-full py-0.5 px-1.5 mr-2">{stage.index}</span>
-              {stage.name}
-            </div>
-          )
-        }
+        { getStage() }
       </div>
-      <div>
-        <StageSwitch stage={stage}/>
-      </div>
+      <FormBody pageNum={stage} nextPage={nextPage} previousPage={previousPage} />
     </div>
   );
 }

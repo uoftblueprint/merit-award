@@ -19,7 +19,7 @@ const Form = forwardRef(({questions, dataCallback}, ref) => {
       let question = questions[i];
       switch (question.type) {
         case "Input Text":
-          formElementList.push(<InputText name={question._id} label={question.text} hint={question.hint} register={register}/>);
+          formElementList.push(<InputText key={i} name={question._id} label={question.text} hint={question.hint} register={register}/>);
         break;
       }
     }
