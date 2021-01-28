@@ -6,12 +6,10 @@ import Applicant from "./application/Applicant";
 import Involvement from "./application/Involvement";
 import Education from "./application/Education";
 import Mentorship from "./application/Mentorship";
+import { getQuestions } from "../api/application";
 
 function Application() {
   const [stage, setStage] = useState(1);
-
-  function validateForm() {
-  }
 
   async function handleSubmit(event) {
     event.preventDefault();

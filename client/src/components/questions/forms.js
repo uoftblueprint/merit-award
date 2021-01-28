@@ -1,46 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from "axios";
 
-function Form() {
-  const [questions, setQuestions] = useState([]);
+const Form = forwardRef(({questions, dataCallback}, ref) => {
   const [formElements, setFormElements] = useState([]);
 
   const { register, handleSubmit, watch, errors} = useForm();
 
-  useEffect(() => {
-    console.log("inside useEffect");
+  useImperativeHandle(ref, () => ({
+    submit () {
+        handleSubmit(d => dataCallback(d))()
+    },
+  }))
 
-    async function fetchData() {
-      // Get the data from the backend
-      const result = await axios(
-        'http://localhost:8080/getQuestions',
-      );
-      console.log("result from fetching the data")
-      console.log(result)
-      const list = []
-      for (let i = 0; i < result.data.length; i++) {
-        var current = result.data[i]
-        list.push({
-          id: current["ID"],
-          page_number: current["page_number"],
-          question_type: current["question_type"],
-          text: current["text"],
-          hint: current["hint"],
-          options: current["options"].split(','),
-        })
+  useEffect(() => {
+    const formElementList = []
+    for (let i = 0; i < questions.length; i++) {
+      let question = questions[i];
+      switch (question.type) {
+        case "Input Text":
+          formElementList.push(<InputText name={question._id} label={question.text} hint={question.hint} register={register}/>);
+        break;
       }
-      setQuestions(list);
     }
-
-    fetchData();
-
-  }, []);
-
-  useEffect(() => {
-    console.log('errors :>> ', errors);
-    const list = []
-    for (const [index, value] of questions.entries()) {
+    /*for (const [index, value] of questions.entries()) {
       console.log("line 40")
       console.log(value.question_type)
       const label = value.text;
@@ -81,28 +64,28 @@ function Form() {
           );
           break;
       }
-    }
-    setFormElements(list)
+    }*/
+    setFormElements(formElementList)
   }, [questions, errors])
 
   return (
+    <>
     <form onSubmit={handleSubmit(d => console.log(d))}>
       {formElements}
-      <input type="submit" />
     </form>
+    </>
   )
-}
+})
 
-function InputText(props) {
+function InputText({name, label, hint, register}) {
   return (
     <div>
       <div>
-        <label>{props.label}</label>
+        <label>{label}</label>
       </div>
       <div>
-        <input type="text" name={props.label} placeholder={props.hint} ref={props.register} />
+        <input type="text" name={name} placeholder={hint} ref={register} />
       </div>
-      {props.error && <div>This field is required.</div>}
     </div>
   )
 }
