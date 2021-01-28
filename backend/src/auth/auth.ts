@@ -10,7 +10,7 @@ const ExtractJWT = passportJwt.ExtractJwt;
 
 import UserModel from '../models/User';
 import { JWT_SECRET } from '../constants';
-import { Student, Counselor, Reviewer, Admin } from '../models/UserType';
+import { Student, Counselor, Reviewer, Recommender, Admin } from '../models/UserType';
 import User from '../models/User';
 
 passport.use(
@@ -73,6 +73,30 @@ passport.use(
         user.reviewer = reviewer._id;
         reviewer.students = [req.body._student._id];
         await reviewer.save();
+        await user.save();
+        return done(null, user);
+      } catch (error) {
+        done(error);
+      }
+    }
+  )
+);
+
+passport.use(
+  'signupRecommender',
+  new localStrategy(
+    {
+      usernameField: 'email',
+      passwordField: 'password',
+      passReqToCallback : true
+    },
+    async (req, email: string, password: string, done: any) => {
+      try {
+        const user = await UserModel.create({ email, password });
+        const recommender = await Recommender.create({ user: user._id });
+        user.recommender = recommender._id;
+        recommender.students = [req.body._student._id];
+        await recommender.save();
         await user.save();
         return done(null, user);
       } catch (error) {

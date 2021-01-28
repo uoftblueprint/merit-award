@@ -87,6 +87,26 @@ export const signUpReviewer = async (req: Request, res: Response, next: NextFunc
   })(req, res, next);
 };
 
+export const signUpRecommender = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserModel.findOne({ email: req.body.email });
+  if (user && user.recommender) {
+    res.status(400);
+    return res.json({ error: "User is already a recommender" });
+  }
+
+  const student = await Student.findOne({ recommenderReferral: req.body.url })
+  if (!student) {
+    res.status(400);
+    return res.json({ error: "Invalid Referral Url :(" });
+  }
+
+  req.body._student = student;
+
+  passport.authenticate("signupRecommender", async (err: Error, user: User, _: NextFunction) => {
+    return reqLogin(err, user, req, res, next);
+  })(req, res, next);
+};
+
 export const signUpAdmin = async (req: Request, res: Response, next: NextFunction) => {
   const user = await UserModel.exists({ email: req.body.email });
   if (user) {
