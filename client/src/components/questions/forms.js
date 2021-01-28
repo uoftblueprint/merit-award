@@ -20,7 +20,20 @@ const Form = forwardRef(({questions, dataCallback}, ref) => {
       switch (question.type) {
         case "Input Text":
           formElementList.push(<InputText key={i} name={question._id} label={question.text} hint={question.hint} register={register}/>);
-        break;
+          break;
+        case "Multiple Select":
+          formElementList.push(<Checkbox key={i} label={question.text} options={question.options} register={register} />);
+          break;
+        case "Single Select":
+          console.log('question :>> ', question);
+          formElementList.push(<SingleSelect key={i} label={question.text} options={question.options} register={register}/>);
+          break;
+        case "Email":
+          formElementList.push(<Email key={i} label={question.text} hint={question.hint} register={register}/>);
+          break
+        case "Phone Number":
+          formElementList.push(<PhoneNumber key={i} label={question.text} hint={question.hint} register={register}/>);
+          break;
       }
     }
     /*for (const [index, value] of questions.entries()) {
