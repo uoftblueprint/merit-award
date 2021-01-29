@@ -19,10 +19,10 @@ function Login() {
     event.preventDefault();
 
     try {
-        await apiLogin(email, password);
-        dispatch({ type: 'LOGIN' });
+      await apiLogin(email, password);
+      dispatch({ type: 'LOGIN' });
     } catch (err) {
-        console.log(err);
+      console.log(err);
     }
   }
 
@@ -47,11 +47,14 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-        <Button block size="lg" type="submit" disabled={!validateForm()}>
+        <button
+          block size="lg"
+          className="indigo-button my-3"
+          onClick={!validateForm()}>
           Login
-        </Button>
+        </button>
       </Form>
-      <Link to="/signup">Signup</Link>
+      <Link className="outline-button m-auto" to="/signup">Signup</Link>
     </div>
   );
 }

@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: Roboto;
+    font-weight: 400;
+  }
+
+  .indigo-button {
+    @apply bg-indigo rounded min-w-max text-white py-1 px-4 font-bold;
+  }
+
+  .gray-button {
+    @apply bg-gray rounded min-w-max text-white py-1 px-4 font-bold;
+  }
+  .outline-button {
+    @apply bg-white rounded border-2 border-indigo min-w-max text-indigo py-1 px-4 font-bold;
+  }
+}
