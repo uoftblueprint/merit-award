@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { signUp, logIn, signUpCounselor, signUpReviewer, signUpAdmin } from "../controllers/auth";
+import { signUp, logIn, signUpCounselor, signUpReviewer, signUpAdmin, getStudentFromCounselorReferral } from "../controllers/auth";
 
 
 
@@ -13,5 +13,7 @@ router.post("/login", logIn);
 router.post("/signup/counselor", signUpCounselor);
 router.post("/signup/reviewer", signUpReviewer);
 router.post("/signup/admin", signUpAdmin);
+
+router.get("/referral/counselor/:referral", getStudentFromCounselorReferral);
 
 export default router;

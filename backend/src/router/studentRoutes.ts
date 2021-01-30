@@ -9,16 +9,17 @@ router.put(
   '/referral/counselor',
   async (req: Request, res: Response, _: NextFunction) => {
     const user = req.user as User;
-    console.log(user);
     if (!(user.student || user.admin)) {
       return res.json({error: "Only students and admins can give referral links."})
     }
-    const url = crypto.randomBytes(50).toString('hex');
+    const referral = crypto.randomBytes(50).toString('hex');
     const student = await Student.findById(user.student);
-    student.counselorReferral = url;
+    student.counselorReferral = referral;
     await student.save();
-    
-    res.json({url: url})
+    console.log("making referral link");
+    console.log('user :>> ', user);
+    console.log('student :>> ', student);
+    res.json({url: "http://localhost:3000/signup/counselor/" + referral})
   }
 );
 

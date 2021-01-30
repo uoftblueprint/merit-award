@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import LoggedIn from "./pages/LoggedIn";
 import Signup from "./pages/Signup";
+import SignupCounselor from "./pages/SignupCounselor";
 import Dashboard from "./pages/Dashboard";
 import Application from "./pages/Application";
 import './styles/App.css';
@@ -56,6 +57,7 @@ function App() {
           </Switch>
           :
           <Switch>
+            <Route path="/signup/counselor/:referral" component={SignupCounselor}/>
             <Route path="/signup" component={Signup}/>
             <Route path="/" component={Login}/>
           </Switch>

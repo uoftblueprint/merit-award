@@ -98,3 +98,24 @@ export const signUpAdmin = async (req: Request, res: Response, next: NextFunctio
     return reqLogin(err, user, req, res, next);
   })(req, res, next);
 };
+
+export const getStudentFromCounselorReferral = async (req: Request, res: Response, next: NextFunction) => {
+  // referral doesn't work with admin yet -- see studentRoutes.ts
+  try {
+    console.log("getting student from counselor referral");
+    const student = await Student.findOne({counselorReferral: req.params.referral});
+    console.log('student :>> ', student);
+    if (!student) {
+      return res.status(400).json({ error: "Invalid counselor referral link."})
+    }
+    const user = await UserModel.findById(student.user);
+    if (!user) {
+      return res.status(500).json({ error: "We couldn't get the user associated with the referral link."})
+    }
+    console.log('user :>> ', user);
+    return res.status(200).json({email: user.email});   // send back email for now because we don't have names
+  }
+  catch (err) {
+    return next(err);
+  }
+}
