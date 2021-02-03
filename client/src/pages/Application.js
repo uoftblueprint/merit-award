@@ -58,8 +58,8 @@ function Application() {
   return (
     <div className="application flex flex-column m-20">
       <div className="mt-20 bg-ma rounded-full p-2">
-        <span className="px-4 text-white">Application Form</span>
-        <span className="px-4 text-white">References</span>
+        <Link to="/application" className="px-4 text-white">Application Form</Link>
+        <Link to="/references" className="px-4 text-white">References</Link>
         <span className="px-4 text-white">Additional Attachments</span>
       </div>
       <div className="my-10">
