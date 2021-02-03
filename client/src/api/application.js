@@ -13,3 +13,16 @@ export const getQuestions = async (page) => {
         throw err;
     }
 };
+
+export const postResponses = async (data) => {
+    try {
+        const res = await client.post('/api/forms/response', data);
+        console.log(res)
+        if (!res || res.status !== 200) {
+            throw 'Could not post response';
+        }
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}

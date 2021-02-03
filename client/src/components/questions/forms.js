@@ -22,17 +22,17 @@ const Form = forwardRef(({questions, dataCallback}, ref) => {
           formElementList.push(<InputText key={i} name={question._id} label={question.text} hint={question.hint} register={register}/>);
           break;
         case "Multiple Select":
-          formElementList.push(<Checkbox key={i} label={question.text} options={question.options} register={register} />);
+          formElementList.push(<Checkbox key={i} name={question._id} label={question.text} options={question.options} register={register} />);
           break;
         case "Single Select":
           console.log('question :>> ', question);
-          formElementList.push(<SingleSelect key={i} label={question.text} options={question.options} register={register}/>);
+          formElementList.push(<SingleSelect key={i} name={question._id} label={question.text} options={question.options} register={register}/>);
           break;
         case "Email":
-          formElementList.push(<Email key={i} label={question.text} hint={question.hint} register={register}/>);
+          formElementList.push(<Email key={i} name={question._id} label={question.text} hint={question.hint} register={register}/>);
           break
         case "Phone Number":
-          formElementList.push(<PhoneNumber key={i} label={question.text} hint={question.hint} register={register}/>);
+          formElementList.push(<PhoneNumber key={i} name={question._id} label={question.text} hint={question.hint} register={register}/>);
           break;
       }
     }
@@ -103,13 +103,13 @@ function InputText({name, label, hint, register}) {
   )
 }
 
-function Checkbox(props) {
+function Checkbox({name, options, label, hint, register}) {
   const checkbox_options = []
 
-  for (const [index, value] of props.options.entries()) {
+  for (const [index, value] of options.entries()) {
     checkbox_options.push(
       <div key={index}>
-        <input name={props.label + value} type="checkbox" ref={props.register} />
+        <input name={name} type="checkbox" ref={register} value={value} />
         <label>{value}</label>
       </div>
     )
@@ -118,20 +118,20 @@ function Checkbox(props) {
   return (
     <div>
       <div>
-        <label htmlFor={props.label}>{props.label}</label>
+        <label>{label}</label>
       </div>
       {checkbox_options}
     </div>
   )
 }
 
-function SingleSelect(props) {
+function SingleSelect({name, options, label, hint, register}) {
   const select_options = []
 
-  for (const [index, value] of props.options.entries()) {
+  for (const [index, value] of options.entries()) {
     select_options.push(
       <div key={index}>
-        <input name={props.label} type="radio" ref={props.register({ required: true })} />
+        <input name={name} type="radio" ref={register({ required: true })} />
         <label>{value}</label>
       </div>
     )
@@ -140,36 +140,34 @@ function SingleSelect(props) {
   return (
     <div>
       <div>
-        <label htmlFor={props.label}>{props.label}</label>
+        <label htmlFor={label}>{label}</label>
       </div>
       {select_options}
     </div>
   )
 }
 
-function Email(props) {
+function Email({name, options, label, hint, register}) {
   return (
     <div>
       <div>
-        <label>{props.label}</label>
+        <label>{label}</label>
       </div>
       <div>
-        <input type="text" name={props.label} placeholder={props.hint} ref={props.register({required: true, pattern: /^\S+@\S+$/i})} />
-        {props.error && <div>Enter a valid email address.</div>}
+        <input type="text" name={name} placeholder={hint} ref={register({required: true, pattern: /^\S+@\S+$/i})} />
       </div>
     </div>
   )
 }
 
-function PhoneNumber(props) {
+function PhoneNumber({name, label, hint, register}) {
   return (
     <div>
       <div>
-        <label>{props.label}</label>
+        <label>{label}</label>
       </div>
       <div>
-        <input type="tel" name={props.label} placeholder={props.hint} ref={props.register({required: true, pattern: /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/})} />
-        {props.error && <div>Enter a valid phone number.</div>}
+        <input type="tel" name={name} placeholder={hint} ref={register} />
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { getQuestions } from "../../api/application";
+import { getQuestions, postResponses } from "../../api/application";
 import Form from "../../components/questions/forms";
 
 function FormBody(props) {
@@ -9,6 +9,8 @@ function FormBody(props) {
 
   useEffect(() => {
     const getData = async () => {
+      setLoading(true);
+      setForms([]);
       const data = await getQuestions(props.pageNum);
       setForms(data);
       setLoading(false);
@@ -19,6 +21,16 @@ function FormBody(props) {
       console.log(e);
     }
   }, [props.pageNum]);
+
+  function sendResponse(data) {
+    console.log(data)
+    console.log("send")
+    try {
+      postResponses(data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   function updatePage(nextPage) {
     for (let i = 0; i < formsRef.current.length; i++) {
@@ -35,7 +47,7 @@ function FormBody(props) {
         return (
           <div key={i}>
             <h1>{form.name}</h1>
-            <Form questions={form.questions} ref={el => formsRef.current[i] = el} dataCallback={(d) => {console.log("form name: ", form.name)}} />
+            <Form questions={form.questions} ref={el => formsRef.current[i] = el} dataCallback={(d) => sendResponse(d)} />
           </div>
         )
       })
