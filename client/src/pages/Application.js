@@ -117,6 +117,7 @@ function Application() {
   return (
     <div className="application m-20 relative flex flex-column items-center">
       <Menu className="fixed" setStage={setStage}/>
+      <div className="w-64 h-50 bg-ma"/>
       <div className="flex flex-column w-50 mt-100">
         <h1 className="text-3xl">Application Form</h1>
         <div className="my-6">
