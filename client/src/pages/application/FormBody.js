@@ -1,66 +1,45 @@
 import React, { useState, useEffect, useRef } from "react";
-import { getQuestions, postResponses } from "../../api/application";
-import Form from "../../components/questions/forms";
+import {InputText, Checkbox, Email, SingleSelect} from '../../components/questions/forms';
 
-function FormBody(props) {
-  const [formsLoading, setLoading] = useState(true)
-  const [forms, setForms] = useState([])
-  const formsRef = useRef([]);
 
+function FormBody({data, values}) {
+  const [formElements, setFormElements] = useState([]);
   useEffect(() => {
-    const getData = async () => {
-      setLoading(true);
-      setForms([]);
-      const data = await getQuestions(props.pageNum);
-      setForms(data);
-      setLoading(false);
-    }
-    try {
-      getData();
-    } catch (e) {
-      console.log(e);
-    }
-  }, [props.pageNum]);
+    console.log(values)
+    const formElementList = []
+    for (let i = 0; i < data.length; i++) {
+      let section = data[i];
+      formElementList.push(<h1 key={section.name}>{section.name}</h1>);
 
-  function sendResponse(data) {
-    console.log(data)
-    console.log("send")
-    try {
-      postResponses(data);
-    } catch (e) {
-      console.log(e);
-    }
-  }
+      for (let y = 0; y < section.questions.length; y++) {
+        let question = section.questions[y];
+        switch (question.type) {
 
-  function updatePage(nextPage) {
-    for (let i = 0; i < formsRef.current.length; i++) {
-      if (formsRef.current[i]) {
-        formsRef.current[i].submit();
+          case "Input Text":
+          formElementList.push(<InputText key={question._id} name={question._id} label={question.text} hint={question.hint}/>);
+            break;
+
+          case "Multiple Select":
+          formElementList.push(<Checkbox key={question._id} name={question._id} label={question.text} options={question.options} />);
+           break;
+
+          case "Email":
+            formElementList.push(<Email key={question._id} name={question._id} label={question.text} />)
+            break;
+          case "Single Select":
+            formElementList.push(<SingleSelect key={question._id} name={question._id} label={question.text} options={question.options} />);
+            break;
+        }
       }
     }
-    nextPage ? props.nextPage() : props.previousPage();
-  }
-
-  function getForms() {
-    return (
-      !formsLoading && forms.map((form, i) => {
-        return (
-          <div key={i}>
-            <h1>{form.name}</h1>
-            <Form questions={form.questions} ref={el => formsRef.current[i] = el} dataCallback={(d) => sendResponse(d)} />
-          </div>
-        )
-      })
-    )
-  }
+    setFormElements(formElementList)
+  }, [])
 
   return (
     <div>
-      { getForms() }
-      <button onClick={() => updatePage(false)}>previous</button>
-      <button onClick={() => updatePage(true)}>next</button>
+    {formElements}
     </div>
-  );
+  )
 }
 
 export default FormBody;
