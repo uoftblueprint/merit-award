@@ -69,7 +69,7 @@ function App() {
 
 function WithNav(props) {
   return (
-    <div>
+    <div className="pt-20">
       <Navbar/>
       <Switch>
         <Route path="/reviewers" component={Reviewers}/>
@@ -78,7 +78,7 @@ function WithNav(props) {
         <Route path="/dashboard" component={Dashboard}/>
         <Route path="/application" component={Application}/>
         <Route path="/references" component={References}/>
-        <Route path="/" render={() => <LoggedIn logout={props.logout} cookies={props.access}/>}/>
+        <Route path="/" render={() => <Dashboard logout={props.logout} cookies={props.access}/>}/>
       </Switch>
     </div>
   );

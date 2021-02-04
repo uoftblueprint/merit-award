@@ -7,7 +7,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        ma: '#152A74'
+        ma: '#152A74',
+        gray: '#959A99',
+        lightgray: '#E7E7E7'
       }
     },
     screens: {
@@ -23,7 +25,6 @@ module.exports = {
 
       black: colors.black,
       white: colors.white,
-      gray: colors.coolGray,
       red: colors.red,
       yellow: colors.amber,
       green: colors.emerald,
@@ -31,6 +32,8 @@ module.exports = {
       indigo: colors.indigo,
       purple: colors.violet,
       pink: colors.pink,
+      indigo: '#152A74'
+
     },
     spacing: {
       px: '1px',
