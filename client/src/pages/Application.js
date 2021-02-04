@@ -9,7 +9,7 @@ import Mentorship from "./application/Mentorship";
 
 function Menu(props) {
     const [open, setAccordian] = useState(0);
-    const [stage, setStage] = useState();
+    const [stage, setStage] = useState(1);
 
     let sections = [
       {
@@ -62,10 +62,10 @@ function Menu(props) {
         <div className="fixed flex flex-column bg-fixed overflow-hidden left-28 rounded-md h-auto w-62 l-50 border bg-white border-gray">
 
           {sections.map(s =>
-            <div id="app-section-1" className="w-full overflow-hidden cursor-pointer">
+            <div className="w-full overflow-hidden cursor-pointer">
               <div
                 className={`px-3 p-2 ${open == s.index ? "bg-ma text-white " : "bg-lightgray text-gray"}`}
-                onClick={() => { setAccordian(s.index); setStage(0); }}>
+                onClick={() => { setAccordian(s.index); setStage(1); props.setStage(1); }}>
                   {s.name} { s.index == 3 ? "" : `(${s.completed}` + "/" + `${s.stages.length})` }
               </div>
               <div className={`transition-all ${open == s.index && s.index != 3 ? "h-auto py-2" : "h-0"}`}>
@@ -115,7 +115,7 @@ function Application() {
   }
 
   return (
-    <div className="application m-20 relative flex flex-column items-center">
+    <div className="application mt-36 m-20 relative flex flex-column items-center">
       <Menu className="fixed" setStage={setStage}/>
       <div className="w-64 h-50 bg-ma"/>
       <div className="flex flex-column w-50 mt-100">
