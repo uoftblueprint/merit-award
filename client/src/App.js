@@ -69,7 +69,7 @@ function App() {
 
 function WithNav(props) {
   return (
-    <div className="pt-20">
+    <div className="pt-18">
       <Navbar/>
       <Switch>
         <Route path="/reviewers" component={Reviewers}/>

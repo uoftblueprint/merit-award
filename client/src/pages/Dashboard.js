@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function Dashboard() {
   return (
-    <div className="dashboard flex justify-center items-center h-screen">
+    <div className="dashboard flex justify-center items-center h-screen bg-superlightgray">
       <div className="status w-4/5">
         <div className="flex">
           <span className="flex-grow"/>

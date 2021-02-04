@@ -9,8 +9,10 @@ function Navbar() {
 
   return (
     <div id="navbar" className="fixed flex px-8 py-2 items-center w-screen bg-white top-0 shadow-md">
-        <img src={logo} className="w-20 h-12 mr-3"/>
-        <div className="font-semibold text-lg">Application Portal</div>
+        <Link className="flex items-center hover:no-underline hover:text-black" to="/dashboard">
+          <img src={logo} className="w-20 h-12 mr-3"/>
+          <div className="font-semibold text-lg">Application Portal</div>
+        </Link>
         <div className="flex-grow"/>
         <div className={`h-0.5 w-24 bg-ma absolute bottom-0 transition-all duration-200 ${page === "dashboard" ? "right-56" : "right-16"}`}/>
         <div>
