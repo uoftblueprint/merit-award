@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import logo from "../media/logo.png";
+import logo from "../images/logo.png";
 
 function Navbar() {
   let url = window.location.href.split("/");
