@@ -52,7 +52,7 @@ function SignupCounselor() {
 
   return (
     <div className="login">
-      <h1> You were referred by {student} </h1>
+      {student && <h1> You were referred by {student} </h1>}
       <h1> MERIT AWARD </h1>
       <Form onSubmit={handleSubmit}>
         <Form.Group size="lg" controlId="email">
