@@ -9,7 +9,6 @@ import Login from "./pages/Login";
 import LoggedIn from "./pages/LoggedIn";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
-import Application from "./pages/Application";
 import Student from './pages/application/Student';
 import './styles/App.css';
 import Cookies from 'js-cookie'
