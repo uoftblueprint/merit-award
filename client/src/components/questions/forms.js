@@ -2,16 +2,14 @@ import React from 'react';
 import { Field, ErrorMessage } from 'formik';
 
 
-export function InputText({name, label, hint, register, value, errors}) {
-  console.log("INPUT")
-  console.log(errors)
+export function InputText({name, label, hint, errors}) {
   return (
     <div>
       <div>
         <label>{label}</label>
       </div>
       <div>
-        <Field component="input" type="text" name={name} placeholder={hint} ref={register} value={value}/>
+        <Field component="input" type="text" name={name} placeholder={hint}/>
         {errors && <ErrorMessage name={name} />}
       </div>
     </div>

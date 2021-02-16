@@ -5,8 +5,6 @@ import {ErrorMessage} from 'formik';
 function FormBody({data, values, errors}) {
   const [formElements, setFormElements] = useState([]);
   useEffect(() => {
-    console.log(values)
-    console.log(errors)
     const formElementList = []
     for (let i = 0; i < data.length; i++) {
       let section = data[i];
@@ -19,6 +17,10 @@ function FormBody({data, values, errors}) {
           case "Input Text":
           formElementList.push(<InputText key={question._id} name={question._id} label={question.text} hint={question.hint} errors={errors}/>);
             break;
+          
+          case "Name":
+          formElementList.push(<InputText key={question._id} name={question._id} label={question.text} hint={question.hint} errors={errors}/>);
+              break;
 
           case "Multiple Select":
           formElementList.push(<Checkbox key={question._id} name={question._id} label={question.text} options={question.options} />);
