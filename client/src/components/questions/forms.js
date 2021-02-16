@@ -1,15 +1,18 @@
 import React from 'react';
-import { Field } from 'formik';
+import { Field, ErrorMessage } from 'formik';
 
 
-export function InputText({name, label, hint, register, value}) {
+export function InputText({name, label, hint, register, value, errors}) {
+  console.log("INPUT")
+  console.log(errors)
   return (
     <div>
       <div>
         <label>{label}</label>
       </div>
       <div>
-        <Field component="input" type="text" name={name} placeholder={hint} ref={register}/>
+        <Field component="input" type="text" name={name} placeholder={hint} ref={register} value={value}/>
+        {errors && <ErrorMessage name={name} />}
       </div>
     </div>
   )
@@ -33,6 +36,7 @@ export function Checkbox({name, options, label, hint, register}) {
         <label>{label}</label>
       </div>
       {checkbox_options}
+      <ErrorMessage name={name} />
     </div>
   )
 }
@@ -55,6 +59,7 @@ export function SingleSelect({name, options, label, hint, register}) {
         <label htmlFor={label}>{label}</label>
       </div>
       {select_options}
+      <ErrorMessage name={name} />
     </div>
   )
 }
@@ -67,6 +72,7 @@ export function Email({name, label}) {
       </div>
       <div>
         <Field type="email" name={name} />
+        <ErrorMessage name={name} />
       </div>
     </div>
   )

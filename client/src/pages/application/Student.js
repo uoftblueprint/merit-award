@@ -2,14 +2,19 @@ import React, { useState, useEffect } from "react";
 import {
   Formik,
   Form,
+  ErrorMessage
 } from "formik";
 import {getQuestions, postResponses} from '../../api/application';
 import FormBody from "./FormBody";
+import * as Yup from 'yup';
+
 
 function Student() {
   const [isLoading, setLoading] = useState(true);
   const [snapshot, setSnapshot] = useState({});
   const [formData, setFormData] = useState({});
+  const [formValidation, setFormValidation] = useState({});
+  const [initialValues, setInitialValues] = useState({});
   const [step, setStep] = useState(1);
 
   useEffect(() => {
@@ -17,10 +22,9 @@ function Student() {
     const getData = async () => {
       setLoading(true);
       setFormData({});
+      setFormValidation({});
       const data = await getQuestions(step);
-      console.log(data)
-      setFormData(data);
-      setLoading(false);
+      await initForm(data);
     };
     try {
       getData();
@@ -28,6 +32,34 @@ function Student() {
       console.log(e);
     }
   }, [step]);
+
+  const initForm = async (data) => {
+    setFormData(data);
+    let _validationSchema = {};
+    let _initialValues = {};
+    for (let i = 0; i < data.length; i++) {
+      let section = data[i];
+      for (let y = 0; y < section.questions.length; y++) {
+        let question = section.questions[y];
+        _initialValues[question._id] = "";
+        if(question.type === "Name" || question.type === "Input Text"){
+          _validationSchema[question._id] = Yup.string().required(question.text + ' required');
+        }else if(question.type === "Email"){
+          _validationSchema[question._id] = Yup.string().email().required(question.text + ' required')
+        }else if(question.type === "Single Select" || question.type === ""){
+          _validationSchema[question._id] = Yup.string().oneOf(question.options).required('Required');
+        }
+      }
+    }
+    console.log(_validationSchema)
+    setFormValidation(Yup.object().shape({ ..._validationSchema }));
+    setSnapshot(_initialValues);
+    console.log(_initialValues)
+    console.log(snapshot)
+    console.log("yo")
+    console.log(formValidation)
+    setLoading(false);
+  }
 
   const steps = [
     {
@@ -71,6 +103,8 @@ function Student() {
   }
 
   async function handleSubmit(values, actions) {
+    actions.isTouched = true;
+    console.log(values)
     setSnapshot(values)
     try {
       await postResponses(values)
@@ -105,11 +139,13 @@ function Student() {
         {getStep()}
       </div>
       <div>
-      <Formik initialValues={snapshot} onSubmit={handleSubmit}>
-      {({ values }) => {
+      <Formik initialValues={snapshot} onSubmit={handleSubmit} validationSchema={formValidation}>
+      {({ errors, values }) => {
+        console.log(errors)
         return (
           <Form id={step}>
-          {!isLoading && <FormBody data={formData} values={values}/>}
+          <div>{errors.keys}</div>
+          {!isLoading && <FormBody data={formData} values={values} errors={errors}/>}
           {step !== 1 && (
           <button onClick={() => previous(values)}>Previous</button>
           )}
