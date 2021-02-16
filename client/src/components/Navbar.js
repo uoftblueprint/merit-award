@@ -14,7 +14,7 @@ function Navbar() {
           <div className="font-semibold text-lg">Application Portal</div>
         </Link>
         <div className="flex-grow"/>
-        <div className={`h-0.5 w-24 bg-ma absolute bottom-0 transition-all duration-200 ${page === "dashboard" ? "right-56" : "right-16"}`}/>
+        <div className={`h-0.5 w-24 bg-ma absolute bottom-0 transition-all duration-200 ${page === "dashboard" ? "right-56" : page === "settings" ? "right-16" : "-right-40"}`}/>
         <div>
             <Link to="/dashboard" className={`px-8 font-semibold hover:text-ma hover:no-underline transition-all ${page === "dashboard" ? "text-ma" : "text-gray"}`}>Dashboard</Link>
             <Link to="/settings" className={`px-8 font-semibold hover:text-ma hover:no-underline transition-all ${page === "settings" ? "text-ma" : "text-gray"}`}>User Settings</Link>
