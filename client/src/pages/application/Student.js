@@ -47,7 +47,9 @@ function Student() {
         }else if(question.type === "Email"){
           _validationSchema[question._id] = Yup.string().email("Email must be valid").required(question.text + ' required')
         }else if(question.type === "Single Select" || question.type === ""){
-          _validationSchema[question._id] = Yup.string().oneOf(question.options);
+          _validationSchema[question._id] = Yup.string().oneOf(question.options).required('Selection required');
+        }else if(question.type === "Dropdown" || question.type === ""){
+          _validationSchema[question._id] = Yup.string().oneOf(question.options).required('Dropdown selection required');
         }
       }
     }
@@ -102,7 +104,7 @@ function Student() {
   }
 
   async function handleSubmit(values, actions) {
-    console.log(values)
+    console.log("VALUES HERE :" , values)
     setSnapshot(values)
     try {
       await postResponses(values)

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Field, ErrorMessage } from 'formik';
 
 
@@ -61,6 +61,41 @@ export function SingleSelect({name, options, label, hint, register}) {
     </div>
   )
 }
+
+export function Dropdown({name, options, label}) {
+  const [selectedValue, setSelectedValue] = useState("");
+  const select_options = []
+  select_options.push(<option key={0} name={name} value={"asdf"} label={""}/>)
+
+  const handleChange = (event) => {
+    setSelectedValue(event.target.value);
+  }
+
+  for (const [index, value] of options.entries()) {
+    select_options.push(
+      <option key={index+1} name={name} value={value} label={value}/>
+    )
+  }
+
+  return (
+    <div>
+      <div>
+        <label>{label}</label>
+      </div>
+      <div>
+        <select
+          name={name}
+          value={selectedValue}
+          onChange={handleChange}
+        >
+          { select_options }
+        </ select>
+        <ErrorMessage name={name} />
+      </div>
+    </div>
+  )
+}
+
 
 export function Email({name, label}) {
   return (
