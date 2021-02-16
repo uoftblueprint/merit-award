@@ -2,11 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.css';
 import "../styles/login.css";
+import { useDispatch } from 'react-redux';
 import { useEffect, useState } from "react";
 
 import {getEmail} from '../api/auth';
 
 function Login(props) {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
    useEffect(() => {
     const getData = async () => {
@@ -14,7 +16,11 @@ function Login(props) {
       console.log(data);
       setEmail(data.user.email);
      }
-    getData();
+     try {
+      getData();
+     } catch (e) {
+      dispatch({ type: 'LOGOUT' });
+     }
   }, []);
   return (
     <div className="loggedInTest">

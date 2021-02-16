@@ -1,4 +1,4 @@
-import mongoose, { Document, Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import bcrypt from "bcrypt";
 import { User } from "../types";
 
@@ -18,13 +18,31 @@ const UserSchema = new Schema<User, UserModel>({
     type: String,
     required: true,
   },
+  student: {
+    type: Schema.Types.ObjectId,
+    ref: "Student",
+  },
+  counselor: {
+    type: Schema.Types.ObjectId,
+    ref: "Counselor",
+  },
+  reviewer: {
+    type: Schema.Types.ObjectId,
+    ref: "Reviewer",
+  },
+  admin: {
+    type: Schema.Types.ObjectId,
+    ref: "Admin",
+  },
 });
 
 UserSchema.pre("save", async function (this: User, next: any) {
-  const hash = await bcrypt.hash(this.password, 10);
+  if (this.isNew) {
+    const hash = await bcrypt.hash(this.password, 10);
 
-  this.password = hash;
-  next();
+    this.password = hash;
+    next();
+  }
 });
 
 UserSchema.methods.isValidPassword = async function (

@@ -30,11 +30,10 @@ module.exports = {
       yellow: colors.amber,
       green: colors.emerald,
       blue: colors.blue,
-      indigo: colors.indigo,
       purple: colors.violet,
       pink: colors.pink,
-      indigo: '#152A74'
-
+      indigo: '#152A74',
+      gray: '#959A99'
     },
     spacing: {
       px: '1px',
