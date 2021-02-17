@@ -10,7 +10,7 @@ export function InputText({name, label, hint, errors}) {
       </div>
       <div>
         <Field component="input" type="text" name={name} placeholder={hint}/>
-        {errors && <ErrorMessage name={name} />}
+        <ErrorMessage name={name} />
       </div>
     </div>
   )

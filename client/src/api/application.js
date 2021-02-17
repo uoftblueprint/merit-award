@@ -14,6 +14,16 @@ export const getQuestions = async (page) => {
     }
 };
 
+export const getAnswers = async () => {
+    try {
+        const res = await client.get('/api/forms/answers/');
+        return res.data;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
 export const postResponses = async (data) => {
     try {
         const res = await client.post('/api/forms/response', data);

@@ -7,7 +7,6 @@ const userSubmissionSchema = new Schema({
   name: String,
   answers: {
     type: Map,
-    of: [String]
   }
 })
 

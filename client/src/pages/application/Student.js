@@ -5,7 +5,7 @@ import {
   ErrorMessage,
   connect
 } from "formik";
-import {getQuestions, postResponses} from '../../api/application';
+import {getAnswers, getQuestions, postResponses} from '../../api/application';
 import FormBody from "./FormBody";
 import * as Yup from 'yup';
 
@@ -25,6 +25,7 @@ function Student() {
       setFormValidation({});
       const data = await getQuestions(step);
       await initForm(data);
+      setLoading(false);
     };
     try {
       getData();
@@ -35,13 +36,20 @@ function Student() {
 
   const initForm = async (data) => {
     setFormData(data);
+    const prevAnswers = await getAnswers();
     let _validationSchema = {};
     let _initialValues = {};
     for (let i = 0; i < data.length; i++) {
       let section = data[i];
       for (let y = 0; y < section.questions.length; y++) {
         let question = section.questions[y];
-        _initialValues[question._id] = "";
+
+        if (prevAnswers[question._id]) {
+          _initialValues[question._id] = prevAnswers[question._id];
+        } else {
+          _initialValues[question._id] = "";
+        }
+        
         if(question.type === "Name" || question.type === "Input Text"){
           _validationSchema[question._id] = Yup.string().required(question.text + ' required');
         } else if(question.type === "Email"){
@@ -53,15 +61,13 @@ function Student() {
         } else if(question.type === "Paragraph" || question.type === ""){
           _validationSchema[question._id] = Yup.string().required('Description required').max(question.charCount);
         }
+
       }
     }
 
     setFormValidation(Yup.object().shape({ ..._validationSchema }));
-    console.log(snapshot)
-    if (Object.keys(snapshot).length === 0) {
-      setSnapshot(_initialValues);
-    }
-    setLoading(false);
+
+    setSnapshot(_initialValues);
   }
 
   const steps = [
@@ -106,11 +112,9 @@ function Student() {
   }
 
   async function handleSubmit(values, actions) {
-    console.log("VALUES HERE :" , values)
     setSnapshot(values)
     try {
       await postResponses(values)
-      console.log("done")
       setStep(step+1)
     } catch (e) {
       console.log(e);

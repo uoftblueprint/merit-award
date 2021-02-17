@@ -33,22 +33,30 @@ export const getPage = async(req: Request, res: Response) => {
     return res.send("error")
 }
 
+export const getAnswers = async(req: Request, res: Response) => {
+    const user = req.user as User;
+    console.log(user);
+    const q = await UserApplication.findOne({user: user._id})
+    let answers = {}
+    if (q) {
+        const submissions = q.studentSubmissions;
+        answers = submissions.answers.toObject({ flattenMaps: true });
+    }
+    return res.json(answers);
+}
+
 export const postForm = async(req: Request, res: Response) => {
     const answers = req.body;
     const user = req.user as User;
-    let a = new Map<string, [string]>()
+    let a = new Map<string, any>()
     const exists = await UserApplication.exists({user: user._id})
     if (exists) {
         const x = await UserApplication.find({user: user._id})
         a = x[0].studentSubmissions.answers
     }
-    for (let i in answers) {
-        if (typeof answers[i] == "string") {
-            a.set(i, [answers[i]])
-        }
-        else {
-            a.set(i, answers[i])
-        }
+    for (const i in answers) {
+        console.log(answers[i])
+        a.set(i, answers[i])
     }
     if (!exists) {
         await UserApplication.create({user: user._id, studentSubmissions: {_id: "0", name:"Student", answers: a}})
