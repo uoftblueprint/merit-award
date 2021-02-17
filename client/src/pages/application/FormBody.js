@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import {InputText, Checkbox, Email, SingleSelect, Dropdown} from '../../components/questions/forms';
+import {InputText, Checkbox, Email, SingleSelect, Dropdown, TextArea} from '../../components/questions/forms';
 import {ErrorMessage} from 'formik';
 
 function FormBody({data, values, errors}) {
@@ -36,6 +36,10 @@ function FormBody({data, values, errors}) {
 
           case "Dropdown":
             formElementList.push(<Dropdown key={question._id} name={question._id} label={question.text} options={question.options} />);
+            break;
+
+          case "Paragraph":
+            formElementList.push(<TextArea key={question._id} name={question._id} label={question.text} options={question.options} />);
             break;
         }
       }

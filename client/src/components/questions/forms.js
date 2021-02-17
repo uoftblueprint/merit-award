@@ -16,6 +16,17 @@ export function InputText({name, label, hint, errors}) {
   )
 }
 
+
+export function TextArea({name, label, hint, errors}) {
+  return (
+    <div>
+      <label>{label}</label>
+      <Field component="textarea" type="text" name={name} placeholder="lmao"/>
+      <ErrorMessage name={name} />
+    </div>
+  )
+}
+
 export function Checkbox({name, options, label, hint, register}) {
   const checkbox_options = []
 
@@ -63,13 +74,8 @@ export function SingleSelect({name, options, label, hint, register}) {
 }
 
 export function Dropdown({name, options, label}) {
-  const [selectedValue, setSelectedValue] = useState("");
   const select_options = []
-  select_options.push(<option key={0} name={name} value={"asdf"} label={""}/>)
-
-  const handleChange = (event) => {
-    setSelectedValue(event.target.value);
-  }
+  select_options.push(<option key={0} name={name} value="" label={""}/>)
 
   for (const [index, value] of options.entries()) {
     select_options.push(
@@ -79,23 +85,14 @@ export function Dropdown({name, options, label}) {
 
   return (
     <div>
-      <div>
-        <label>{label}</label>
-      </div>
-      <div>
-        <select
-          name={name}
-          value={selectedValue}
-          onChange={handleChange}
-        >
-          { select_options }
-        </ select>
-        <ErrorMessage name={name} />
-      </div>
+      <label>{label}</label>
+      <Field name={name} component="select">
+        { select_options }
+      </Field>
+      <ErrorMessage name={name} />
     </div>
   )
 }
-
 
 export function Email({name, label}) {
   return (
