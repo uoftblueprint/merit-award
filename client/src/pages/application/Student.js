@@ -24,6 +24,7 @@ function Student() {
       setFormData({});
       setFormValidation({});
       const data = await getQuestions(step);
+      console.log('data :>> ', data);
       await initForm(data);
       setLoading(false);
     };
