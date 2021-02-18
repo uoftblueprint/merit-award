@@ -4,34 +4,43 @@ import {ErrorMessage, FieldArray} from 'formik';
 
 function Section(props) {
   const { section, errors } = props;
-  const [ allSectionElements, setAllSectionElements ] = useState([<h1 key={section.name}>{section.name}</h1>]);
-  const [ repeat, setRepeat ] = useState(0);
+  const [ allSectionElements, setAllSectionElements ] = useState([]);
+  const [ sectionId, setSectionId ] = useState(0);
 
   useEffect(() => {
     const sectionBody = getSectionElements();
-    setRepeat(repeat + 1);
     setAllSectionElements([...allSectionElements, sectionBody]);
   }, [])
 
-  const removeSection = (index) => {
-    // can't use index
-    if (repeat >= 1) {
-      const newSectionElements = [...allSectionElements];
-      newSectionElements.splice(index + 1, 1);
-      console.log('newSectionElements :>> ', newSectionElements);
-      console.log('repeat :>> ', repeat);
-      setRepeat(repeat - 1);
-      setAllSectionElements(newSectionElements);
-    }
+  // const removeSection = (index) => {
+  //   // can't use index
+  //   if (repeat >= 1) {
+  //     const newSectionElements = [...allSectionElements];
+  //     newSectionElements.splice(index + 1, 1);
+  //     console.log('newSectionElements :>> ', newSectionElements);
+  //     console.log('repeat :>> ', repeat);
+  //     setRepeat(repeat - 1);
+  //     setAllSectionElements(newSectionElements);
+  //   }
+  // }
+
+  const removeSection = (event) => {
+    event.preventDefault();
+    // This is weird because each individual sectionbody that this remove section belongs to has its own copy of allsection elements so we need to move this up to the parent.
+    console.log('event :>> ', event);
+    console.log('sectionElements :>> ', allSectionElements);
+    // const newSectionElements = allSectionElements.filter(sec => sec != event);
+    // console.log('newSectionElements :>> ', newSectionElements);
+    // setAllSectionElements(newSectionElements)
   }
 
   const getSectionElements = () => {
-    console.log('repeat :>> ', repeat);
+    // maybe consider making this a separate component that we can pass props down to
     const sectionBody = [];
-    console.log('section :>> ', section);
     for (let y = 0; y < section.questions.length; y++) {
       let question = section.questions[y];
-        const id = section.repeatable ? question._id + "-" + repeat : question._id;
+        const id = section.repeatable ? question._id + "-" + sectionId : question._id;
+        setSectionId(sectionId + 1);
         switch (question.type) {
           case "Input Text":
           sectionBody.push(<InputText key={id} name={id} label={question.text} hint={question.hint} errors={errors}/>);
@@ -63,19 +72,17 @@ function Section(props) {
       }
     }
     return (
-      <div>
+      <div key={section._id + '-' + sectionId}>
         { sectionBody }
-        { section.repeatable && <button onClick={() => removeSection(repeat)}> REMOVE </button>}
+        { section.repeatable && <button onClick={(el) => removeSection(el)}> REMOVE </button>}
       </div>
     )
   }
 
 
   const repeatSection = () => {
-    if (repeat < section.repeatable) {
+    if (allSectionElements.length <= section.repeatable) {
       const sectionBody = getSectionElements();
-      console.log('repeat :>> ', repeat);
-      setRepeat(repeat + 1);
       setAllSectionElements([...allSectionElements, sectionBody]);
     }
   }
@@ -83,7 +90,8 @@ function Section(props) {
 
   return (
     <div>
-      {allSectionElements}
+      <h1 key={section.name}>{section.name}</h1>
+      { allSectionElements }
       {
         section.repeatable > 0 && <button type="button" onClick={() => repeatSection()}>Add More</button>
       }
@@ -103,7 +111,7 @@ function FormBody({data, values, errors}) {
 
   return (
     <div>
-    {formElements}
+      {formElements}
     </div>
   )
 }
