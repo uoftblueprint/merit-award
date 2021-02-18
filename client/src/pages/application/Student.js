@@ -24,7 +24,6 @@ function Student() {
       setFormData({});
       setFormValidation({});
       const data = await getQuestions(step);
-      console.log('data :>> ', data);
       await initForm(data);
       setLoading(false);
     };
@@ -36,7 +35,7 @@ function Student() {
   }, [step]);
 
   const initSchema = (validationSchema, initialValues, prevAnswers, question, number) => {
-    let id = number ? (question._id + "-" + number) : question._id;
+    let id = number != null ? (question._id + "-" + number) : question._id;
     if (prevAnswers[id]) {
       initialValues[id] = prevAnswers[id];
     } else {
