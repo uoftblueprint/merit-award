@@ -34,7 +34,7 @@ function Student() {
     }
   }, [step]);
 
-  const initSchema = (validationSchema, initialValues, prevAnswers, question, number) => {
+  const initSchema = (validationSchema, initialValues, prevAnswers, question, number, required) => {
     let id = number != null ? (question._id + "-" + number) : question._id;
     if (prevAnswers[id]) {
       initialValues[id] = prevAnswers[id];
@@ -43,15 +43,20 @@ function Student() {
     }
     
     if(question.type === "Name" || question.type === "Input Text"){
-      validationSchema[id] = Yup.string().required(question.text + ' required');
+      validationSchema[id] = Yup.string();
+      required && validationSchema[id].required(question.text + ' required');
     } else if(question.type === "Email"){
-      validationSchema[id] = Yup.string().email("Email must be valid").required(question.text + ' required')
+      validationSchema[id] = Yup.string().email("Email must be valid")
+      required && validationSchema[id].required(question.text + ' required');
     } else if(question.type === "Single Select" || question.type === ""){
-      validationSchema[id] = Yup.string().oneOf(question.options).required('Selection required');
+      validationSchema[id] = Yup.string().oneOf(question.options);
+      required && validationSchema[id].required('Selection required');
     } else if(question.type === "Dropdown" || question.type === ""){
-      validationSchema[id] = Yup.string().oneOf(question.options).required('Dropdown selection required');
+      validationSchema[id] = Yup.string().oneOf(question.options);
+      required && validationSchema[id].required('Dropdown selection required');
     } else if(question.type === "Paragraph" || question.type === ""){
-      validationSchema[id] = Yup.string().required('Description required').max(question.charCount);
+      validationSchema[id] = Yup.string().max(question.charCount);
+      required && validationSchema[id].required('Description required');
     }
   }
 
@@ -67,10 +72,10 @@ function Student() {
 
         if (section.repeatable) {
           for (let num = 0; num < section.repeatable; num++) {
-            initSchema(_validationSchema, _initialValues, prevAnswers, question, num);
+            initSchema(_validationSchema, _initialValues, prevAnswers, question, num, false);
           }
         } else {
-          initSchema(_validationSchema, _initialValues, prevAnswers, question)
+          initSchema(_validationSchema, _initialValues, prevAnswers, question, null, true)
         }
 
       }
