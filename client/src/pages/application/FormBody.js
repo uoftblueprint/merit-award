@@ -9,52 +9,26 @@ function Section(props) {
 
   useEffect(() => {
     const sectionBody = getSectionElements();
-    setAllSectionElements([...allSectionElements, ...sectionBody]);
-  }, [repeat])
+    setRepeat(repeat + 1);
+    setAllSectionElements([...allSectionElements, sectionBody]);
+  }, [])
 
-  const getSectionElementsRepeatable = () => {
-    const sectionBody = [];
-    for (let i = 0; i < section.repeatable; i++) {
-      for (let y = 0; y < section.questions.length; y++) {
-        let question = section.questions[y];
-          const id = section.name[repeat][question._id];
-          switch (question.type) {
-            case "Input Text":
-            sectionBody.push(<InputText key={id} name={id} label={question.text} hint={question.hint} errors={errors}/>);
-              break;
-            
-            case "Name":
-            sectionBody.push(<InputText key={id} name={id} label={question.text} hint={question.hint} errors={errors}/>);
-                break;
-    
-            case "Multiple Select":
-            sectionBody.push(<Checkbox key={id} name={id} label={question.text} options={question.options} />);
-              break;
-    
-            case "Email":
-              sectionBody.push(<Email key={id} name={id} label={question.text} />)
-              break;
-    
-            case "Single Select":
-              sectionBody.push(<SingleSelect key={id} name={id} label={question.text} options={question.options} />);
-              break;
-    
-            case "Dropdown":
-              sectionBody.push(<Dropdown key={id} name={id} label={question.text} options={question.options} />);
-              break;
-    
-            case "Paragraph":
-              sectionBody.push(<TextArea key={id} name={id} label={question.text} options={question.options} />);
-              break;
-        }
-      }
+  const removeSection = (index) => {
+    // can't use index
+    if (repeat >= 1) {
+      const newSectionElements = [...allSectionElements];
+      newSectionElements.splice(index + 1, 1);
+      console.log('newSectionElements :>> ', newSectionElements);
+      console.log('repeat :>> ', repeat);
+      setRepeat(repeat - 1);
+      setAllSectionElements(newSectionElements);
     }
-    return sectionBody;
   }
 
   const getSectionElements = () => {
-    console.log("repeat");
+    console.log('repeat :>> ', repeat);
     const sectionBody = [];
+    console.log('section :>> ', section);
     for (let y = 0; y < section.questions.length; y++) {
       let question = section.questions[y];
         const id = section.repeatable ? question._id + "-" + repeat : question._id;
@@ -88,13 +62,21 @@ function Section(props) {
             break;
       }
     }
-    return sectionBody;
+    return (
+      <div>
+        { sectionBody }
+        { section.repeatable && <button onClick={() => removeSection(repeat)}> REMOVE </button>}
+      </div>
+    )
   }
 
 
   const repeatSection = () => {
     if (repeat < section.repeatable) {
+      const sectionBody = getSectionElements();
+      console.log('repeat :>> ', repeat);
       setRepeat(repeat + 1);
+      setAllSectionElements([...allSectionElements, sectionBody]);
     }
   }
 
@@ -104,9 +86,6 @@ function Section(props) {
       {allSectionElements}
       {
         section.repeatable > 0 && <button type="button" onClick={() => repeatSection()}>Add More</button>
-      }
-      {
-        section.repeatable > 0 && <button type="button" onClick={() => repeatSection()}>Remove</button>
       }
     </div>
   )
