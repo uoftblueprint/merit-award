@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import logo from "../images/logo.png";
@@ -10,7 +10,7 @@ function Navbar() {
   return (
     <div id="navbar" className="fixed flex px-8 py-2 items-center w-screen bg-white top-0 shadow-md">
         <Link className="flex items-center hover:no-underline hover:text-black" to="/dashboard">
-          <img src={logo} className="w-20 h-12 mr-3"/>
+          <img src={logo} alt="Merit Award logo" className="w-20 h-12 mr-3"/>
           <div className="font-semibold text-lg">Application Portal</div>
         </Link>
         <div className="flex-grow"/>

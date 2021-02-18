@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../styles/login.css";
 import { useDispatch } from 'react-redux';
 import { apiLogin } from "../api/auth";

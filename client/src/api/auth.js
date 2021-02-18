@@ -9,7 +9,7 @@ export const apiLogin = async (email, password) => {
       password,
     });
 
-    if (!user || user.status != 200) {
+    if (!user || user.status !== 200) {
       throw 'Unable to login';
     }
 
@@ -29,7 +29,7 @@ export const apiSignup = async (email, password) => {
             password
         });
 
-        if (!user || user.status != 200 || typeof(user.data) == "string") {
+        if (!user || user.status !== 200 || typeof(user.data) == "string") {
             throw 'Could not create new user.';
         }
 
@@ -45,7 +45,7 @@ export const getEmail = async () => {
   try {
       const user = await client.get('/api/user/profile');
 
-      if (!user || user.status != 200 || typeof(user.data) == "string") {
+      if (!user || user.status !== 200 || typeof(user.data) == "string") {
           throw 'Could not get email';
       }
       return user.data;

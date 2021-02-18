@@ -4,7 +4,6 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { Link } from "react-router-dom";
 import "../styles/login.css";
-import {useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import { apiSignup } from "../api/auth";
@@ -15,7 +14,6 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [validate, setValidate] = useState("");
   const [signupState, setSignUpState] = useState(false);
-  const history = useHistory();
 
   function validateForm() {
     return email.length > 0 && password.length > 0 && validatePassword();
@@ -33,7 +31,7 @@ function Signup() {
         dispatch({ type: 'LOGIN' });
     } catch (err) {
         console.log(err);
-    } 
+    }
   }
 
   return (

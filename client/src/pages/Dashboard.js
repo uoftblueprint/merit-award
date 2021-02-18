@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 
 import { Link } from "react-router-dom";
 
@@ -119,8 +119,8 @@ function Menu(props) {
               <div className="px-3 p-2 text-ma font-semibold"> {s.name} </div>
               <div className="transition-all py-2">
                 {s.stages.map(ss =>
-                  <div className={`px-3 py-1 flex ${stage == ss.index ? "text-ma" : "text-gray"}`} >
-                    <span className={`bg-white border border-solid rounded-full border px-2 py-0 ${stage == ss.index ? "border-ma" : "border-gray"}`}>{ss.index}</span>
+                  <div className={`px-3 py-1 flex ${stage === ss.index ? "text-ma" : "text-gray"}`} >
+                    <span className={`bg-white border border-solid rounded-full border px-2 py-0 ${stage === ss.index ? "border-ma" : "border-gray"}`}>{ss.index}</span>
                     <p className="w-auto px-3 text-sm">{ss.name}</p>
                   </div>
                 )}
@@ -146,14 +146,14 @@ function Dashboard() {
         <h2 className="mt-6 text-center text-5xl text-bold text-gray-700">
           Dashboard
         </h2>
-        {stageIndex == 0 && <RenderDashboardStart setStageByIndex={setStageByIndex} borderColor={border} />}
-        {stageIndex == 1 && <RenderDashboardMain setStageByIndex={setStageByIndex}/>}
+        {stageIndex === 0 && <RenderDashboardStart setStageByIndex={setStageByIndex} borderColor={border} />}
+        {stageIndex === 1 && <RenderDashboardMain setStageByIndex={setStageByIndex}/>}
 
         <button onClick={() => setModalOpen(true)} className="group relative flex justify-center py-2 px-4 border border-transparent text-lg font-medium rounded-md text-white bg-blue-300 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900">
           TEST modal popup
-        </button>    
+        </button>
 
-            { modalOpen && 
+            { modalOpen &&
             <div class="fixed z-10 inset-0 overflow-y-auto">
               <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                 <div class="fixed inset-0 transition-opacity" aria-hidden="true">
