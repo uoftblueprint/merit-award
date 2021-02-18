@@ -35,6 +35,27 @@ function Student() {
     }
   }, [step]);
 
+  const initSchema = (validationSchema, initialValues, prevAnswers, question, number) => {
+    let id = number ? (question._id + "-" + number) : question._id;
+    if (prevAnswers[id]) {
+      initialValues[id] = prevAnswers[id];
+    } else {
+      initialValues[id] = "";
+    }
+    
+    if(question.type === "Name" || question.type === "Input Text"){
+      validationSchema[id] = Yup.string().required(question.text + ' required');
+    } else if(question.type === "Email"){
+      validationSchema[id] = Yup.string().email("Email must be valid").required(question.text + ' required')
+    } else if(question.type === "Single Select" || question.type === ""){
+      validationSchema[id] = Yup.string().oneOf(question.options).required('Selection required');
+    } else if(question.type === "Dropdown" || question.type === ""){
+      validationSchema[id] = Yup.string().oneOf(question.options).required('Dropdown selection required');
+    } else if(question.type === "Paragraph" || question.type === ""){
+      validationSchema[id] = Yup.string().required('Description required').max(question.charCount);
+    }
+  }
+
   const initForm = async (data) => {
     setFormData(data);
     const prevAnswers = await getAnswers();
@@ -45,22 +66,12 @@ function Student() {
       for (let y = 0; y < section.questions.length; y++) {
         let question = section.questions[y];
 
-        if (prevAnswers[question._id]) {
-          _initialValues[question._id] = prevAnswers[question._id];
+        if (section.repeatable) {
+          for (let num = 0; num < section.repeatable; num++) {
+            initSchema(_validationSchema, _initialValues, prevAnswers, question, num);
+          }
         } else {
-          _initialValues[question._id] = "";
-        }
-        
-        if(question.type === "Name" || question.type === "Input Text"){
-          _validationSchema[question._id] = Yup.string().required(question.text + ' required');
-        } else if(question.type === "Email"){
-          _validationSchema[question._id] = Yup.string().email("Email must be valid").required(question.text + ' required')
-        } else if(question.type === "Single Select" || question.type === ""){
-          _validationSchema[question._id] = Yup.string().oneOf(question.options).required('Selection required');
-        } else if(question.type === "Dropdown" || question.type === ""){
-          _validationSchema[question._id] = Yup.string().oneOf(question.options).required('Dropdown selection required');
-        } else if(question.type === "Paragraph" || question.type === ""){
-          _validationSchema[question._id] = Yup.string().required('Description required').max(question.charCount);
+          initSchema(_validationSchema, _initialValues, prevAnswers, question)
         }
 
       }
