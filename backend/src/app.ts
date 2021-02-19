@@ -4,6 +4,7 @@ import passport from 'passport';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import * as dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ const app = express();
 app.use(cors());
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));    // need this for pug form
 app.use('/api/user', routes);
 app.use('/api/forms', formRoutes)
 
@@ -36,6 +38,10 @@ app.use(function(err: any, req: any, res: any, next: any) {
   res.status(err.status || 500);
   res.json({ error: err });
 });
+
+// Setup view engine.
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
 app.listen(8000, () => {
   console.log('Server started.')

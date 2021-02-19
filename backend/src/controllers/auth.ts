@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 import passport from "passport";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 import UserModel from "../../src/models/User";
 import { Student, Counselor } from '../models/UserType';
@@ -11,13 +12,11 @@ const reqLogin = async (err: Error, user: User, req: Request, res: Response, nex
   try {
     if (err || !user) {
       const error = new Error("An error occurred.");
-
       return next(error);
     }
 
     req.login(user, { session: false }, async (error: Error) => {
       if (error) return next(error);
-
       const body = { _id: user._id, email: user.email };
       const token = jwt.sign({ user: body }, JWT_SECRET);
 
@@ -97,4 +96,57 @@ export const signUpAdmin = async (req: Request, res: Response, next: NextFunctio
   passport.authenticate("signupAdmin", async (err: Error, user: User, _: NextFunction) => {
     return reqLogin(err, user, req, res, next);
   })(req, res, next);
+};
+
+export const recoverPassword = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserModel.findOne({email: req.body.email});
+  if (!user){
+    return res.status(404).json({ error: "User not found."})
+  }
+  
+  try {
+    user.generatePasswordReset();
+    user.save()
+  
+    // TODO: send email instead of returning link
+    const link = "http://" + req.headers.host + "/api/user/reset/" + user.resetPasswordToken;
+    return res.json({link: link});
+  }
+  catch(err) {
+    return next(err);
+  }
+};
+
+export const redirectReset = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserModel.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}});
+  if (!user){
+    return res.status(401).json({errror: "Password reset token is invalid or has expired."})
+  }
+  
+  try {
+    res.render('reset', {user})
+  }
+  catch(err) {
+    return next(err);
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+  const user = await UserModel.findOne({resetPasswordToken: req.params.token, resetPasswordExpires: {$gt: Date.now()}});
+  if (!user){
+    return res.status(401).json({errror: "Password reset token is invalid or has expired."})
+  }
+  
+  try {
+    const hash = await bcrypt.hash(req.body.password, 10);    // have to hash it here now
+    user.password = hash;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+    // TODO: send email that password has been updated
+    res.status(200).json({message: 'Your password has been updated.'})
+  }
+  catch(err) {
+    return next(err);
+  }
 };

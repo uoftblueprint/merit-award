@@ -9,7 +9,6 @@ router.put(
   '/referral/counselor',
   async (req: Request, res: Response, _: NextFunction) => {
     const user = req.user as User;
-    console.log(user);
     if (!(user.student || user.admin)) {
       return res.json({error: "Only students and admins can give referral links."})
     }
