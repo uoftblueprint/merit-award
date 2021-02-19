@@ -10,6 +10,7 @@ import LoggedIn from "./pages/LoggedIn";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Student from './pages/application/Student';
+import References from "./pages/References";
 import './styles/App.css';
 import Cookies from 'js-cookie'
 import { useSelector, useDispatch } from 'react-redux';
@@ -50,6 +51,7 @@ function App() {
             <Route path="/users" component={WithNav}/>
             <Route path="/dashboard" component={WithNav}/>
             <Route path="/application" component={WithNav}/>
+            <Route path="/references" component={WithNav}/>
             <Route path="/" render={() => <WithNav logout={logout} cookies={access}/>}/>
           </Switch>
           :
@@ -65,7 +67,7 @@ function App() {
 
 function WithNav(props) {
   return (
-    <div>
+    <div className="pt-18">
       <Navbar/>
       <Switch>
         <Route path="/reviewers" component={Reviewers}/>
@@ -73,7 +75,8 @@ function WithNav(props) {
         <Route path="/users" component={Users}/>
         <Route path="/dashboard" component={Dashboard}/>
         <Route path="/application" component={Student}/>
-        <Route path="/" render={() => <LoggedIn logout={props.logout} cookies={props.access}/>}/>
+        <Route path="/references" component={References}/>
+        <Route path="/" render={() => <Dashboard logout={props.logout} cookies={props.access}/>}/>
       </Switch>
     </div>
   );
