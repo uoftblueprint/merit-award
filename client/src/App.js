@@ -9,13 +9,11 @@ import Login from "./pages/Login";
 import LoggedIn from "./pages/LoggedIn";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
-import Application from "./pages/Application";
+import Student from './pages/application/Student';
 import References from "./pages/References";
 import './styles/App.css';
 import Cookies from 'js-cookie'
 import { useSelector, useDispatch } from 'react-redux';
-
-import Form from './components/questions/forms';
 
 function App() {
   const loggedIn = useSelector(state => state.userStatus);
@@ -76,7 +74,7 @@ function WithNav(props) {
         <Route path="/recommenders" component={Recommenders}/>
         <Route path="/users" component={Users}/>
         <Route path="/dashboard" component={Dashboard}/>
-        <Route path="/application" component={Application}/>
+        <Route path="/application" component={Student}/>
         <Route path="/references" component={References}/>
         <Route path="/" render={() => <Dashboard logout={props.logout} cookies={props.access}/>}/>
       </Switch>
@@ -97,7 +95,6 @@ function Users() {
       <h2>
         User Dashboard
       </h2>
-      <Form />
     </div>);
 }
 

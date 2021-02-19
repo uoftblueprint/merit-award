@@ -33,6 +33,7 @@
     "eslint-plugin-react": "7.19.0",
     "eslint-plugin-react-hooks": "^1.6.1",
     "file-loader": "4.3.0",
+    "formik": "^2.2.6",
     "fs-extra": "^8.1.0",
     "html-webpack-plugin": "4.0.0-beta.11",
     "identity-obj-proxy": "3.0.0",
@@ -74,7 +75,8 @@
     "webpack": "4.42.0",
     "webpack-dev-server": "3.11.0",
     "webpack-manifest-plugin": "2.2.0",
-    "workbox-webpack-plugin": "4.3.1"
+    "workbox-webpack-plugin": "4.3.1",
+    "yup": "^0.32.8"
   },
   "scripts": {
     "start": "node scripts/start.js && npm run watch:css",
