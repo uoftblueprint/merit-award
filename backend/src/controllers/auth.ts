@@ -65,6 +65,9 @@ export const signUpCounselor = async (req: Request, res: Response, next: NextFun
   passport.authenticate("signupCounselor", async (err: Error, user: User, _: NextFunction) => {
     return reqLogin(err, user, req, res, next);
   })(req, res, next);
+  
+  student.counselorReferral = null;
+  await student.save();
 };
 
 export const signUpReviewer = async (req: Request, res: Response, next: NextFunction) => {
@@ -81,10 +84,13 @@ export const signUpReviewer = async (req: Request, res: Response, next: NextFunc
   }
 
   req.body._student = student;
-
+  
   passport.authenticate("signupReviewer", async (err: Error, user: User, _: NextFunction) => {
     return reqLogin(err, user, req, res, next);
   })(req, res, next);
+
+  student.reviewerReferral = null;
+  await student.save();
 };
 
 export const signUpAdmin = async (req: Request, res: Response, next: NextFunction) => {

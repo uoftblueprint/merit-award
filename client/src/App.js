@@ -30,7 +30,6 @@ function App() {
   const authenticate = () => {
     let access = Cookies.get('access');
     if (access && access !== undefined) {
-
       setAccess(access);
       dispatch({ type: 'LOGIN' });
     } else {
@@ -63,9 +62,6 @@ function App() {
 }
 
 function getPages(loggedIn, userType, logout, access) {
-  console.log('loggedIn :>> ', loggedIn);
-  console.log("getting pages");
-  console.log('userType :>> ', userType);
   switch (userType) {
     case "USER":
       return (
@@ -79,9 +75,7 @@ function getPages(loggedIn, userType, logout, access) {
       case "COUNSELOR":
         return (
           <Switch>
-            <Route path="/users" component={WithNav}/>
             <Route path="/dashboard" component={WithNav}/>
-            <Route path="/application" component={WithNav}/>
             <Route path="/" component={Counselors}/>
           </Switch>
       )
