@@ -10,6 +10,10 @@ const StudentSchema = new Schema<StudentInterface>({
   },
   counselorReferral: { type: String },
   reviewerReferral: { type: String },
+  applicationId: {
+    type: Schema.Types.ObjectId,
+    ref: "Application",
+  }
 });
 
 const CounselorSchema = new Schema<CounselorInterface>({
@@ -49,4 +53,3 @@ export const Student = mongoose.model<StudentInterface>("student", StudentSchema
 export const Counselor = mongoose.model<CounselorInterface>("counselor", CounselorSchema);
 export const Reviewer = mongoose.model<ReviewerInterface>("reviewer", ReviewerSchema);
 export const Admin = mongoose.model<AdminInterface>("admin", AdminSchema);
-

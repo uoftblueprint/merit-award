@@ -13,6 +13,7 @@ export interface User extends Document {
 export interface StudentInterface extends Document {
     user: Schema.Types.ObjectId;
     counselorReferral: string;
+    appplicationId: Schema.Types.ObjectId;
 }
 
 export interface ReviewerInterface extends Document {
@@ -29,7 +30,14 @@ export interface AdminInterface extends Document {
     user: Schema.Types.ObjectId;
 }
 
-export interface Form { 
+export interface AppStatusInterface extends Document {
+    applicationId: Schema.Types.ObjectId;
+    status: string;
+    deadline: string;
+    lastEdited: string;
+}
+
+export interface Form {
     name: string,
     pages: Record<string, Array<Section>>,
 }
