@@ -1,6 +1,6 @@
-import React, { Component, useState } from 'react';
-
+import React, { Component, useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
+import { getAppStatus } from "../api/status";
 
 
 function RenderDashboardStart(props){
@@ -26,6 +26,19 @@ function RenderDashboardStart(props){
 
 
 function RenderDashboardMain(props){
+
+  useEffect(() => {
+    async function getStatus() {
+      try {
+        const appStatus = await getAppStatus();
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    getStatus();
+  });
+
+
   return (
       <div className="status relative w-4/5">
         <div className="flex border border-blue-900 bg-white relative h-full rounded-md overflow-hidden">
