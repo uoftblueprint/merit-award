@@ -32,7 +32,7 @@ export const apiSignup = async (email, password) => {
         if (!user || user.status != 200 || typeof(user.data) == "string") {
             throw 'Could not create new user.';
         }
-
+        console.log('user :>> ', user);
         Cookies.set('access', user.data.access);
     } catch (err) {
         console.log(err);

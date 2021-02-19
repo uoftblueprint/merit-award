@@ -7,7 +7,7 @@ import "../styles/login.css";
 import {useHistory, useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { apiSignup } from "../api/auth";
+import { apiSignupCounselor } from "../api/auth";
 
 function SignupCounselor() {
   const dispatch = useDispatch();
@@ -43,8 +43,9 @@ function SignupCounselor() {
     event.preventDefault();
 
     try {
-        await apiSignup(email, password);
+        await apiSignupCounselor(email, password);
         dispatch({ type: 'LOGIN' });
+        dispatch({ type: 'COUNSELOR' });
     } catch (err) {
         console.log(err);
     } 

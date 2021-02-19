@@ -19,6 +19,8 @@ import Form from './components/questions/forms';
 
 function App() {
   const loggedIn = useSelector(state => state.userStatus);
+  const userType = useSelector(state => state.userType);
+
   const [access, setAccess] = useState(undefined);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -38,7 +40,7 @@ function App() {
 
   function logout() {
     Cookies.remove('access');
-    dispatch({ type: 'logOut' }); // sets global user state to logged out with Redux
+    dispatch({ type: 'LOGOUT' }); // sets global user state to logged out with Redux
   }
 
   return (
@@ -47,14 +49,7 @@ function App() {
     <div>
       {/* Only make internal pages available if global state is Logged In -> true */}
         {loggedIn ?
-          <Switch>
-            <Route path="/reviewers" component={WithNav}/>
-            <Route path="/recommenders" component={WithNav}/>
-            <Route path="/users" component={WithNav}/>
-            <Route path="/dashboard" component={WithNav}/>
-            <Route path="/application" component={WithNav}/>
-            <Route path="/" render={() => <WithNav logout={logout} cookies={access}/>}/>
-          </Switch>
+            getPages(loggedIn, userType, logout, access)
           :
           <Switch>
             <Route path="/signup/counselor/:referral" component={SignupCounselor}/>
@@ -65,6 +60,41 @@ function App() {
     </div>
   </Router>
   );
+}
+
+function getPages(loggedIn, userType, logout, access) {
+  console.log('loggedIn :>> ', loggedIn);
+  console.log("getting pages");
+  console.log('userType :>> ', userType);
+  switch (userType) {
+    case "USER":
+      return (
+        <Switch>
+          <Route path="/users" component={WithNav}/>
+          <Route path="/dashboard" component={WithNav}/>
+          <Route path="/application" component={WithNav}/>
+          <Route path="/" render={() => <WithNav logout={logout} cookies={access}/>}/>
+        </Switch>
+      )
+      case "COUNSELOR":
+        return (
+          <Switch>
+            <Route path="/users" component={WithNav}/>
+            <Route path="/dashboard" component={WithNav}/>
+            <Route path="/application" component={WithNav}/>
+            <Route path="/" component={Counselors}/>
+          </Switch>
+      )
+    default:
+      return (
+        <Switch>
+          <Route path="/users" component={WithNav}/>
+          <Route path="/dashboard" component={WithNav}/>
+          <Route path="/application" component={WithNav}/>
+          <Route path="/" render={() => <WithNav logout={logout} cookies={access}/>}/>
+      </Switch>
+      )
+  }
 }
 
 function WithNav(props) {
@@ -81,6 +111,10 @@ function WithNav(props) {
       </Switch>
     </div>
   );
+}
+
+function Counselors() {
+  return <h3>Counselor Dashboard</h3>
 }
 
 function Reviewers() {

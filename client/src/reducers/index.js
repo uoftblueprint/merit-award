@@ -1,10 +1,11 @@
   
 import {combineReducers} from 'redux';
 
-import userStatusReducer from './userStatusReducer';
+import userStatusReducer, { userTypeReducer} from './userStatusReducer';
 
 const rootReducer = combineReducers({
-    userStatus: userStatusReducer
+    userStatus: userStatusReducer,
+    userType: userTypeReducer,
 });
 
 export default rootReducer;
