@@ -25,7 +25,7 @@ app.use(cors());
 
 app.use(bodyParser.json());
 app.use('/api/user', routes);
-app.use('/api/forms', formRoutes)
+app.use('/api/forms', passport.authenticate('jwt', { session: false }), formRoutes)
 
 // Plug in the JWT strategy as a middleware so only verified users can access this route.
 app.use('/api/user', passport.authenticate('jwt', { session: false }), secureRoute);
