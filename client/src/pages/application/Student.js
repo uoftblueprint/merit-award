@@ -38,17 +38,19 @@ function Student() {
     setFormData(data);
     const prevAnswers = await getAnswers();
     let _validationSchema = {};
-    let _initialValues = {};
+    let _initialValues = [];
     for (let i = 0; i < data.length; i++) {
       let section = data[i];
+      let currSection = {};
       for (let y = 0; y < section.questions.length; y++) {
         let question = section.questions[y];
 
         if (prevAnswers[question._id]) {
-          _initialValues[question._id] = prevAnswers[question._id];
+          currSection[question._id] = prevAnswers[question._id];
         } else {
-          _initialValues[question._id] = "";
+          currSection[question._id] = "";
         }
+
         
         // if(question.type === "Name" || question.type === "Input Text"){
         //   _validationSchema[question._id] = Yup.string().required(question.text + ' required');
@@ -63,11 +65,12 @@ function Student() {
         // }
 
       }
+      _initialValues.push([currSection]);
     }
 
     setFormValidation(Yup.object().shape({ ..._validationSchema }));
     
-    // console.log('_initialValues :>> ', _initialValues);
+    console.log('_initialValues :>> ', _initialValues);
     setSnapshot(_initialValues);
   }
 
@@ -145,7 +148,7 @@ function Student() {
         {getStep()}
       </div>
       <div>
-      <Formik initialValues={snapshot} onSubmit={handleSubmit} validationSchema={formValidation} enableReinitialize>
+      <Formik initialValues={{sections: snapshot}} onSubmit={handleSubmit} validationSchema={formValidation} enableReinitialize>
       {({ errors, values }) => {
         console.log(errors)
         // console.log('snapshot :>> ', snapshot);

@@ -4,9 +4,8 @@ import {ErrorMessage, FieldArray, Field} from 'formik';
 
 function Section(props) {
   const { section, values, errors } = props;
-  // console.log('section :>> ', section);
-  const allSections = [section]
-  const questions = section.questions;
+  console.log('section :>> ', section);
+  console.log('values :>> ', values);
 
   // useEffect(() => {
   //   const sectionBody = getSectionElements();
@@ -56,8 +55,13 @@ function Section(props) {
   //     </div>
   //   )
   // }
-  const getSection = (questionId) => {
-    return section.questions.filter(question => question._id == questionId);
+  const getQuestion = (questionId) => {
+    const question = section.questions.filter(question => question._id == questionId);
+    return question[0];
+  }
+
+  const getNextQuestions = () => {
+
   }
 
   return (
@@ -67,14 +71,19 @@ function Section(props) {
         name="sections"
         render={arrayHelpers => (
           <div>
-            {values.map((question, index) => {
-              // console.log('question :>> ', question);
-              return (
-                <div key={index}>
-                  <label>{getSection(question)[0].text}</label>
-                  <Field name={`${question._id}.${index}`} />                         
-                </div>
-              )
+            {
+            // map each section of questions
+            values.map((sec, index) => {
+              const questionIds = Object.keys(sec);
+              return questionIds.map((id, ind) => {
+                return (
+                  <div key={`${id}-${index}`}>
+                    <label htmlFor={`${id}-${index}`} >{getQuestion(id).text}</label>
+                    {/* <label>{getSection(question)[0].text}</label> */}
+                    <Field name={`${id}-${index}`} />                         
+                  </div>
+                )
+              })
             })}
             {/* <button 
               type="button"
@@ -83,10 +92,11 @@ function Section(props) {
               Remove
             </button> */}
 
-            <button 
+            <button
               type="button"
-              onClick={() => {console.log('section :>> ', section); arrayHelpers.push('')}}
-              >
+              className="secondary"
+              onClick={() => {arrayHelpers.push(values[0]); console.log('values :>> ', values);}}
+            >
               Add Section
             </button>
           </div>
@@ -100,10 +110,8 @@ function FormBody({data, values, errors}) {
   const [formElements, setFormElements] = useState([]);
   useEffect(() => {
     const formElementList = []
-    for (let i = 0; i < data.length; i++) {
-      const section = data[i];
-      const questionIds = section.questions.map(question => question._id);
-      formElementList.push(<Section key={i} values={questionIds} section={data[i]} errors={errors}></Section>)
+    for (let i = 0; i < values.length; i++) {
+      formElementList.push(<Section key={i} values={values[i]} section={data[i]} errors={errors}></Section>)
     }
     setFormElements(formElementList)
   }, [])
