@@ -50,23 +50,24 @@ function Student() {
           _initialValues[question._id] = "";
         }
         
-        if(question.type === "Name" || question.type === "Input Text"){
-          _validationSchema[question._id] = Yup.string().required(question.text + ' required');
-        } else if(question.type === "Email"){
-          _validationSchema[question._id] = Yup.string().email("Email must be valid").required(question.text + ' required')
-        } else if(question.type === "Single Select" || question.type === ""){
-          _validationSchema[question._id] = Yup.string().oneOf(question.options).required('Selection required');
-        } else if(question.type === "Dropdown" || question.type === ""){
-          _validationSchema[question._id] = Yup.string().oneOf(question.options).required('Dropdown selection required');
-        } else if(question.type === "Paragraph" || question.type === ""){
-          _validationSchema[question._id] = Yup.string().required('Description required').max(question.charCount);
-        }
+        // if(question.type === "Name" || question.type === "Input Text"){
+        //   _validationSchema[question._id] = Yup.string().required(question.text + ' required');
+        // } else if(question.type === "Email"){
+        //   _validationSchema[question._id] = Yup.string().email("Email must be valid").required(question.text + ' required')
+        // } else if(question.type === "Single Select" || question.type === ""){
+        //   _validationSchema[question._id] = Yup.string().oneOf(question.options).required('Selection required');
+        // } else if(question.type === "Dropdown" || question.type === ""){
+        //   _validationSchema[question._id] = Yup.string().oneOf(question.options).required('Dropdown selection required');
+        // } else if(question.type === "Paragraph" || question.type === ""){
+        //   _validationSchema[question._id] = Yup.string().required('Description required').max(question.charCount);
+        // }
 
       }
     }
 
     setFormValidation(Yup.object().shape({ ..._validationSchema }));
-
+    
+    // console.log('_initialValues :>> ', _initialValues);
     setSnapshot(_initialValues);
   }
 
@@ -147,6 +148,8 @@ function Student() {
       <Formik initialValues={snapshot} onSubmit={handleSubmit} validationSchema={formValidation} enableReinitialize>
       {({ errors, values }) => {
         console.log(errors)
+        // console.log('snapshot :>> ', snapshot);
+        // console.log('formData :>> ', formData);
         return (
           <Form id={step}>
           {!isLoading && <FormBody data={formData} values={values} errors={errors}/>}
