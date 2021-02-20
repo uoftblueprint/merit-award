@@ -39,7 +39,7 @@ function Student() {
     const prevAnswers = await getAnswers();
     let _validationSchema = {};
     let _initialValues = [];
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i < 1; i++) {
       let section = data[i];
       let currSection = {};
       for (let y = 0; y < section.questions.length; y++) {

@@ -116,10 +116,64 @@ function FormBody({data, values, errors}) {
     setFormElements(formElementList)
   }, [])
 
+  const getQuestion = (questionId) => {
+    const question = data[0].questions.filter(question => question._id == questionId);
+    return question[0];
+  }
+
+  const sectionQuestions = values.sections[0][0]
+  console.log('values.sections :>> ', values.sections);
+
   return (
-    <div>
-      {formElements}
-    </div>
+    <FieldArray 
+      name="sections"
+      render={arrayHelpers => (
+        <div>
+          {
+          // map each section of questions
+          values.sections.map((sec, index) => {
+            console.log('sec :>> ', sec);
+            const questionIds = Object.keys(sec);
+            console.log('questionIds :>> ', questionIds);
+            const questions = questionIds.map((id, ind) => {
+              const currQuestion = getQuestion(id);
+              return (
+                <div key={`${id}-${index}`}>
+                  <label htmlFor={`${id}-${index}`} >{currQuestion.text}</label>
+                  <Field name={`sections.${index}.${currQuestion._id}`} />
+                </div>
+              )
+            })
+            return (
+              <div key={index}>
+                { questions }
+                <button 
+                  type="button"
+                  onClick={() => arrayHelpers.remove(index)}
+                  >
+                  Remove
+                </button>
+              </div>
+            )
+          })}
+
+          <button
+            type="button"
+            className="secondary"
+            onClick={() => { 
+              console.log('values.sections :>> ', values.sections); 
+              console.log('values.sections[0] :>> ', values.sections[0]); 
+              console.log('values.sections[0][0] :>> ', values.sections[0][0]);
+              arrayHelpers.push(sectionQuestions); 
+            
+              console.log('values.sections after :>> ', values.sections );}
+            }
+          >
+            Add Section
+          </button>
+        </div>
+      )}
+    />
   )
 }
 
