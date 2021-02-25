@@ -3,10 +3,7 @@ import {InputText, Checkbox, Email, SingleSelect, Dropdown, TextArea} from '../.
 import {ErrorMessage, FieldArray, Field} from 'formik';
 
 function Section(props) {
-  const { section, values, errors } = props;
-  console.log('section :>> ', section);
-  console.log('values :>> ', values);
-
+  const { index, values, data, errors } = props;
   // useEffect(() => {
   //   const sectionBody = getSectionElements();
   //   setAllSectionElements([...allSectionElements, sectionBody]);
@@ -55,75 +52,18 @@ function Section(props) {
   //     </div>
   //   )
   // }
-  const getQuestion = (questionId) => {
-    const question = section.questions.filter(question => question._id == questionId);
-    return question[0];
-  }
-
-  const getNextQuestions = () => {
-
-  }
-
-  return (
-    <div>
-      <h1 key={section.name}>{section.name}</h1>
-      <FieldArray 
-        name="sections"
-        render={arrayHelpers => (
-          <div>
-            {
-            // map each section of questions
-            values.map((sec, index) => {
-              const questionIds = Object.keys(sec);
-              return questionIds.map((id, ind) => {
-                return (
-                  <div key={`${id}-${index}`}>
-                    <label htmlFor={`${id}-${index}`} >{getQuestion(id).text}</label>
-                    {/* <label>{getSection(question)[0].text}</label> */}
-                    <Field name={`${id}-${index}`} />                         
-                  </div>
-                )
-              })
-            })}
-            {/* <button 
-              type="button"
-              onClick={() => arrayHelpers.remove(index)}
-              >
-              Remove
-            </button> */}
-
-            <button
-              type="button"
-              className="secondary"
-              onClick={() => {arrayHelpers.push(values[0]); console.log('values :>> ', values);}}
-            >
-              Add Section
-            </button>
-          </div>
-        )}
-      />
-    </div>
-  )
-}
-
-function FormBody({data, values, errors}) {
-  const [formElements, setFormElements] = useState([]);
-  useEffect(() => {
-    const formElementList = []
-    for (let i = 0; i < values.length; i++) {
-      formElementList.push(<Section key={i} values={values[i]} section={data[i]} errors={errors}></Section>)
-    }
-    setFormElements(formElementList)
-  }, [])
-
+  
   const getQuestion = (questionId) => {
     const question = data[0].questions.filter(question => question._id == questionId);
     return question[0];
   }
 
+  //values is a list of section bodies starts with 1 and adds
+  // values: {sections: [{id: values, id: value}]}
   const sectionQuestions = values.sections[0][0];
+  console.log('values :>> ', values);
+  console.log('sectionQuestions :>> ', sectionQuestions);
 
-  // We will have a fieldarray for each section so we dont have to do values.sections[0]
   return (
     <FieldArray 
       name="sections[0]"
@@ -175,6 +115,94 @@ function FormBody({data, values, errors}) {
         </div>
       )}
     />
+  )
+}
+
+function FormBody({data, values, errors}) {
+  const [formElements, setFormElements] = useState([]);
+  useEffect(() => {
+    const formElementList = []
+    for (let i = 0; i < values.sections.length; i++) {
+      formElementList.push(<Section key={i} index={i} values={values} data={data} errors={errors}></Section>);
+      console.log('formElementList :>> ', formElementList);
+    }
+    setFormElements(formElementList)
+  }, [])
+
+
+  const getQuestion = (sectionId, questionId) => {
+    const question = data[sectionId].questions.filter(question => question._id == questionId);
+    return question[0];
+  }
+
+  return (
+    <div>
+      {
+        values.sections.map((section, sectionIndex) => {
+          const sectionQuestions = {};
+          for (const [key, value] of Object.entries(section[0])) {
+            sectionQuestions[key] = '';
+          }
+          
+          return (
+          <div key={sectionIndex}>
+            <h1>{data[sectionIndex].name}</h1>
+            <div>{data[sectionIndex].label != 'none' ? data[sectionIndex].label : ''}</div>
+            <FieldArray
+            name={`sections[${sectionIndex}]`}
+            render={arrayHelpers => (
+              <div>
+                {
+                // map each section of questions
+                values.sections[sectionIndex].map((sec, index) => {
+                  // section is a section of repeatable questions
+                  // sec: {"ids": "values"}
+                  // we want to duplicate each section
+                  const questionIds = Object.keys(sec);
+                  const questions = questionIds.map((id, ind) => {
+                    const currQuestion = getQuestion(sectionIndex, id);
+                    return (
+                      <div key={`${id}-${index}`}>
+                        <label htmlFor={`${id}-${index}`} >{currQuestion.text}</label>
+                        <Field name={`sections[${sectionIndex}].${index}.${currQuestion._id}`} />
+                      </div>
+                    )
+                  })
+                  return (
+                    <div key={index}>
+                      { questions }
+                      {data[sectionIndex].repeatable > 0 && values.sections[sectionIndex].length > 1 && <button 
+                        type="button"
+                        onClick={() => arrayHelpers.remove(index)}
+                        >
+                        Remove
+                      </button>}
+                      
+                    </div>
+                  )
+                })}
+
+                { data[sectionIndex].repeatable > 0 && values.sections[sectionIndex].length < data[sectionIndex].repeatable &&
+                <button
+                  type="button"
+                  className="secondary"
+                  onClick={() => { 
+                    arrayHelpers.push(sectionQuestions);
+                    console.log('values.sections[sectionIndex] :>> ', values.sections[sectionIndex]);
+                  }
+                  }
+                >
+                  Add Section
+                </button>
+                }
+              </div>
+            )}
+          />
+          </div>)
+        })
+      }
+      
+    </div>
   )
 }
 

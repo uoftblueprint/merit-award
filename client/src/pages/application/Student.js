@@ -40,8 +40,8 @@ function Student() {
     let _validationSchema = {};
     let _initialValues = [];
     // console.log('data :>> ', data);
-    // for (let i = 0; i < data.length; i++) {
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < data.length; i++) {
+    // for (let i = 0; i < 1; i++) {
       let section = data[i];
       let currSection = {};
       for (let y = 0; y < section.questions.length; y++) {
@@ -154,7 +154,9 @@ function Student() {
       {({ errors, values }) => {
         // console.log(errors)
         //values/snapshot is an array of all the sections, right now we are only passing the first one so it is 
-        // [{"ids": values}]
+        // {"sections": [{"ids": values}]}
+        // console.log('values :>> ', values);
+        // console.log('snapshot :>> ', snapshot);
         // console.log('snapshot :>> ', snapshot);
         // console.log('formData :>> ', formData);
         return (
