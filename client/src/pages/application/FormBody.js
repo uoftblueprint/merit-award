@@ -121,26 +121,27 @@ function FormBody({data, values, errors}) {
     return question[0];
   }
 
-  const sectionQuestions = values.sections[0][0]
-  console.log('values.sections :>> ', values.sections);
+  const sectionQuestions = values.sections[0][0];
 
+  // We will have a fieldarray for each section so we dont have to do values.sections[0]
   return (
     <FieldArray 
-      name="sections"
+      name="sections[0]"
       render={arrayHelpers => (
         <div>
           {
           // map each section of questions
-          values.sections.map((sec, index) => {
-            console.log('sec :>> ', sec);
+          values.sections[0].map((sec, index) => {
+            // section is a section of repeatable questions
+            // sec: {"ids": "values"}
+            // we want to duplicate each section
             const questionIds = Object.keys(sec);
-            console.log('questionIds :>> ', questionIds);
             const questions = questionIds.map((id, ind) => {
               const currQuestion = getQuestion(id);
               return (
                 <div key={`${id}-${index}`}>
                   <label htmlFor={`${id}-${index}`} >{currQuestion.text}</label>
-                  <Field name={`sections.${index}.${currQuestion._id}`} />
+                  <Field name={`sections[0].${index}.${currQuestion._id}`} />
                 </div>
               )
             })

@@ -39,6 +39,8 @@ function Student() {
     const prevAnswers = await getAnswers();
     let _validationSchema = {};
     let _initialValues = [];
+    // console.log('data :>> ', data);
+    // for (let i = 0; i < data.length; i++) {
     for (let i = 0; i < 1; i++) {
       let section = data[i];
       let currSection = {};
@@ -70,7 +72,7 @@ function Student() {
 
     setFormValidation(Yup.object().shape({ ..._validationSchema }));
     
-    console.log('_initialValues :>> ', _initialValues);
+    // console.log('_initialValues :>> ', _initialValues);
     setSnapshot(_initialValues);
   }
 
@@ -150,7 +152,9 @@ function Student() {
       <div>
       <Formik initialValues={{sections: snapshot}} onSubmit={handleSubmit} validationSchema={formValidation} enableReinitialize>
       {({ errors, values }) => {
-        console.log(errors)
+        // console.log(errors)
+        //values/snapshot is an array of all the sections, right now we are only passing the first one so it is 
+        // [{"ids": values}]
         // console.log('snapshot :>> ', snapshot);
         // console.log('formData :>> ', formData);
         return (
