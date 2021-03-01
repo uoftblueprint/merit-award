@@ -161,10 +161,12 @@ function FormBody({data, values, errors}) {
                   const questionIds = Object.keys(sec);
                   const questions = questionIds.map((id, ind) => {
                     const currQuestion = getQuestion(sectionIndex, id);
+                    console.log(`sections[${sectionIndex}].${index}.${currQuestion._id}`);
                     return (
                       <div key={`${id}-${index}`}>
                         <label htmlFor={`${id}-${index}`} >{currQuestion.text}</label>
                         <Field name={`sections[${sectionIndex}].${index}.${currQuestion._id}`} />
+                        <ErrorMessage name={`sections[${sectionIndex}].${index}.${currQuestion._id}`} />
                       </div>
                     )
                   })

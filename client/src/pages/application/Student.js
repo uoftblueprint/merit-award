@@ -39,9 +39,7 @@ function Student() {
     const prevAnswers = await getAnswers();
     let _validationSchema = {};
     let _initialValues = [];
-    // console.log('data :>> ', data);
     for (let i = 0; i < data.length; i++) {
-    // for (let i = 0; i < 1; i++) {
       let section = data[i];
       let currSection = {};
       for (let y = 0; y < section.questions.length; y++) {
@@ -53,23 +51,24 @@ function Student() {
           currSection[question._id] = "";
         }
 
-        
-        // if(question.type === "Name" || question.type === "Input Text"){
-        //   _validationSchema[question._id] = Yup.string().required(question.text + ' required');
-        // } else if(question.type === "Email"){
-        //   _validationSchema[question._id] = Yup.string().email("Email must be valid").required(question.text + ' required')
-        // } else if(question.type === "Single Select" || question.type === ""){
-        //   _validationSchema[question._id] = Yup.string().oneOf(question.options).required('Selection required');
-        // } else if(question.type === "Dropdown" || question.type === ""){
-        //   _validationSchema[question._id] = Yup.string().oneOf(question.options).required('Dropdown selection required');
-        // } else if(question.type === "Paragraph" || question.type === ""){
-        //   _validationSchema[question._id] = Yup.string().required('Description required').max(question.charCount);
-        // }
+        const currQuestionId = `sections[${i}].0.${question._id}`;
+        if(question.type === "Name" || question.type === "Input Text"){
+          _validationSchema[currQuestionId] = Yup.string().required(question.text + ' required');
+        } else if(question.type === "Email"){
+          _validationSchema[currQuestionId] = Yup.string().email("Email must be valid").required(question.text + ' required')
+        } else if(question.type === "Single Select" || question.type === ""){
+          _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Selection required');
+        } else if(question.type === "Dropdown" || question.type === ""){
+          _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Dropdown selection required');
+        } else if(question.type === "Paragraph" || question.type === ""){
+          _validationSchema[currQuestionId] = Yup.string().required('Description required').max(question.charCount);
+        }
 
       }
       _initialValues.push([currSection]);
     }
 
+    console.log('_validationSchema :>> ', _validationSchema);
     setFormValidation(Yup.object().shape({ ..._validationSchema }));
     
     // console.log('_initialValues :>> ', _initialValues);
@@ -152,13 +151,10 @@ function Student() {
       <div>
       <Formik initialValues={{sections: snapshot}} onSubmit={handleSubmit} validationSchema={formValidation} enableReinitialize>
       {({ errors, values }) => {
-        // console.log(errors)
-        //values/snapshot is an array of all the sections, right now we are only passing the first one so it is 
-        // {"sections": [{"ids": values}]}
+        console.log('errors :>> ', errors);
         // console.log('values :>> ', values);
-        // console.log('snapshot :>> ', snapshot);
-        // console.log('snapshot :>> ', snapshot);
-        // console.log('formData :>> ', formData);
+        // console.log('{sections: snapshot} :>> ', {sections: snapshot});
+        // console.log('formValidation :>> ', formValidation);
         return (
           <Form id={step}>
           {!isLoading && <FormBody data={formData} values={values} errors={errors}/>}
