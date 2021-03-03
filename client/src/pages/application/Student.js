@@ -51,7 +51,8 @@ function Student() {
           currSection[question._id] = "";
         }
 
-        const currQuestionId = `sections[${i}].0.${question._id}`;
+        // const currQuestionId = `sections[${i}].0.${question._id}`;
+        const currQuestionId = question._id;
         if(question.type === "Name" || question.type === "Input Text"){
           _validationSchema[currQuestionId] = Yup.string().required(question.text + ' required');
         } else if(question.type === "Email"){
@@ -69,7 +70,7 @@ function Student() {
     }
 
     console.log('_validationSchema :>> ', _validationSchema);
-    setFormValidation(Yup.object().shape({ ..._validationSchema }));
+    setFormValidation(Yup.object().shape({sections: Yup.array().of(Yup.object().shape(_validationSchema))}));
     
     // console.log('_initialValues :>> ', _initialValues);
     setSnapshot(_initialValues);

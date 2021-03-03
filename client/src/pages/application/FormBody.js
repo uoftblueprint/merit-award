@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import {InputText, Checkbox, Email, SingleSelect, Dropdown, TextArea} from '../../components/questions/forms';
-import {ErrorMessage, FieldArray, Field} from 'formik';
+import {InputText, Checkbox, Email, SingleSelect, Dropdown, TextArea, CustomErrorMessage} from '../../components/questions/forms';
+import {FieldArray, Field} from 'formik';
 
 function Section(props) {
   const { index, values, data, errors } = props;
@@ -61,8 +61,8 @@ function Section(props) {
   //values is a list of section bodies starts with 1 and adds
   // values: {sections: [{id: values, id: value}]}
   const sectionQuestions = values.sections[0][0];
-  console.log('values :>> ', values);
-  console.log('sectionQuestions :>> ', sectionQuestions);
+  // console.log('values :>> ', values);
+  // console.log('sectionQuestions :>> ', sectionQuestions);
 
   return (
     <FieldArray 
@@ -161,12 +161,12 @@ function FormBody({data, values, errors}) {
                   const questionIds = Object.keys(sec);
                   const questions = questionIds.map((id, ind) => {
                     const currQuestion = getQuestion(sectionIndex, id);
-                    console.log(`sections[${sectionIndex}].${index}.${currQuestion._id}`);
+                    // console.log(`sections[${sectionIndex}].${index}.${currQuestion._id}`);
                     return (
                       <div key={`${id}-${index}`}>
                         <label htmlFor={`${id}-${index}`} >{currQuestion.text}</label>
                         <Field name={`sections[${sectionIndex}].${index}.${currQuestion._id}`} />
-                        <ErrorMessage name={`sections[${sectionIndex}].${index}.${currQuestion._id}`} />
+                        <CustomErrorMessage name={`sections[${sectionIndex}].${index}.${currQuestion._id}`} />
                       </div>
                     )
                   })
