@@ -94,17 +94,23 @@ export const signUpRecommender = async (req: Request, res: Response, next: NextF
     return res.json({ error: "User already exists." });
   }
 
-  const student = await Student.findOne({ recommenderReferral: req.body.url })
+  const studentId = req.query.id
+  console.log(studentId)
+
+  const student = await Student.findById(studentId);
   if (!student) {
     res.status(400);
     return res.json({ error: "Invalid Referral Url :(" });
   }
 
-  req.body._student = student;
-
-  passport.authenticate("signupRecommender", async (err: Error, user: User, _: NextFunction) => {
-    return reqLogin(err, user, req, res, next);
-  })(req, res, next);
+  student.recommenderRequest.forEach((email: string) => {
+    if (email === req.body.email) {
+      req.body._student = student;
+      return passport.authenticate("signupRecommender", async (err: Error, user: User, _: NextFunction) => {
+        return reqLogin(err, user, req, res, next);
+      })(req, res, next);
+    }
+  })
 };
 
 export const signUpAdmin = async (req: Request, res: Response, next: NextFunction) => {

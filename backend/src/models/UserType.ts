@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { StudentInterface, CounselorInterface, ReviewerInterface, AdminInterface, RecommenderInterface } from "../types";
+import { StudentInterface, CounselorInterface, ReviewerInterface, AdminInterface, RecommenderInterface, RecommendationInterface } from "../types";
 
 const Schema = mongoose.Schema;
 
@@ -10,7 +10,7 @@ const StudentSchema = new Schema<StudentInterface>({
   },
   counselorReferral: { type: String },
   reviewerReferral: { type: String },
-  recommenderReferral: { type: String },
+  recommenderRequest: [String],
 });
 
 const CounselorSchema = new Schema<CounselorInterface>({
@@ -39,17 +39,22 @@ const ReviewerSchema = new Schema<ReviewerInterface>({
   ],
 });
 
+const RecommendationSchema = new Schema<RecommendationInterface>({
+  student: {
+    type: Schema.Types.ObjectId,
+    ref: "Student",
+  },
+  status: String,
+  relationship: String,
+  message: String,
+})
+
 const RecommenderSchema = new Schema<RecommenderInterface>({
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
   },
-  students: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Students",
-    },
-  ],
+  recommendations: [RecommendationSchema],
 });
 
 const AdminSchema = new Schema<AdminInterface>({

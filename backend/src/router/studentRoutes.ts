@@ -2,8 +2,11 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { User } from '../types';
 import { Student } from '../models/UserType';
 import crypto from "crypto";
+import { inviteRecommender } from "../controllers/student"
 
 const router = Router();
+
+router.post('/recommender/add', inviteRecommender)
 
 router.put(
   '/referral/counselor',

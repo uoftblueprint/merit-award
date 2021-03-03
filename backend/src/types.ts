@@ -14,6 +14,7 @@ export interface User extends Document {
 export interface StudentInterface extends Document {
     user: Schema.Types.ObjectId;
     counselorReferral: string;
+    recommenderRequests: [string];
 }
 
 export interface ReviewerInterface extends Document {
@@ -26,9 +27,16 @@ export interface CounselorInterface extends Document {
     students: Array<Schema.Types.ObjectId>;
 }
 
+export interface RecommendationInterface extends Document {
+    student: Schema.Types.ObjectId,
+    status: string,
+    relationship: string,
+    message: string,
+}
+
 export interface RecommenderInterface extends Document {
     user: Schema.Types.ObjectId;
-    students: Array<Schema.Types.ObjectId>;
+    recommendations: Array<RecommendationInterface>;
 }
 
 export interface AdminInterface extends Document {

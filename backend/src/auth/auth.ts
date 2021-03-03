@@ -2,6 +2,7 @@ import passport from 'passport';
 import passportLocal from 'passport-local';
 import passportJwt from 'passport-jwt';
 import passportCustom from 'passport-custom';
+import mongoose from "mongoose";
 
 const localStrategy = passportLocal.Strategy;
 const CustomStrategy = passportCustom.Strategy;
@@ -11,6 +12,7 @@ const ExtractJWT = passportJwt.ExtractJwt;
 import UserModel from '../models/User';
 import { JWT_SECRET } from '../constants';
 import { Student, Counselor, Reviewer, Recommender, Admin } from '../models/UserType';
+import { RecommendationInterface } from '../types';
 import User from '../models/User';
 
 passport.use(
@@ -95,7 +97,8 @@ passport.use(
         const user = await UserModel.create({ email, password });
         const recommender = await Recommender.create({ user: user._id });
         user.recommender = recommender._id;
-        recommender.students = [req.body._student._id];
+        const recommendation = {student: req.body._student._id, status: "requested", relationship: String(req.query.r), message: String(req.query.m)} as RecommendationInterface;
+        recommender.recommendations.push(recommendation)
         await recommender.save();
         await user.save();
         return done(null, user);
