@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {InputText, Checkbox, Email, SingleSelect, Dropdown, TextArea, CustomErrorMessage} from '../../components/questions/forms';
-import {FieldArray, Field} from 'formik';
+import {FieldArray, Field, ErrorMessage} from 'formik';
 
 function Section(props) {
   const { index, values, data, errors } = props;
@@ -124,7 +124,6 @@ function FormBody({data, values, errors}) {
     const formElementList = []
     for (let i = 0; i < values.sections.length; i++) {
       formElementList.push(<Section key={i} index={i} values={values} data={data} errors={errors}></Section>);
-      console.log('formElementList :>> ', formElementList);
     }
     setFormElements(formElementList)
   }, [])
@@ -161,12 +160,11 @@ function FormBody({data, values, errors}) {
                   const questionIds = Object.keys(sec);
                   const questions = questionIds.map((id, ind) => {
                     const currQuestion = getQuestion(sectionIndex, id);
-                    // console.log(`sections[${sectionIndex}].${index}.${currQuestion._id}`);
                     return (
                       <div key={`${id}-${index}`}>
                         <label htmlFor={`${id}-${index}`} >{currQuestion.text}</label>
                         <Field name={`sections[${sectionIndex}].${index}.${currQuestion._id}`} />
-                        <CustomErrorMessage name={`sections[${sectionIndex}].${index}.${currQuestion._id}`} />
+                        <ErrorMessage name={`sections[${sectionIndex}].${index}.${currQuestion._id}`} />
                       </div>
                     )
                   })
@@ -190,7 +188,6 @@ function FormBody({data, values, errors}) {
                   className="secondary"
                   onClick={() => { 
                     arrayHelpers.push(sectionQuestions);
-                    console.log('values.sections[sectionIndex] :>> ', values.sections[sectionIndex]);
                   }
                   }
                 >

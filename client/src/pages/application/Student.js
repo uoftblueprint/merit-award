@@ -36,7 +36,9 @@ function Student() {
 
   const initForm = async (data) => {
     setFormData(data);
+    console.log('data :>> ', data);
     const prevAnswers = await getAnswers();
+    console.log('prevAnswers :>> ', prevAnswers);
     let _validationSchema = {};
     let _initialValues = [];
     for (let i = 0; i < data.length; i++) {
@@ -51,28 +53,33 @@ function Student() {
           currSection[question._id] = "";
         }
 
-        // const currQuestionId = `sections[${i}].0.${question._id}`;
         const currQuestionId = question._id;
-        if(question.type === "Name" || question.type === "Input Text"){
-          _validationSchema[currQuestionId] = Yup.string().required(question.text + ' required');
-        } else if(question.type === "Email"){
-          _validationSchema[currQuestionId] = Yup.string().email("Email must be valid").required(question.text + ' required')
-        } else if(question.type === "Single Select" || question.type === ""){
-          _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Selection required');
-        } else if(question.type === "Dropdown" || question.type === ""){
-          _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Dropdown selection required');
-        } else if(question.type === "Paragraph" || question.type === ""){
-          _validationSchema[currQuestionId] = Yup.string().required('Description required').max(question.charCount);
-        }
+        if(question.type === "Name"){
+          _validationSchema[currQuestionId] = Yup.string().required(question.text + ' required'); }
+        // if(question.type === "Name" || question.type === "Input Text"){
+        //   _validationSchema[currQuestionId] = Yup.string().required(question.text + ' required'); }
+        // } else if(question.type === "Email"){
+        //   _validationSchema[currQuestionId] = Yup.string().email("Email must be valid").required(question.text + ' required')
+        // } else if(question.type === "Single Select" || question.type === ""){
+        //   _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Selection required');
+        // } else if(question.type === "Dropdown" || question.type === ""){
+        //   _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Dropdown selection required');
+        // } else if(question.type === "Paragraph" || question.type === ""){
+        //   _validationSchema[currQuestionId] = Yup.string().required('Description required').max(question.charCount);
+        // }
 
       }
       _initialValues.push([currSection]);
     }
 
-    console.log('_validationSchema :>> ', _validationSchema);
-    setFormValidation(Yup.object().shape({sections: Yup.array().of(Yup.object().shape(_validationSchema))}));
+    setFormValidation(Yup.object().shape({ 
+      sections: Yup.array().of(
+        Yup.array().of(
+          Yup.object().shape(_validationSchema)
+        )
+      )
+    }));
     
-    // console.log('_initialValues :>> ', _initialValues);
     setSnapshot(_initialValues);
   }
 
@@ -118,9 +125,10 @@ function Student() {
   }
 
   async function handleSubmit(values, actions) {
-    setSnapshot(values)
+    setSnapshot(values.sections)
     try {
-      await postResponses(values)
+      const bar = await postResponses(values.sections);
+      console.log('bar :>> ', bar);
       setStep(step+1)
     } catch (e) {
       console.log(e);
@@ -152,10 +160,9 @@ function Student() {
       <div>
       <Formik initialValues={{sections: snapshot}} onSubmit={handleSubmit} validationSchema={formValidation} enableReinitialize>
       {({ errors, values }) => {
-        console.log('errors :>> ', errors);
-        // console.log('values :>> ', values);
-        // console.log('{sections: snapshot} :>> ', {sections: snapshot});
-        // console.log('formValidation :>> ', formValidation);
+        // snapshot is an array of all sections e.g. [[question1: "answer", question2: "answer2", question3: "answer3"], ["q1": "a1"]]
+        // console.log('snapshot :>> ', snapshot);
+        // console.log('errors :>> ', errors);
         return (
           <Form id={step}>
           {!isLoading && <FormBody data={formData} values={values} errors={errors}/>}

@@ -26,6 +26,7 @@ export const getAnswers = async () => {
 
 export const postResponses = async (data) => {
     try {
+        console.log('data :>> ', data);
         const res = await client.post('/api/forms/response', data);
         console.log(res)
         if (!res || res.status !== 200) {
