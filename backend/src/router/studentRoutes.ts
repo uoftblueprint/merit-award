@@ -38,4 +38,20 @@ router.put(
   }
 );
 
+router.put(
+  '/referral/recommender',
+  async (req: Request, res: Response, _: NextFunction) => {
+    const user = req.user as User;
+    if (!(user.student || user.admin)) {
+      return res.json({error: "Only students and admins can give referral links."})
+    }
+    const url = crypto.randomBytes(50).toString('hex');
+    const student = await Student.findById(user.student);
+    student.recommenderReferral = url;
+    await student.save();
+    
+    res.json({url: url})
+  }
+);
+
 export default router;

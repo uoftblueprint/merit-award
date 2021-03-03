@@ -30,6 +30,10 @@ const UserSchema = new Schema<User, UserModel>({
     type: Schema.Types.ObjectId,
     ref: "Reviewer",
   },
+  recommender: {
+    type: Schema.Types.ObjectId,
+    ref: "Recommender",
+  },
   admin: {
     type: Schema.Types.ObjectId,
     ref: "Admin",
