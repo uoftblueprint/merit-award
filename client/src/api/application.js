@@ -26,6 +26,7 @@ export const getAnswers = async () => {
 
 export const postResponses = async (data) => {
     try {
+        //data [{q: a}, {q, a}]
         console.log('data :>> ', data);
         const res = await client.post('/api/forms/response', data);
         console.log(res)

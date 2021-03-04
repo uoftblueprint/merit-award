@@ -127,8 +127,7 @@ function Student() {
   async function handleSubmit(values, actions) {
     setSnapshot(values.sections)
     try {
-      const bar = await postResponses(values.sections);
-      console.log('bar :>> ', bar);
+      await postResponses(values.sections);
       setStep(step+1)
     } catch (e) {
       console.log(e);
