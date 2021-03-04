@@ -1,0 +1,19 @@
+@import 'variables';
+@import 'mixins';
+
+.App {
+    position: relative;
+}
+
+.btn {
+  border: 2px solid $blue;
+  border-radius: 5px;
+  padding: 5px 12px;
+  color: $blue;
+  font-weight: 600;
+
+  a:hover {
+    color: $blue;
+    text-decoration: none;
+  }
+}

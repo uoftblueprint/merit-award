@@ -9,9 +9,11 @@ import Login from "./pages/Login";
 import LoggedIn from "./pages/LoggedIn";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import Recommenders from "./pages/Recommenders";
 import Student from './pages/application/Student';
 import References from "./pages/References";
 import './styles/App.css';
+import './styles/css/Main.css';
 import Cookies from 'js-cookie'
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -42,9 +44,9 @@ function App() {
   return (
     <Router>
 
-    <div>
+    <div className="App">
       {/* Only make internal pages available if global state is Logged In -> true */}
-        {loggedIn ?
+        {!loggedIn ?
           <Switch>
             <Route path="/reviewers" component={WithNav}/>
             <Route path="/recommenders" component={WithNav}/>
@@ -84,10 +86,6 @@ function WithNav(props) {
 
 function Reviewers() {
   return <h2>Reviewer Dashboard</h2>;
-}
-
-function Recommenders() {
-  return <h2>Recommender Dashboard</h2>;
 }
 
 function Users() {

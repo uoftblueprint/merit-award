@@ -1,0 +1,17 @@
+.App {
+  position: relative;
+}
+
+.btn {
+  border: 2px solid #152A74;
+  border-radius: 5px;
+  padding: 5px 12px;
+  color: #152A74;
+  font-weight: 600;
+}
+.btn a:hover {
+  color: #152A74;
+  text-decoration: none;
+}
+
+/*# sourceMappingURL=Main.css.map */
