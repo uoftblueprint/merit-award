@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { FormModel } from '../models/Form'
 import { UserApplication } from '../models/UserApplication'
-import { updateQuestions } from '../forms/forms'
+import { updateQuestions, getSchoolsList } from '../forms/forms'
 import { User } from '../types'
 
 //This is the route used when updating the MongoDB with the airtable
@@ -31,6 +31,14 @@ export const getPage = async(req: Request, res: Response) => {
         console.log(e)
     }
     return res.send("error")
+}
+
+export const getSchools = async(req: Request, res: Response) => {
+    const schools = await getSchoolsList();
+    const schoolNames = schools.map(school => {
+        return school.name;
+    })
+    return res.json(schoolNames);
 }
 
 export const getAnswers = async(req: Request, res: Response) => {

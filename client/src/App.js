@@ -14,6 +14,7 @@ import References from "./pages/References";
 import './styles/App.css';
 import Cookies from 'js-cookie'
 import { useSelector, useDispatch } from 'react-redux';
+import StudentLogin from './pages/StudentSignup';
 
 function App() {
   const loggedIn = useSelector(state => state.userStatus);
@@ -57,6 +58,7 @@ function App() {
           :
           <Switch>
             <Route path="/signup" component={Signup}/>
+            <Route path="/student" component={StudentLogin} />
             <Route path="/" component={Login}/>
           </Switch>
         }
