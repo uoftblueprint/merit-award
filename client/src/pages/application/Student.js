@@ -43,33 +43,44 @@ function Student() {
     let _initialValues = [];
     for (let i = 0; i < data.length; i++) {
       let section = data[i];
-      let currSection = {};
-      for (let y = 0; y < section.questions.length; y++) {
-        let question = section.questions[y];
-
-        if (prevAnswers[question._id]) {
-          currSection[question._id] = prevAnswers[question._id];
-        } else {
-          currSection[question._id] = "";
+      let currSectionOfQuestions = [];
+      let numRepeat = 0;
+      let moreAnswers = true;
+      while (moreAnswers) {
+        let currSection = {};
+        for (let y = 0; y < section.questions.length; y++) {
+          let question = section.questions[y];
+  
+          // prevAnswers[question._id] is an array of answers
+          if (prevAnswers[question._id]) {
+            currSection[question._id] = prevAnswers[question._id][numRepeat];
+            if (prevAnswers[question._id].length - numRepeat <= 1) {
+              moreAnswers = false;
+            } 
+          } else {
+            currSection[question._id] = "";
+            moreAnswers = false;
+          }
+  
+          const currQuestionId = question._id;
+          if(question.type === "Name"){
+            _validationSchema[currQuestionId] = Yup.string().required(question.text + ' required'); }
+          // if(question.type === "Name" || question.type === "Input Text"){
+          //   _validationSchema[currQuestionId] = Yup.string().required(question.text + ' required'); }
+          // } else if(question.type === "Email"){
+          //   _validationSchema[currQuestionId] = Yup.string().email("Email must be valid").required(question.text + ' required')
+          // } else if(question.type === "Single Select" || question.type === ""){
+          //   _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Selection required');
+          // } else if(question.type === "Dropdown" || question.type === ""){
+          //   _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Dropdown selection required');
+          // } else if(question.type === "Paragraph" || question.type === ""){
+          //   _validationSchema[currQuestionId] = Yup.string().required('Description required').max(question.charCount);
+          // }
         }
-
-        const currQuestionId = question._id;
-        if(question.type === "Name"){
-          _validationSchema[currQuestionId] = Yup.string().required(question.text + ' required'); }
-        // if(question.type === "Name" || question.type === "Input Text"){
-        //   _validationSchema[currQuestionId] = Yup.string().required(question.text + ' required'); }
-        // } else if(question.type === "Email"){
-        //   _validationSchema[currQuestionId] = Yup.string().email("Email must be valid").required(question.text + ' required')
-        // } else if(question.type === "Single Select" || question.type === ""){
-        //   _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Selection required');
-        // } else if(question.type === "Dropdown" || question.type === ""){
-        //   _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Dropdown selection required');
-        // } else if(question.type === "Paragraph" || question.type === ""){
-        //   _validationSchema[currQuestionId] = Yup.string().required('Description required').max(question.charCount);
-        // }
-
+        currSectionOfQuestions.push(currSection);
+        numRepeat++;
       }
-      _initialValues.push([currSection]);
+      _initialValues.push(currSectionOfQuestions);
     }
 
     setFormValidation(Yup.object().shape({ 
