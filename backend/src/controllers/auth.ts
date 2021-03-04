@@ -42,6 +42,7 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
 
 
 export const logIn = async (req: Request, res: Response, next: NextFunction) => {
+  console.log('req.body :>> ', req.body);
   passport.authenticate("login", async (err: Error, user: User, _: NextFunction) => {
     return reqLogin(err, user, req, res, next);
   })(req, res, next);

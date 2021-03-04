@@ -13,6 +13,8 @@ export const apiLogin = async (email, password) => {
       throw 'Unable to login';
     }
 
+    console.log('user :>> ', user);
+
     Cookies.set('access', user.data.access);
   } catch (err) {
     console.log(err);

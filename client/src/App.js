@@ -49,7 +49,7 @@ function App() {
             <Route path="/reviewers" component={WithNav}/>
             <Route path="/recommenders" component={WithNav}/>
             <Route path="/users" component={WithNav}/>
-            <Route path="/dashboard" component={WithNav}/>
+            <Route path="/dashboard" render={() => <WithNav logout={logout} cookies={access}/>}/>
             <Route path="/application" component={WithNav}/>
             <Route path="/references" component={WithNav}/>
             <Route path="/" render={() => <WithNav logout={logout} cookies={access}/>}/>
@@ -73,7 +73,7 @@ function WithNav(props) {
         <Route path="/reviewers" component={Reviewers}/>
         <Route path="/recommenders" component={Recommenders}/>
         <Route path="/users" component={Users}/>
-        <Route path="/dashboard" component={Dashboard}/>
+        <Route path="/dashboard" render={() => <Dashboard logout={props.logout} cookies={props.access}/>}/>
         <Route path="/application" component={Student}/>
         <Route path="/references" component={References}/>
         <Route path="/" render={() => <Dashboard logout={props.logout} cookies={props.access}/>}/>
