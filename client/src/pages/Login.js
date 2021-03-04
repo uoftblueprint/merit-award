@@ -1,21 +1,20 @@
-import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
-import { Link, useHistory } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import "../styles/login.css";
 import { useDispatch } from 'react-redux';
 import { apiLogin } from "../api/auth";
-import { Field, Form, withFormik, ErrorMessage, Formik } from "formik";
-import * as Yup from 'yup';
+import { Field, Form, ErrorMessage, Formik } from "formik";
+import * as yup from 'yup';
 
 function Login() {
   const dispatch = useDispatch()
 
-  const LoginValidation = Yup.object().shape({
-    email: Yup
+  const loginValidation = yup.object().shape({
+    email: yup
       .string()
       .email()
       .required(),
-    password: Yup
+    password: yup
       .string()
       .required(),
   })
@@ -37,7 +36,7 @@ function Login() {
   return (
     <div className="login">
       <h1 className="bg-gray-500 text-orange"> MERIT AWARD </h1>
-      <Formik validationSchema={LoginValidation} onSubmit={handleSubmit} initialValues={initialValues}>
+      <Formik validationSchema={loginValidation} onSubmit={handleSubmit} initialValues={initialValues}>
         <Form>
           <div size="lg">
             <label htmlFor="email" className="block">Email</label>
