@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Field, ErrorMessage, getIn } from 'formik';
+import React from 'react';
+import { Field, ErrorMessage } from 'formik';
 
 
 export function InputText({name, label, hint, errors}) {
@@ -107,14 +107,3 @@ export function Email({name, label}) {
     </div>
   )
 }
-
-export const CustomErrorMessage = ({ name }) => (
-  <Field
-    name={name}
-    render={({ form }) => {
-      const error = getIn(form.errors, name);
-      const touch = getIn(form.touched, name);
-      return touch && error ? error : null;
-    }}
-  />
-);

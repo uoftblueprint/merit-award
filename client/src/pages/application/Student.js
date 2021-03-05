@@ -63,25 +63,25 @@ function Student() {
           }
   
           const currQuestionId = question._id;
-          if(question.type === "Name"){
-            _validationSchema[currQuestionId] = Yup.string().required(question.text + ' required'); }
-          // if(question.type === "Name" || question.type === "Input Text"){
-          //   _validationSchema[currQuestionId] = Yup.string().required(question.text + ' required'); }
-          // } else if(question.type === "Email"){
-          //   _validationSchema[currQuestionId] = Yup.string().email("Email must be valid").required(question.text + ' required')
-          // } else if(question.type === "Single Select" || question.type === ""){
-          //   _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Selection required');
-          // } else if(question.type === "Dropdown" || question.type === ""){
-          //   _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Dropdown selection required');
-          // } else if(question.type === "Paragraph" || question.type === ""){
-          //   _validationSchema[currQuestionId] = Yup.string().required('Description required').max(question.charCount);
-          // }
+          if(question.type === "Name" || question.type === "Input Text"){
+            _validationSchema[currQuestionId] = Yup.string().required(question.text + ' required');
+          } else if(question.type === "Email"){
+            _validationSchema[currQuestionId] = Yup.string().email("Email must be valid").required(question.text + ' required')
+          } else if(question.type === "Single Select" || question.type === ""){
+            _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Selection required');
+          } else if(question.type === "Dropdown" || question.type === ""){
+            _validationSchema[currQuestionId] = Yup.string().oneOf(question.options).required('Dropdown selection required');
+          } else if(question.type === "Paragraph" || question.type === ""){
+            _validationSchema[currQuestionId] = Yup.string().required('Description required').max(question.charCount);
+          }
         }
         currSectionOfQuestions.push(currSection);
         numRepeat++;
       }
       _initialValues.push(currSectionOfQuestions);
     }
+
+    console.log('validationSchema :>> ', _validationSchema);
 
     setFormValidation(Yup.object().shape({ 
       sections: Yup.array().of(
@@ -170,9 +170,7 @@ function Student() {
       <div>
       <Formik initialValues={{sections: snapshot}} onSubmit={handleSubmit} validationSchema={formValidation} enableReinitialize>
       {({ errors, values }) => {
-        // snapshot is an array of all sections e.g. [[question1: "answer", question2: "answer2", question3: "answer3"], ["q1": "a1"]]
-        // console.log('snapshot :>> ', snapshot);
-        // console.log('errors :>> ', errors);
+        console.log('errors :>> ', errors);
         return (
           <Form id={step}>
           {!isLoading && <FormBody data={formData} values={values} errors={errors}/>}
