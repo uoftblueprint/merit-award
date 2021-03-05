@@ -6,14 +6,23 @@
 }
 
 .btn {
+  padding: 5px 12px;
   border: 2px solid $blue;
   border-radius: 5px;
-  padding: 5px 12px;
-  color: $blue;
   font-weight: 600;
 
-  a:hover {
-    color: $blue;
+  &:hover {
     text-decoration: none;
+    border: 2px solid $blue;
   }
+}
+
+.btn-primary, .btn-primary:hover {
+  color: white;
+  background: $blue;
+}
+
+.btn-secondary, .btn-secondary:hover {
+  color: $blue;
+  background: white;
 }

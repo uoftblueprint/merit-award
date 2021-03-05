@@ -47,31 +47,73 @@
         padding-bottom: 0px;
       }
 
-      .student {
-        display: flex;
-
-        .profile-photo {
-          background: blue;
-          width: 40px;
-          height: 40px;
-          border-radius: 50px;
-          margin-right: 20px;
-        }
-
-        .name {
-          h3 {
-            font-size: 16px;
-          }
-
-          p {
-            color: $grey;
-          }
-        }
-      }
-
       .request-date {
         color: $grey;
       }
+    }
+  }
+}
+
+.student {
+  display: flex;
+
+  .profile-photo {
+    background: blue;
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+    margin-right: 20px;
+  }
+
+  .name {
+    h3 {
+      font-size: 16px;
+    }
+
+    p {
+      color: $grey;
+    }
+  }
+}
+
+#rec-request {
+  @include card;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .request {
+    color: $blue;
+  }
+
+  .student {
+    margin: 40px 20px;
+  }
+
+  .deadline {
+    padding: 20px;
+    border-top: 1px solid $lightgrey;
+    border-bottom: 1px solid $lightgrey;
+  }
+
+  .rec-accept {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .buttons .btn {
+      margin: 6px;
+    }
+
+    p {
+      margin: 15px;
+    }
+
+    .notified {
+      font-size: 14px;
+      color: $grey;
     }
   }
 }

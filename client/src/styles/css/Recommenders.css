@@ -42,23 +42,61 @@
   border-bottom: none;
   padding-bottom: 0px;
 }
-#rec-table .table-entries .table-entry .student {
+#rec-table .table-entries .table-entry .request-date {
+  color: #959A99;
+}
+
+.student {
   display: flex;
 }
-#rec-table .table-entries .table-entry .student .profile-photo {
+.student .profile-photo {
   background: blue;
   width: 40px;
   height: 40px;
   border-radius: 50px;
   margin-right: 20px;
 }
-#rec-table .table-entries .table-entry .student .name h3 {
+.student .name h3 {
   font-size: 16px;
 }
-#rec-table .table-entries .table-entry .student .name p {
+.student .name p {
   color: #959A99;
 }
-#rec-table .table-entries .table-entry .request-date {
+
+#rec-request {
+  padding: 40px;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#rec-request .request {
+  color: #152A74;
+}
+#rec-request .student {
+  margin: 40px 20px;
+}
+#rec-request .deadline {
+  padding: 20px;
+  border-top: 1px solid #CDCDCD;
+  border-bottom: 1px solid #CDCDCD;
+}
+#rec-request .rec-accept {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+#rec-request .rec-accept .buttons .btn {
+  margin: 6px;
+}
+#rec-request .rec-accept p {
+  margin: 15px;
+}
+#rec-request .rec-accept .notified {
+  font-size: 14px;
   color: #959A99;
 }
 

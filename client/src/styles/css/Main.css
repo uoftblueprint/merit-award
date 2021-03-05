@@ -3,15 +3,24 @@
 }
 
 .btn {
+  padding: 5px 12px;
   border: 2px solid #152A74;
   border-radius: 5px;
-  padding: 5px 12px;
-  color: #152A74;
   font-weight: 600;
 }
-.btn a:hover {
-  color: #152A74;
+.btn:hover {
   text-decoration: none;
+  border: 2px solid #152A74;
+}
+
+.btn-primary, .btn-primary:hover {
+  color: white;
+  background: #152A74;
+}
+
+.btn-secondary, .btn-secondary:hover {
+  color: #152A74;
+  background: white;
 }
 
 /*# sourceMappingURL=Main.css.map */
