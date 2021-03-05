@@ -19,6 +19,15 @@ export const userTypeReducer = (state = "USER", action) => {
         case "COUNSELOR":
             return "COUNSELOR"
 
+        case "REVIEWER":
+            return "REVIEWER"
+
+        case "RECOMMENDER":
+            return "RECOMMENDER"
+
+        case "ADMIN":
+            return "ADMIN"
+
         default:
             return state;
     }

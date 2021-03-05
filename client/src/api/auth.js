@@ -60,6 +60,26 @@ export const apiSignupCounselor = async (email, password) => {
   }
 };
 
+export const apiSignupReviewer = async (email, password) => {
+
+  console.log("attempting to sign up w/ email: " + email + " , password: " + password + "")
+  try {
+      const user = await axios.post('/api/user/signup/reviewer', {
+          email,
+          password
+      });
+
+      if (!user || user.status != 200 || typeof(user.data) == "string") {
+          throw 'Could not create new user.';
+      }
+
+      Cookies.set('access', user.data.access);
+  } catch (err) {
+      console.log(err);
+      throw err;
+  }
+};
+
 
 export const getEmail = async () => {
 
