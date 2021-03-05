@@ -1,10 +1,10 @@
 #rec-dash {
-  height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 100px 0px 60px 0px;
 }
 #rec-dash h1 {
   font-size: 2.5rem;
@@ -51,7 +51,7 @@
 }
 .student .profile-photo {
   background: blue;
-  width: 40px;
+  max-width: 40px;
   height: 40px;
   border-radius: 50px;
   margin-right: 20px;
@@ -68,9 +68,14 @@
   border: 1px solid #dee2e6;
   border-radius: 10px;
   width: 50%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+}
+#rec-request div {
+  width: 100%;
 }
 #rec-request .request {
   color: #152A74;
@@ -79,15 +84,23 @@
   margin: 40px 20px;
 }
 #rec-request .deadline {
+  text-align: center;
   padding: 20px;
   border-top: 1px solid #CDCDCD;
   border-bottom: 1px solid #CDCDCD;
+}
+#rec-request .questions {
+  border-bottom: 1px solid #CDCDCD;
+  padding: 20px;
 }
 #rec-request .rec-accept {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+#rec-request .rec-accept .buttons {
+  display: flex;
 }
 #rec-request .rec-accept .buttons .btn {
   margin: 6px;

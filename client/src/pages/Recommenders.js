@@ -70,13 +70,15 @@ function RecRequest() {
     <div id="rec-request">
       <b className="request">You have been asked to provide a recommendation on behalf of:</b>
 
-      <div className="student">
-        <div className="profile-photo">
-          <img src=""/>
-        </div>
-        <div className="name">
-          <h3>Trudie</h3>
-          <p>email</p>
+      <div className="student-line">
+        <div className="student">
+          <div className="profile-photo">
+            <img src=""/>
+          </div>
+          <div className="name">
+            <h3>Trudie</h3>
+            <p>email</p>
+          </div>
         </div>
       </div>
 
@@ -101,6 +103,58 @@ function RecRequest() {
   );
 }
 
+function Recommendation() {
+  return (
+    <div id="rec-request">
+      <b className="request">Recommendation for:</b>
+
+      <div className="student">
+        <div className="profile-photo">
+          <img src=""/>
+        </div>
+        <div className="name">
+          <h3>Trudie</h3>
+          <p>email</p>
+        </div>
+      </div>
+
+      <div className="deadline">
+        <b>Recommendation Deadline:</b> March 20, 2020 10:00PM EST
+      </div>
+
+      <div className="questions">
+        <p>How long have you known Trudie Cheung? </p>
+
+        <p>What courses have you taught the applicant?</p>
+        <textarea></textarea>
+
+        <p>Based on your personal involvment with the applicant, what characteristics , obstacles overcome, or acheivements make this student worthy of a Merit Award ?</p>
+        <textarea></textarea>
+
+        <p>Do you have any other comments regarding the applicant you wish to bring to the attention of the Selection Committee (e.g. the applicant’s extra-curricular activities or personal circumstances)</p>
+        <textarea></textarea>
+      </div>
+
+      <div className="rec-accept">
+        <p>I confirm that the above information is true:</p>
+        <textarea></textarea>
+
+        <p>Date</p>
+
+        <div className="buttons">
+          <div className="btn btn-secondary">
+            No
+          </div>
+          <div className="btn btn-primary">
+            Yes
+          </div>
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
 function Dashboard() {
 
   const [stageIndex, setStageByIndex] = useState(0);
@@ -108,12 +162,9 @@ function Dashboard() {
   return (
     <div id="rec-dash">
       <h1>Your Recommendations</h1>
-      {
-        true ?
-        <RecRequest/>
-        :
-        <RenderDashboardMain />
-      }
+        <Recommendation />
+        {/*<RecRequest />
+        <RenderDashboardMain />*/}
     </div>
   );
 }

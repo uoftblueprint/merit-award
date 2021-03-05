@@ -2,12 +2,12 @@
 @import 'mixins';
 
 #rec-dash {
-  height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 100px 0px 60px 0px;
 
   h1 {
     font-size: 2.5rem;
@@ -56,10 +56,9 @@
 
 .student {
   display: flex;
-
   .profile-photo {
     background: blue;
-    width: 40px;
+    max-width: 40px;
     height: 40px;
     border-radius: 50px;
     margin-right: 20px;
@@ -79,9 +78,15 @@
 #rec-request {
   @include card;
   width: 50%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+
+  & div {
+    width: 100%;
+  }
 
   .request {
     color: $blue;
@@ -92,9 +97,15 @@
   }
 
   .deadline {
+    text-align: center;
     padding: 20px;
     border-top: 1px solid $lightgrey;
     border-bottom: 1px solid $lightgrey;
+  }
+
+  .questions {
+    border-bottom: 1px solid $lightgrey;
+    padding: 20px;
   }
 
   .rec-accept {
@@ -103,8 +114,11 @@
     flex-direction: column;
     align-items: center;
 
-    .buttons .btn {
-      margin: 6px;
+    .buttons {
+      display: flex;
+      .btn {
+        margin: 6px;
+      }
     }
 
     p {
