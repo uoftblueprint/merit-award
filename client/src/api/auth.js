@@ -13,6 +13,8 @@ export const apiLogin = async (email, password) => {
       throw 'Unable to login';
     }
 
+    console.log('user :>> ', user);
+
     Cookies.set('access', user.data.access);
   } catch (err) {
     console.log(err);
@@ -20,13 +22,14 @@ export const apiLogin = async (email, password) => {
   }
 };
 
-export const apiSignup = async (email, password) => {
+export const apiSignup = async (email, password, school) => {
 
     console.log("attempting to sign up w/ email: " + email + " , password: " + password + "")
     try {
         const user = await axios.post('/api/user/signup', {
             email,
-            password
+            password,
+            school
         });
 
         if (!user || user.status != 200 || typeof(user.data) == "string") {

@@ -7,6 +7,7 @@ const base = airtable.base('appt2jmmk7EWPzIkp');
 //These are the names of the tabs in our Airtable
 const questionTable = base("StudentApplication")
 const descriptorsTable = base("StudentDescriptors")
+const schoolsTable = base("Schools")
 
 //airtableQuestion is the interface for the data when it first comes from
 //Airtable
@@ -24,6 +25,11 @@ interface airtableDescriptor {
   name: string,
   repeatable: number,
   label: string
+}
+
+//airtableDescriptor is the form that the initial Airtable data is put in
+interface school {
+  name: string
 }
 
 //getAirtableQuestions queries Airtable and returns a list of 
@@ -65,6 +71,21 @@ const getDescriptors = async() => {
         name: c["Name"],
         repeatable: c["Repeatable"],
         label: c["Label"]
+      }
+      return a;
+    }
+  )
+}
+
+//getDescriptors queries the Airtable for info on each section
+export const getSchoolsList = async() => {
+  const schools = await schoolsTable.select({view: 'Grid view'}).all();
+  return schools.map(
+    function(r) {
+      let c = r._rawJson
+      c = c["fields"]
+      const a : school = {
+        name: c["Name"]
       }
       return a;
     }

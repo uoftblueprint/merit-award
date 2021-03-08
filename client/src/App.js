@@ -14,6 +14,7 @@ import References from "./pages/References";
 import './styles/App.css';
 import Cookies from 'js-cookie'
 import { useSelector, useDispatch } from 'react-redux';
+import StudentLogin from './pages/StudentSignup';
 
 function App() {
   const loggedIn = useSelector(state => state.userStatus);
@@ -49,14 +50,14 @@ function App() {
             <Route path="/reviewers" component={WithNav}/>
             <Route path="/recommenders" component={WithNav}/>
             <Route path="/users" component={WithNav}/>
-            <Route path="/dashboard" component={WithNav}/>
+            <Route path="/dashboard" render={() => <WithNav logout={logout} cookies={access}/>}/>
             <Route path="/application" component={WithNav}/>
             <Route path="/references" component={WithNav}/>
             <Route path="/" render={() => <WithNav logout={logout} cookies={access}/>}/>
           </Switch>
           :
           <Switch>
-            <Route path="/signup" component={Signup}/>
+            <Route path="/signup" component={StudentLogin} />
             <Route path="/" component={Login}/>
           </Switch>
         }
@@ -73,7 +74,7 @@ function WithNav(props) {
         <Route path="/reviewers" component={Reviewers}/>
         <Route path="/recommenders" component={Recommenders}/>
         <Route path="/users" component={Users}/>
-        <Route path="/dashboard" component={Dashboard}/>
+        <Route path="/dashboard" render={() => <Dashboard logout={props.logout} cookies={props.access}/>}/>
         <Route path="/application" component={Student}/>
         <Route path="/references" component={References}/>
         <Route path="/" render={() => <Dashboard logout={props.logout} cookies={props.access}/>}/>
