@@ -57,8 +57,7 @@ function App() {
           </Switch>
           :
           <Switch>
-            <Route path="/signup" component={Signup}/>
-            <Route path="/student" component={StudentLogin} />
+            <Route path="/signup" component={StudentLogin} />
             <Route path="/" component={Login}/>
           </Switch>
         }

@@ -27,19 +27,23 @@ function StudentLogin() {
 
   const loginValidation = yup.object().shape({
     email: yup.string().email().required(),
-    password: yup.string().required(),
+    password: yup.string().required().min(2, 'Password too short.'),
     school: yup.string().required(),
     confirm: yup.boolean().oneOf([true], 'This checkbox must be checked.').required(),
+    confirmPassword: yup.string().oneOf([yup.ref('password'), null], "Passwords don't match").required('Confirm Password is required')
   })
 
   const initialValues = {
     email: '',
     password: '',
+    confirmPassword: '',
+    school: '',
+    confirm: ''
   }
 
   const handleSubmit = async (values) => {
     try {
-      await apiSignup(values.email, values.password);
+      await apiSignup(values.email, values.password, values.school);
       dispatch({ type: 'LOGIN' });
     } catch (err) {
       console.log('err :>> ', err);
@@ -62,6 +66,11 @@ function StudentLogin() {
             <ErrorMessage name={"password"} />
           </div>
           <div size="lg">
+            <label htmlFor="confirmPassword" className="block">Confirm Password</label>
+            <Field size="lg" type="password" name="confirmPassword" placeholder="Password" />
+            <ErrorMessage name={"confirmPassword"} />
+          </div>
+          <div size="lg">
             <Dropdown name="school" options={schoolNames} />
           </div>
           <div size="lg">
@@ -73,7 +82,7 @@ function StudentLogin() {
         </Form>
       </Formik>
       
-      <Link className="outline-button m-auto" to="/signup">Signup</Link>
+      <Link className="outline-button m-auto" to="/">Login</Link>
     </div>
   );
 }
