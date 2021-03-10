@@ -34,7 +34,6 @@ function Question({name, type, text, hint, options}) {
       return <TextArea key={name} name={name} label={text} options={options} />
 
     default:
-      console.log('type :>> ', type);
       return <div>No Question</div>
   }
 }
