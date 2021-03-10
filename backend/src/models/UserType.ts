@@ -8,6 +8,7 @@ const StudentSchema = new Schema<StudentInterface>({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  school: { type: String },
   counselorReferral: { type: String },
   reviewerReferral: { type: String },
   recommenderReferral: { type: String },

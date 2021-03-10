@@ -14,16 +14,12 @@ import { Student, Counselor, Reviewer, Recommender, Admin } from '../models/User
 import User from '../models/User';
 
 passport.use(
-    'signup',
-    new localStrategy(
-      {
-        usernameField: 'email',
-        passwordField: 'password'
-      },
-      async (email: string, password: string, done: any) => {
+    'signupStudent',
+    new CustomStrategy(
+      async (req, done: any) => {
         try {
-          const user = await UserModel.create({ email, password });
-          const student = await Student.create({ user: user._id });
+          const user = await UserModel.create({ email: req.body.email, password: req.body.password });
+          const student = await Student.create({ user: user._id, school: req.body.school });
           user.student = student._id;
           await user.save();
           return done(null, user);

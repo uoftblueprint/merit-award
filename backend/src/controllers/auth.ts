@@ -35,13 +35,14 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
     return res.json({ error: "User exists" });
   }
 
-  passport.authenticate("signup", async (err: Error, user: User, _: NextFunction) => {
+  passport.authenticate("signupStudent", async (err: Error, user: User, _: NextFunction) => {
     return reqLogin(err, user, req, res, next);
   })(req, res, next);
 };
 
 
 export const logIn = async (req: Request, res: Response, next: NextFunction) => {
+  console.log('req.body :>> ', req.body);
   passport.authenticate("login", async (err: Error, user: User, _: NextFunction) => {
     return reqLogin(err, user, req, res, next);
   })(req, res, next);

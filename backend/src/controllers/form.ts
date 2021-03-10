@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { FormModel } from '../models/Form';
 import { UserApplication } from '../models/UserApplication';
-import { updateQuestions } from '../forms/forms';
+import { updateQuestions, getSchoolsList } from '../forms/forms'
 import { User } from '../types';
 
 //This is the route used when updating the MongoDB with the airtable
@@ -31,24 +31,24 @@ export const getPage = async (req: Request, res: Response) => {
   return res.send('error');
 };
 
-export const getAnswers = async (req: Request, res: Response) => {
-  const user = req.user as User;
-  console.log(user);
-  const q = await UserApplication.findOne({ user: user._id });
-  let answers = {};
-  if (q) {
-    const submissions = q.studentSubmissions;
-    answers = submissions.answers.toObject({ flattenMaps: true });
-  }
-  return res.json(answers);
-};
+// export const getAnswers = async (req: Request, res: Response) => {
+//   const user = req.user as User;
+//   console.log(user);
+//   const q = await UserApplication.findOne({ user: user._id });
+//   let answers = {};
+//   if (q) {
+//     const submissions = q.studentSubmissions;
+//     answers = submissions.answers.toObject({ flattenMaps: true });
+//   }
+//   return res.json(answers);
+// };
 
 export const postForm = async (req: Request, res: Response) => {
   const sections = req.body;
   console.log('sections :>> ', sections);
   const user = req.user as User;
   let userResponses = new Map<string, string[]>();
-  let updated = new Set<string>();
+  const updated = new Set<string>();
   const exists = await UserApplication.exists({ user: user._id });
   if (exists) {
     const x = await UserApplication.find({ user: user._id });
@@ -86,3 +86,24 @@ export const postForm = async (req: Request, res: Response) => {
   }
   return res.send('working');
 };
+
+export const getSchools = async(req: Request, res: Response) => {
+    const schools = await getSchoolsList();
+    const schoolNames = schools.map(school => {
+        return school.name;
+    })
+    return res.json(schoolNames);
+}
+
+export const getAnswers = async(req: Request, res: Response) => {
+    const user = req.user as User;
+    console.log(user);
+    const q = await UserApplication.findOne({user: user._id})
+    let answers = {}
+    if (q) {
+        const submissions = q.studentSubmissions;
+        answers = submissions.answers.toObject({ flattenMaps: true });
+    }
+    return res.json(answers);
+}
+
