@@ -34,7 +34,7 @@ function Question({name, type, text, hint, options}) {
       return <TextArea key={name} name={name} label={text} options={options} />
 
     default:
-      return <div>No Question</div>
+      return <InputText key={name} name={name} label={text} hint={hint}/>;
   }
 }
 
