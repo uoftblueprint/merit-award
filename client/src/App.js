@@ -7,7 +7,6 @@ import {
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
 import LoggedIn from "./pages/LoggedIn";
-import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import Student from './pages/application/Student';
 import References from "./pages/References";
@@ -77,7 +76,7 @@ function WithNav(props) {
         <Route path="/dashboard" render={() => <Dashboard logout={props.logout} cookies={props.access}/>}/>
         <Route path="/application" component={Student}/>
         <Route path="/references" component={References}/>
-        <Route path="/" render={() => <Dashboard logout={props.logout} cookies={props.access}/>}/>
+        <Route path="/" render={() => <LoggedIn logout={props.logout} cookies={props.access}/>}/>
       </Switch>
     </div>
   );
