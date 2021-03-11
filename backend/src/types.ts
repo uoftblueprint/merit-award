@@ -27,11 +27,29 @@ export interface CounselorInterface extends Document {
     students: Array<Schema.Types.ObjectId>;
 }
 
+export interface ECReccomendationInterface extends Document {
+    activities: [string],
+    details: string,
+    contributions: string,
+}
+
+export interface AReccomendationInterface extends Document { 
+    courses: string,
+    comments: string,
+}
+
 export interface RecommendationInterface extends Document {
     student: Schema.Types.ObjectId,
     status: string,
     relationship: string,
     message: string,
+    type: string,
+    reccomend: boolean,
+    date: Date,
+    length: string,
+    worthy: string,
+    ecreccomendation: ECReccomendationInterface,
+    areccomendation: AReccomendationInterface,
 }
 
 export interface RecommenderInterface extends Document {

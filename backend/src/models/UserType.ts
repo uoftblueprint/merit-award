@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { StudentInterface, CounselorInterface, ReviewerInterface, AdminInterface, RecommenderInterface, RecommendationInterface } from "../types";
+import { StudentInterface, CounselorInterface, ReviewerInterface, AdminInterface, RecommenderInterface, RecommendationInterface, AReccomendationInterface, ECReccomendationInterface } from "../types";
 
 const Schema = mongoose.Schema;
 
@@ -39,6 +39,17 @@ const ReviewerSchema = new Schema<ReviewerInterface>({
   ],
 });
 
+const ECReccomendationSchema = new Schema<ECReccomendationInterface>({
+  activities: [String],
+  details: String,
+  contributions: String,
+});
+
+const AReccomendationSchema = new Schema<AReccomendationInterface>({
+  courses: String,
+  comments: String,
+});
+
 const RecommendationSchema = new Schema<RecommendationInterface>({
   student: {
     type: Schema.Types.ObjectId,
@@ -47,6 +58,13 @@ const RecommendationSchema = new Schema<RecommendationInterface>({
   status: String,
   relationship: String,
   message: String,
+  type: String,
+  reccomend: String,
+  date: Schema.Types.Date,
+  length: String,
+  worthy: String,
+  ecreccomendation: ECReccomendationSchema,
+  areccomendation: AReccomendationSchema,
 })
 
 const RecommenderSchema = new Schema<RecommenderInterface>({
