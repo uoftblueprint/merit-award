@@ -87,4 +87,3 @@ export const Counselor = mongoose.model<CounselorInterface>("counselor", Counsel
 export const Reviewer = mongoose.model<ReviewerInterface>("reviewer", ReviewerSchema);
 export const Recommender = mongoose.model<RecommenderInterface>("recommender", RecommenderSchema);
 export const Admin = mongoose.model<AdminInterface>("admin", AdminSchema);
-

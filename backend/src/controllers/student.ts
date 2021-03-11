@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Recommender, Student } from '../models/UserType';
 import UserModel from '../models/User';
-import { User, RecommendationInterface } from '../types';
+import { User, RecommendationInterface, RecommenderInterface } from '../types';
 import crypto from 'crypto';
 import querystring from 'querystring';
 
@@ -44,6 +44,18 @@ const createRecommenderSignUp = async (recommenderEmail: string, studentUser: Us
     return {url: querystring.stringify({m: recommendation.message, id: String(studentUser.student), r: recommendation.relationship})};
 }
 
+export const updateReccomendation = async(req: Request, res: Response) => {
+    const recomendation = req.body as RecommendationInterface;
+    const user = req.user as User;
+    const reccomender = Recommender.findById(user.id) as RecommenderInterface;
+    reccomender.recommendations.forEach(element => {
+        if (element.student == recomendation.student) {
+            element = recomendation;
+        }
+    });
+    reccomender.save();
+}
+
 export const inviteRecommender = async(req: Request, res: Response) => {
     const studentUser = req.user as User;
     console.log(studentUser)
@@ -79,5 +91,4 @@ export const inviteRecommender = async(req: Request, res: Response) => {
             return res.status(500).send({error: e.message});
         }
     }
-    
 }
