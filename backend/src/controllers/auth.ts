@@ -8,21 +8,9 @@ import { User } from "../types";
 import { JWT_SECRET } from '../constants';
 
 const reqLogin = async (err: Error, user: User, req: Request, res: Response, next: NextFunction) => {
-  console.log("reqLogin");
-  console.log('user :>> ', user);
-  
-  // console.log('res :>> ', res);
-  // console.log('err.message :>> ', err.message);
-  // console.log('res :>> ', res);
   try {
     if (err || !user) {
-      console.log("sdhfjkdshf");
-      console.log('err :>> ', err);
-      // res.status(401);
       return res.status(401).send(err.message);
-      // return next(err);
-      // return res.json(err);
-      // res.end(err.message);
     }
 
     req.login(user, { session: false }, async (error: Error) => {
@@ -52,14 +40,8 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
 
 
 export const logIn = async (req: Request, res: Response, next: NextFunction) => {
-  console.log('req.body :>> ', req.body);
   passport.authenticate("login", async (err: Error, user: User, info: any) => {
-    console.log('info :>> ', info);
-    console.log('user :>> ', user);
-    console.log('err :>> ', err);
-    const fuck = await reqLogin(err, user, req, res, next);
-    // console.log('fuck :>> ', fuck);
-    return fuck;
+    return reqLogin(err, user, req, res, next);
   })(req, res, next);
 };
 

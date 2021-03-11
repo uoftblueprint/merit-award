@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../styles/login.css";
 import { useDispatch } from 'react-redux';
@@ -8,6 +8,7 @@ import * as yup from 'yup';
 
 function Login() {
   const dispatch = useDispatch()
+  const [errorMessage, setErrorMessage] = useState("");
 
   const loginValidation = yup.object().shape({
     email: yup
@@ -25,11 +26,11 @@ function Login() {
   }
 
   const handleSubmit = async (values) => {
-    try {
-      await apiLogin(values.email, values.password);
+    const error = await apiLogin(values.email, values.password);
+    if (error) {
+      setErrorMessage(error.err);
+    } else {
       dispatch({ type: 'LOGIN'});
-    } catch (err) {
-      console.log('err :>> ', err);
     }
   }
 
@@ -47,6 +48,9 @@ function Login() {
             <label htmlFor="password" className="block">Password</label>
             <Field size="lg" type="password" name="password" placeholder="Password" />
             <ErrorMessage name={"password"} />
+          </div>
+          <div className="text-red">
+            {errorMessage}
           </div>
           <button type="submit" className="indigo-button my-3">Login</button>
         </Form>
