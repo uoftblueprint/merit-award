@@ -18,6 +18,12 @@ const UserSchema = new Schema<User, UserModel>({
     type: String,
     required: true,
   },
+  name: {
+    type: String,
+  },
+  gender: {
+    type: String,
+  },
   student: {
     type: Schema.Types.ObjectId,
     ref: "Student",
