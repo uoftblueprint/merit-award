@@ -17,11 +17,6 @@ function RenderDashboardStart(props){
                 Start Application
               </button>
             </div>
-            <div className="pt-6">
-              <button onClick={() => props.logout()} className="group relative flex justify-center py-2 px-4 border border-transparent text-lg font-medium rounded-md text-white bg-blue-900 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900">
-                LOGOUT
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -136,7 +131,7 @@ function Menu(props) {
     );
 }
 
-function Dashboard(props) {
+function Dashboard() {
 
   const [stageIndex, setStageByIndex] = useState(0);
 
@@ -146,7 +141,7 @@ function Dashboard(props) {
         <h2 className="mt-6 text-center text-5xl text-bold text-gray-700">
           Dashboard
         </h2>
-              {stageIndex == 0 && <RenderDashboardStart logout={props.logout} setStageByIndex={setStageByIndex} />}
+              {stageIndex == 0 && <RenderDashboardStart setStageByIndex={setStageByIndex} />}
               {stageIndex == 1 && <RenderDashboardMain setStageByIndex={setStageByIndex}/>}
         </div>
       </div>
