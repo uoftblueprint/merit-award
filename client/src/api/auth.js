@@ -3,22 +3,25 @@ import Cookies from 'js-cookie'
 import client from './axios';
 
 export const apiLogin = async (email, password) => {
+  let user;
   try {
     const user = await axios.post('/api/user/login', {
       email,
       password,
     });
-
-    if (!user || user.status != 200) {
-      throw 'Unable to login';
-    }
-
     console.log('user :>> ', user);
+
+    // if (!user || user.status != 200) {
+    //   throw 'Unable to login';
+    // }
 
     Cookies.set('access', user.data.access);
   } catch (err) {
-    console.log(err);
-    throw err;
+      console.log('user :>> ', user);
+      console.log(err);
+      console.log('err.response.data :>> ', err.response.data);
+      // console.log('err.data :>> ', err.data);
+      throw err;
   }
 };
 

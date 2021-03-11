@@ -133,18 +133,20 @@ passport.use(
       async (email: string, password: string, done: any) => {
         try {
           const user = await UserModel.findOne({ email });
+          console.log('user :>> ', user);
   
           if (!user) {
-            return done(null, false, { message: 'User not found' });
+            // return done(null, false, { message: 'We did not find an account associated with that email.' });
+            return done(new Error('We did not find an account associated with that email.'), false, { message: 'We did not find an account associated with that email.' });
           }
   
           const validate = await user.isValidPassword(password);
   
           if (!validate) {
-            return done(null, false, { message: 'Wrong Password' });
+            return done(null, false, { message: 'Incorrect password.' });
           }
   
-          return done(null, user, { message: 'Logged in Successfully' });
+          return done(null, user, { message: 'Logged in successfully.' });
         } catch (error) {
           return done(error);
         }
