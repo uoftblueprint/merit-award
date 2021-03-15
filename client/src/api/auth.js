@@ -43,7 +43,7 @@ export const apiSignup = async (email, password, school) => {
     }
 };
 
-export const getEmail = async () => {
+export const getUserInfo = async () => {
 
   try {
       const user = await client.get('/api/user/profile');

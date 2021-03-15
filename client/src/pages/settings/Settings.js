@@ -5,16 +5,17 @@ import "../../styles/login.css";
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from "react";
 
-import {getEmail} from '../../api/auth';
+import {getUserInfo} from '../../api/auth';
 import SettingsForm from "./SettingsForm";
 
 function Settings(props) {
   const dispatch = useDispatch();
-  const [user, setUser] = useState("");
-   useEffect(() => {
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
     const getData = async () => {
-      const data = await getEmail();
-      console.log(data);
+      const data = await getUserInfo();
+      console.log('data :>> ', data);
       setUser(data.user);
      }
      try {

@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.css';
 import "../../styles/login.css";
 import { Field, Form, ErrorMessage, Formik } from "formik";
+import { Dropdown } from "../../components/questions/forms";
 import * as yup from 'yup';
+import { getSchools } from "../../api/application";
 
 const loginValidation = yup.object().shape({
   email: yup.string().email().required(),
@@ -22,16 +24,37 @@ const handleSubmit = async (values) => {
 }
 
 function SettingsForm(props) {
-  const [initialValues, setInitialValues] = useState({})
+  const defaultValues = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    school: '',
+    currPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  }
+  const [initialValues, setInitialValues] = useState(defaultValues)
+  const [schoolNames, setSchoolNames] = useState([]);
+
+  
+  const getSchoolData = async () => {
+    const schoolNames = await getSchools();
+    setSchoolNames(schoolNames);
+  }
   
   useEffect(() => {
-    console.log('props :>> ', props);
-    const values = {
-      email: props.user.email || 'asdf',
-      password: '',
-      confirmPassword: '',
+    if (schoolNames.length == 0) {
+      try {
+        getSchoolData();
+      } catch (err) {
+        console.log('err :>> ', err);
+      }
     }
-    setInitialValues(values);
+    console.log('props.user :>> ', props.user);
+    const newValues = {...defaultValues, email: props.user.email};
+    console.log('newValues :>> ', newValues);
+    
+    setInitialValues(newValues);
   }, [props.user]);
 
   
@@ -56,17 +79,22 @@ function SettingsForm(props) {
             <Field type="text" name="email" placeholder="Email" />
             <ErrorMessage name={"email"} />
           </div>
+          
+          <div size="lg">
+            <label htmlFor="school" className="block">School</label>
+            <Dropdown name="school" options={schoolNames} />
+          </div>
 
           <h1>Change Password</h1>
           <div size="lg">
-            <label htmlFor="password" className="block">Current Password</label>
-            <Field size="lg" type="password" name="password" placeholder="Password" />
-            <ErrorMessage name={"password"} />
+            <label htmlFor="currPassword" className="block">Current Password</label>
+            <Field size="lg" type="currPassword" name="currPassword" placeholder="currPassword" />
+            <ErrorMessage name={"currPassword"} />
           </div>
           <div size="lg">
-            <label htmlFor="password" className="block">New Password</label>
-            <Field size="lg" type="password" name="password" placeholder="Password" />
-            <ErrorMessage name={"password"} />
+            <label htmlFor="newPassword" className="block">New Password</label>
+            <Field size="lg" type="newPassword" name="newPassword" placeholder="newPassword" />
+            <ErrorMessage name={"newPassword"} />
           </div>
           <div size="lg">
             <label htmlFor="confirmPassword" className="block">Confirm New Password</label>
