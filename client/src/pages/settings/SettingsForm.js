@@ -6,7 +6,7 @@ import { Dropdown } from "../../components/questions/forms";
 import { getSchools } from "../../api/application";
 
 
-function SettingsForm() {
+function SettingsForm(props) {
   const [schoolNames, setSchoolNames] = useState([]);
   
   const getSchoolData = async () => {
@@ -66,14 +66,25 @@ function SettingsForm() {
           <Field size="lg" type="password" name="confirmPassword" placeholder="Password" />
           <ErrorMessage name={"confirmPassword"} />
         </div>
-        {/* <button 
+        <button 
           type="submit"
           className="indigo-button my-3"
-          onClick={(e) => {
-            setFieldValue('isSecondButton', true); handleSubmit(e);
-          }}>Save Password</button> */}
+          onClick={() => {
+            props.setFieldValue('passwordButton', true, false);
+            props.handleSubmit();
+          }}>
+            Save Password
+          </button>
       </div>
-      <button type="submit" className="indigo-button my-3">Save</button>
+      <button 
+        type="submit"
+        className="indigo-button my-3"
+        onClick={() => {
+          props.setFieldValue('passwordButton', false, false);
+          props.handleSubmit();
+        }}>
+          Save
+        </button>
     </div>
   );
 }

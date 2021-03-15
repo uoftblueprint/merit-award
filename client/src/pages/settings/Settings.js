@@ -22,13 +22,15 @@ const defaultValues = {
   passwordButton: false
 }
 
-const loginValidation = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().required().min(2, 'Password too short.'),
-  school: yup.string().required(),
-  confirm: yup.boolean().oneOf([true], 'This checkbox must be checked.').required(),
-  confirmPassword: yup.string().oneOf([yup.ref('password'), null], "Passwords don't match").required('Confirm Password is required')
-});
+// const loginValidation = yup.object().shape({
+//   email: yup.string().email().required(),
+//   school: yup.string().required(),
+//   password: yup.string().required().min(2, 'Password too short.'),
+//   confirm: yup.boolean().oneOf([true], 'This checkbox must be checked.').required(),
+//   confirmPassword: yup.string().oneOf([yup.ref('password'), null], "Passwords don't match").required('Confirm Password is required')
+// });
+
+const loginValidation = yup.object().shape({})
 
 function Settings(props) {
   const dispatch = useDispatch();
@@ -62,6 +64,7 @@ function Settings(props) {
 
   const updatePassword = (e) => {
     setFormData({...formData, passwordButton: true});
+
     handleSubmit(e);
   }
 
@@ -72,11 +75,11 @@ function Settings(props) {
 
       </div>
       <div className="max-w-6xl w-full space-y-8 flex items-center flex-column">
-        <Formik initialValues={formData} onSubmit={handleSubmit} enableReinitialize validationSchema={loginValidation} >
-        {({ errors, values }) => {
+        <Formik initialValues={formData} enableReinitialize validationSchema={loginValidation} onSubmit={(values) => {handleSubmit(values)}}>
+        { ({setFieldValue, handleSubmit}) => {
           return (
-            <Form>
-              {!isLoading && <SettingsForm />}
+            <Form onSubmit={handleSubmit}>
+              {!isLoading && <SettingsForm setFieldValue={setFieldValue} handleSubmit={handleSubmit} />}
             </Form>
           )
         }}
