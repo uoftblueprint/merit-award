@@ -8,7 +8,8 @@ import { Field, Form, ErrorMessage, Formik } from "formik";
 
 import * as yup from 'yup';
 import {getUserInfo} from '../../api/auth';
-import SettingsForm from "./SettingsForm";
+import ProfileForm from "./ProfileForm";
+import NotificationsForm from "./NotificationsForm";
 
   
 const defaultValues = {
@@ -35,6 +36,7 @@ const loginValidation = yup.object().shape({})
 function Settings(props) {
   const dispatch = useDispatch();
 
+  const [profileSettings, setProfileSettings] = useState(true);
   const [isLoading, setLoading] = useState(true);
   const [formData, setFormData] = useState(defaultValues);
 
@@ -53,7 +55,7 @@ function Settings(props) {
      }
   }, []);
 
-  async function handleSubmit(values) {
+  const handleSubmit = async (values) => {
     if (values.passwordButton) {
       console.log("PASSWORD");
     } else{
@@ -62,24 +64,26 @@ function Settings(props) {
     console.log('values :>> ', values);
   }
 
-  const updatePassword = (e) => {
-    setFormData({...formData, passwordButton: true});
-
-    handleSubmit(e);
+  const getSettingsPage = (setFieldValue, handleSubmit) => {
+    return profileSettings ? <ProfileForm setFieldValue={setFieldValue} handleSubmit={handleSubmit} /> : <NotificationsForm />;
   }
-
 
   return (
     <div className="mt-32 min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 bg-superlightgray">
       <div>
-
+        <button onClick={() => setProfileSettings(true)}>
+          Profile Settings
+        </button>
+        <button onClick={() => setProfileSettings(false)}>
+          Notification Settings
+        </button>
       </div>
       <div className="max-w-6xl w-full space-y-8 flex items-center flex-column">
         <Formik initialValues={formData} enableReinitialize validationSchema={loginValidation} onSubmit={(values) => {handleSubmit(values)}}>
         { ({setFieldValue, handleSubmit}) => {
           return (
             <Form onSubmit={handleSubmit}>
-              {!isLoading && <SettingsForm setFieldValue={setFieldValue} handleSubmit={handleSubmit} />}
+              {!isLoading && getSettingsPage(setFieldValue, handleSubmit)}
             </Form>
           )
         }}

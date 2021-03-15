@@ -6,7 +6,7 @@ import { Dropdown } from "../../components/questions/forms";
 import { getSchools } from "../../api/application";
 
 
-function SettingsForm(props) {
+function ProfileForm(props) {
   const [schoolNames, setSchoolNames] = useState([]);
   
   const getSchoolData = async () => {
@@ -89,4 +89,4 @@ function SettingsForm(props) {
   );
 }
 
-export default SettingsForm;
+export default ProfileForm;
