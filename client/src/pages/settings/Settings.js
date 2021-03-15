@@ -4,19 +4,45 @@ import 'bootstrap/dist/css/bootstrap.css';
 import "../../styles/login.css";
 import { useDispatch } from 'react-redux';
 import { useEffect, useState } from "react";
+import { Field, Form, ErrorMessage, Formik } from "formik";
 
+import * as yup from 'yup';
 import {getUserInfo} from '../../api/auth';
 import SettingsForm from "./SettingsForm";
 
+  
+const defaultValues = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  school: '',
+  currPassword: '',
+  newPassword: '',
+  confirmPassword: '',
+  passwordButton: false
+}
+
+const loginValidation = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required().min(2, 'Password too short.'),
+  school: yup.string().required(),
+  confirm: yup.boolean().oneOf([true], 'This checkbox must be checked.').required(),
+  confirmPassword: yup.string().oneOf([yup.ref('password'), null], "Passwords don't match").required('Confirm Password is required')
+});
+
 function Settings(props) {
   const dispatch = useDispatch();
-  const [user, setUser] = useState({});
+
+  const [isLoading, setLoading] = useState(true);
+  const [formData, setFormData] = useState(defaultValues);
 
   useEffect(() => {
     const getData = async () => {
-      const data = await getUserInfo();
-      console.log('data :>> ', data);
-      setUser(data.user);
+      setLoading(true);
+      setFormData({});
+      const data = await getUserInfo();;
+      setFormData({...formData, email: data.user.email});
+      setLoading(false);
      }
      try {
       getData();
@@ -25,11 +51,36 @@ function Settings(props) {
      }
   }, []);
 
+  async function handleSubmit(values) {
+    if (values.passwordButton) {
+      console.log("PASSWORD");
+    } else{
+      console.log("NOT PASWORD");
+    }
+    console.log('values :>> ', values);
+  }
+
+  const updatePassword = (e) => {
+    setFormData({...formData, passwordButton: true});
+    handleSubmit(e);
+  }
+
 
   return (
     <div className="mt-32 min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8 bg-superlightgray">
+      <div>
+
+      </div>
       <div className="max-w-6xl w-full space-y-8 flex items-center flex-column">
-        <SettingsForm user={user} />
+        <Formik initialValues={formData} onSubmit={handleSubmit} enableReinitialize validationSchema={loginValidation} >
+        {({ errors, values }) => {
+          return (
+            <Form>
+              {!isLoading && <SettingsForm />}
+            </Form>
+          )
+        }}
+        </Formik>
         <div className="pt-6">
           <button onClick={() => props.logout()} className="indigo-button my-3">
             LOGOUT
