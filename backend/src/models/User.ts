@@ -18,7 +18,10 @@ const UserSchema = new Schema<User, UserModel>({
     type: String,
     required: true,
   },
-  name: {
+  firstName: {
+    type: String,
+  },
+  lastName: {
     type: String,
   },
   gender: {

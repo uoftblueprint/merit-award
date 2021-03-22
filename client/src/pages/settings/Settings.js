@@ -6,8 +6,8 @@ import { useDispatch } from 'react-redux';
 import { useEffect, useState } from "react";
 import { Field, Form, ErrorMessage, Formik } from "formik";
 
+import { updateUser, updateUserPassword, getUserInfo } from '../../api/user'
 import * as yup from 'yup';
-import {getUserInfo} from '../../api/auth';
 import ProfileForm from "./ProfileForm";
 import NotificationsForm from "./NotificationsForm";
 
@@ -23,15 +23,22 @@ const defaultValues = {
   passwordButton: false
 }
 
-// const loginValidation = yup.object().shape({
-//   email: yup.string().email().required(),
-//   school: yup.string().required(),
-//   password: yup.string().required().min(2, 'Password too short.'),
-//   confirm: yup.boolean().oneOf([true], 'This checkbox must be checked.').required(),
-//   confirmPassword: yup.string().oneOf([yup.ref('password'), null], "Passwords don't match").required('Confirm Password is required')
-// });
-
-const loginValidation = yup.object().shape({})
+const loginValidation = yup.object().shape({
+  firstName: yup.string().required(),
+  lastName: yup.string().required(),
+  email: yup.string().email().required(),
+  school: yup.string().required(),
+  currPassword: yup.string().min(2, 'Password too short.').default('').notRequired(),
+  newPassword: yup.string().when('currPassword', {
+    is: (currPassword) => currPassword.length > 0,
+    then: yup.string().required("New password is required.")
+  }),
+  confirmPassword: yup.string().when('currPassword', {
+    is: (currPassword) => currPassword.length > 0,
+    then: yup.string().oneOf([yup.ref('newPassword'), null], "Passwords don't match")
+             .required('Confirm password is required.')
+  }),
+});
 
 function Settings(props) {
   const dispatch = useDispatch();
@@ -44,8 +51,15 @@ function Settings(props) {
     const getData = async () => {
       setLoading(true);
       setFormData({});
-      const data = await getUserInfo();;
-      setFormData({...formData, email: data.user.email});
+      const data = await getUserInfo();
+      const user = data.user;
+      setFormData({
+        ...formData,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        school: data.student.school
+      });
       setLoading(false);
      }
      try {
@@ -57,11 +71,15 @@ function Settings(props) {
 
   const handleSubmit = async (values) => {
     if (values.passwordButton) {
-      console.log("PASSWORD");
-    } else{
-      console.log("NOT PASWORD");
+      updateUserPassword({ currPassword: values.currPassword, newPassword: values.newPassword });
+    } else {
+      updateUser({ 
+        firstName: values.firstName, 
+        lastName: values.lastName, 
+        email: values.email, 
+        school: values.school
+      });
     }
-    console.log('values :>> ', values);
   }
 
   const getSettingsPage = (setFieldValue, handleSubmit) => {

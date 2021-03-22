@@ -53,12 +53,12 @@ function ProfileForm(props) {
         <h1>Change Password</h1>
         <div size="lg">
           <label htmlFor="currPassword" className="block">Current Password</label>
-          <Field size="lg" type="currPassword" name="currPassword" placeholder="currPassword" />
+          <Field size="lg" type="password" name="currPassword" placeholder="currPassword" />
           <ErrorMessage name={"currPassword"} />
         </div>
         <div size="lg">
           <label htmlFor="newPassword" className="block">New Password</label>
-          <Field size="lg" type="newPassword" name="newPassword" placeholder="newPassword" />
+          <Field size="lg" type="password" name="newPassword" placeholder="newPassword" />
           <ErrorMessage name={"newPassword"} />
         </div>
         <div size="lg">
