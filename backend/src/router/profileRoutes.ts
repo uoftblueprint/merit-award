@@ -2,6 +2,7 @@ import { AnyARecord } from 'dns';
 import { NextFunction, Request, Response, Router } from 'express'
 import User from '../models/User';
 import { Student } from '../models/UserType';
+import bcrypt from "bcrypt";
 
 const router = Router();
 
@@ -33,6 +34,31 @@ router.put('/update', async (req: Request, res: Response, _: NextFunction) => {
     return res.json({ msg: "Successfully updated!", data: result });
   } else {
     return res.status(400).send("Error updating user information.");
+  }
+});
+
+router.put('/update-password', async (req: Request, res: Response, _: NextFunction) => {
+  const user = req.user as any;
+  const currPassword = req.body.currPassword;
+  const newPassword = req.body.newPassword;
+  const foundUser = await User.findById(user._id);
+  
+  try {
+    const validate = await foundUser.isValidPassword(currPassword);
+    if (!validate) {
+      return res.status(400).send("Incorrect Password.");
+    }
+    const hash = await bcrypt.hash(newPassword, 10);
+    foundUser.password = hash;
+    const result = await foundUser.save();
+    if (result) {
+      return res.json({ msg: "Password successfully updated!" });
+    } else {
+      return res.status(400).send("Error updating user password.");
+    }
+  } catch (err) {
+    console.log('err :>> ', err);
+    return res.status(400).send("Error updating user password.");
   }
 });
 

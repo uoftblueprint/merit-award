@@ -22,9 +22,8 @@ export const updateUser = async (body) => {
         cleanedData[prop] = body[prop];
       }
     });
-    console.log('cleanedData :>> ', cleanedData);
-    const user = await client.put('/api/user/update', { data: cleanedData });
-    console.log('user :>> ', user);
+    const result = await client.put('/api/user/update', { data: cleanedData });
+    return result.data.msg;
   } catch (err) {
     console.log(err);
     throw err;
@@ -32,12 +31,10 @@ export const updateUser = async (body) => {
 };
 
 export const updateUserPassword = async (body) => {
-  try {
-    console.log('body :>> ', body);
-    // const user = await client.put('/api/user/update');
-    // console.log('user :>> ', user);
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
+  const result = await client.put('/api/user/update-password', body).then(result => {
+    return result.data.msg;
+  }).catch(err => {
+    return err.response.data;
+  });
+  return result
 };

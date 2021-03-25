@@ -54,27 +54,30 @@ function ProfileForm(props) {
         <div size="lg">
           <label htmlFor="currPassword" className="block">Current Password</label>
           <Field size="lg" type="password" name="currPassword" placeholder="currPassword" />
-          <ErrorMessage name={"currPassword"} />
         </div>
         <div size="lg">
           <label htmlFor="newPassword" className="block">New Password</label>
           <Field size="lg" type="password" name="newPassword" placeholder="newPassword" />
-          <ErrorMessage name={"newPassword"} />
         </div>
         <div size="lg">
           <label htmlFor="confirmPassword" className="block">Confirm New Password</label>
           <Field size="lg" type="password" name="confirmPassword" placeholder="Password" />
-          <ErrorMessage name={"confirmPassword"} />
+          <span>{props.passwordError}</span>
+        </div>
+        <div>
+          {props.passwordStatus}
         </div>
         <button 
           type="submit"
           className="indigo-button my-3"
           onClick={() => {
             props.setFieldValue('passwordButton', true, false);
-            props.handleSubmit();
           }}>
             Save Password
           </button>
+      </div>
+      <div>
+          {props.settingsStatus}
       </div>
       <button 
         type="submit"

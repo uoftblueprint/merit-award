@@ -28,16 +28,6 @@ const loginValidation = yup.object().shape({
   lastName: yup.string().required(),
   email: yup.string().email().required(),
   school: yup.string().required(),
-  currPassword: yup.string().min(2, 'Password too short.').default('').notRequired(),
-  newPassword: yup.string().when('currPassword', {
-    is: (currPassword) => currPassword.length > 0,
-    then: yup.string().required("New password is required.")
-  }),
-  confirmPassword: yup.string().when('currPassword', {
-    is: (currPassword) => currPassword.length > 0,
-    then: yup.string().oneOf([yup.ref('newPassword'), null], "Passwords don't match")
-             .required('Confirm password is required.')
-  }),
 });
 
 function Settings(props) {
@@ -46,6 +36,9 @@ function Settings(props) {
   const [profileSettings, setProfileSettings] = useState(true);
   const [isLoading, setLoading] = useState(true);
   const [formData, setFormData] = useState(defaultValues);
+  const [passwordError, setPasswordError]  = useState("");
+  const [passwordStatus, setPasswordStatus]  = useState("");
+  const [settingsStatus, setSettingsStatus]  = useState("");
 
   useEffect(() => {
     const getData = async () => {
@@ -70,20 +63,48 @@ function Settings(props) {
   }, []);
 
   const handleSubmit = async (values) => {
+    setPasswordError("");
+    setPasswordStatus("");
+    setSettingsStatus("");
     if (values.passwordButton) {
-      updateUserPassword({ currPassword: values.currPassword, newPassword: values.newPassword });
+      if (values.newPassword !== values.confirmPassword) {
+        setPasswordStatus("Error. Passwords do not match.")
+        return;
+      }
+      if (values.currPassword.length === 0) {
+        setPasswordStatus("Error. Current password field is blank.")
+        return;
+      }
+      if (values.newPassword.length === 0) {
+        setPasswordStatus("Error. New password field is blank.")
+        return;
+      }
+      if (values.confirmPassword.length === 0) {
+        setPasswordStatus("Error. Confirm password field is blank.")
+        return;
+      }
+      const result = await updateUserPassword({ currPassword: values.currPassword, newPassword: values.newPassword });
+      setPasswordStatus(result);
+      return;
     } else {
-      updateUser({ 
+      const result = await updateUser({ 
         firstName: values.firstName, 
         lastName: values.lastName, 
         email: values.email, 
         school: values.school
       });
+      setSettingsStatus(result);
     }
   }
 
   const getSettingsPage = (setFieldValue, handleSubmit) => {
-    return profileSettings ? <ProfileForm setFieldValue={setFieldValue} handleSubmit={handleSubmit} /> : <NotificationsForm />;
+    return profileSettings ? <ProfileForm 
+                              passwordError={passwordError}
+                              passwordStatus={passwordStatus}
+                              settingsStatus={settingsStatus} 
+                              setFieldValue={setFieldValue} 
+                              handleSubmit={handleSubmit} 
+                              /> : <NotificationsForm />;
   }
 
   return (
