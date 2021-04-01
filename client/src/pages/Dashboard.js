@@ -17,11 +17,6 @@ function RenderDashboardStart(props){
                 Start Application
               </button>
             </div>
-            <div className="pt-6">
-              <button onClick={() => props.logout()} className="group relative flex justify-center py-2 px-4 border border-transparent text-lg font-medium rounded-md text-white bg-blue-900 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-900">
-                LOGOUT
-              </button>
-            </div>
           </div>
         </div>
       </div>

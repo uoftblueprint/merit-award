@@ -4,7 +4,7 @@ import "../styles/login.css";
 import { useDispatch } from 'react-redux';
 import { apiSignup } from "../api/auth";
 import { Field, Form, ErrorMessage, Formik } from "formik";
-import { Checkbox, Dropdown } from "../components/questions/forms";
+import { Dropdown } from "../components/questions/forms";
 import * as yup from 'yup';
 import { getSchools } from "../api/application";
 

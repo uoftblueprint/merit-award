@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Login from "./pages/Login";
-import LoggedIn from "./pages/LoggedIn";
+import Settings from "./pages/settings/Settings";
 import Dashboard from "./pages/Dashboard";
 import Student from './pages/application/Student';
 import References from "./pages/References";
@@ -52,7 +52,8 @@ function App() {
             <Route path="/dashboard" render={() => <WithNav logout={logout} cookies={access}/>}/>
             <Route path="/application" component={WithNav}/>
             <Route path="/references" component={WithNav}/>
-            <Route path="/" render={() => <WithNav logout={logout} cookies={access}/>}/>
+            <Route path="/settings" render={() => <WithNav logout={logout} cookies={access}/>}/>
+            <Route exact path="/" render={() => <WithNav logout={logout} cookies={access}/>}/>
           </Switch>
           :
           <Switch>
@@ -76,7 +77,8 @@ function WithNav(props) {
         <Route path="/dashboard" render={() => <Dashboard logout={props.logout} cookies={props.access}/>}/>
         <Route path="/application" component={Student}/>
         <Route path="/references" component={References}/>
-        <Route path="/" render={() => <LoggedIn logout={props.logout} cookies={props.access}/>}/>
+        <Route path="/settings" render={() => <Settings logout={props.logout} cookies={props.access}/>}/>
+        <Route exact path="/" render={() => <Dashboard logout={props.logout} cookies={props.access}/>}/>
       </Switch>
     </div>
   );
