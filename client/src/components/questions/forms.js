@@ -16,17 +16,6 @@ export function InputText({name, label, hint, errors}) {
   )
 }
 
-
-export function TextArea({name, label, hint, errors}) {
-  return (
-    <div>
-      <label>{label}</label>
-      <Field component="textarea" type="text" name={name} placeholder="lmao"/>
-      <ErrorMessage name={name} />
-    </div>
-  )
-}
-
 export function Checkbox({name, options, label, hint, register}) {
   const checkbox_options = []
 
@@ -107,3 +96,16 @@ export function Email({name, label}) {
     </div>
   )
 }
+
+export function TextArea({name, label, hint, errors}) {
+  return (
+    <div>
+      <label>{label}</label>
+      <Field component="textarea" type="text" name={name} placeholder="lmao"/>
+      <ErrorMessage name={name} />
+    </div>
+  )
+}
+
+
+export default TextArea;

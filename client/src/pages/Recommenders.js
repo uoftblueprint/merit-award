@@ -1,9 +1,10 @@
 import React, { Component, useState } from 'react';
+import FormBody from "./application/FormBody";
 import { Link } from "react-router-dom";
 
 import '../styles/css/Recommenders.css';
 
-function RenderDashboardMain(){
+function RenderDashboardMain(props){
 
   let requests = [
     {
@@ -17,7 +18,7 @@ function RenderDashboardMain(){
       name: "Sean Chew",
       email: "sean.chew@mail.utoronto.ca",
       requestType: "Extracurricular",
-      status: "Denied",
+      status: "Accepted, Incomplete",
       requestDate: "03/03/21 6:00 AM EST"
     }
   ]
@@ -55,7 +56,7 @@ function RenderDashboardMain(){
                 <p>{request.requestDate}</p>
               </div>
               <div className="btn btn-secondary">
-                <Link>View</Link>
+                <a onClick={() => props.setStageByIndex(request.status === "Pending Response" ? 1 : 2)}>View</a>
               </div>
 
             </div>
@@ -104,6 +105,17 @@ function RecRequest() {
 }
 
 function Recommendation() {
+  let formData = [
+    {
+      questions: [
+        {
+          type: "Multiple Select",
+          text: "What courses have you taught the applicant?",
+          options: ["english", "coding", "smocial"]
+        }
+      ]
+    }
+  ]
   return (
     <div id="rec-request">
       <b className="request">Recommendation for:</b>
@@ -123,6 +135,10 @@ function Recommendation() {
       </div>
 
       <div className="questions">
+        <FormBody data={formData} errors=""/>
+
+
+
         <p>How long have you known Trudie Cheung? </p>
 
         <p>What courses have you taught the applicant?</p>
@@ -162,9 +178,11 @@ function Dashboard() {
   return (
     <div id="rec-dash">
       <h1>Your Recommendations</h1>
-        <Recommendation />
-        {/*<RecRequest />
-        <RenderDashboardMain />*/}
+
+        {stageIndex == 0 && <RenderDashboardMain setStageByIndex={setStageByIndex} />}
+        {stageIndex == 1 && <RecRequest setStageByIndex={setStageByIndex}/>}
+        {stageIndex == 2 && <Recommendation setStageByIndex={setStageByIndex}/>}
+
     </div>
   );
 }
