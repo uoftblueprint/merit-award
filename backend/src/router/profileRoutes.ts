@@ -12,7 +12,6 @@ router.get(
     let user = req.user as any;
     let student = await Student.findById(user.student);
     res.json({
-      message: 'You made it to the secure route',
       user: user,
       student: student,
       token: req.query.secret_token

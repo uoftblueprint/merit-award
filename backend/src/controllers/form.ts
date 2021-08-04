@@ -45,7 +45,6 @@ export const getPage = async (req: Request, res: Response) => {
 
 export const postForm = async (req: Request, res: Response) => {
   const sections = req.body;
-  console.log('sections :>> ', sections);
   const user = req.user as User;
   let userResponses = new Map<string, string[]>();
   const updated = new Set<string>();
@@ -97,7 +96,6 @@ export const getSchools = async(req: Request, res: Response) => {
 
 export const getAnswers = async(req: Request, res: Response) => {
     const user = req.user as User;
-    console.log(user);
     const q = await UserApplication.findOne({user: user._id})
     let answers = {}
     if (q) {
